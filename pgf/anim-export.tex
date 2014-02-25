@@ -1,0 +1,252 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+%% \setmainfont[Mapping=tex-text]{Minion Pro}
+%% \setromanfont[Mapping=tex-text]{Minion Pro}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+%% \setmonofont{Courier}
+
+%% \usepackage{changepage}
+
+%% \usepackage{graphicx}
+
+%% \usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+
+%% \usepgfplotslibrary{external}
+%% \tikzexternalize
+%% \tikzset{external/mode=graphics if exists}
+
+%% \tikzset{external/system call={xelatex \tikzexternalcheckshellescape -shell-escape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource" }}
+
+%% %pdf setup
+%% \tikzset{external/system call=%
+%%     {xelatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+
+%% %optional png setup
+%% \tikzset{
+%%     png export/.style={
+%%         external/system call=%
+%%         {xelatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource";%
+%%          convert -density 300 -transparent white "\image.pdf" "\image.png"; rm -f "\image.pdf"},
+%%     }
+%% }
+
+%% \tikzset{%
+%%     % Add size information to the .dpth file (png is in density not size)
+%%     /pgf/images/external info,
+%%     % Use the png export AND the import
+%%     use png/.style={png export,png import},
+%%     png import/.code={%
+%%         \tikzset{%
+%%             /pgf/images/include external/.code={%
+%%                 % Here you can alter to whatever you want
+%%                 % \pgfexternalwidth is only available if /pgf/images/external info
+%%                 % is set
+%%                 \includegraphics%
+%%                 [width=\pgfexternalwidth,height=\pgfexternalheight]%
+%%                 {{##1}.png}%
+%%             }%
+%%         }%
+%%     }%
+%% }
+
+%% %%%<
+%% \usepackage{verbatim}
+%% \usepackage[active,tightpage]{preview}
+%% \setlength\PreviewBorder{0pt}%
+%% %%%>
+
+
+%% \begin{comment}
+%% :Title: Animated Normal Distrib
+
+%% \end{comment}
+
+\usepackage{animate}
+
+%%%% macros %%%%
+
+
+%%%%%%%%%%%%%%%%
+\title{Animated Normal Curve}
+%% \author{G. A. Reynolds}
+%% \date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%% \maketitle
+
+%% \pgfdeclarelayer{background layer}
+%% \pgfdeclarelayer{foreground layer}
+%% \pgfsetlayers{background layer,main,foreground layer}
+
+
+%%%%%%%%%%%%%%%%
+
+%% \def\mu{0}
+%% \def\sigma{1}
+
+\pgfplotsset{width=10cm,compat=1.9}
+\pgfmathdeclarefunction{gaussian}{3}{%
+  \pgfmathparse{1/(#3*sqrt(2*pi))*exp(-((#1-#2)^2)/(2*#3^2))}%
+}
+\pgfmathsetmacro\rMu{0}
+\begin{animateinline}[poster=first,controls]{8}%
+   \multiframe{65}{rSigma=2+-.03}{%
+     \message{\rSigma}
+
+  %% \tikzset{use png}
+
+     \begin{tikzpicture}
+       \useasboundingbox (-1,-1) rectangle (10,5);
+
+%% \tikzset{
+%%     %  Defines a custom style which generates BOTH, .pdf and .png export
+%%     %  but prefers the .png on inclusion.
+%%     %
+%%     %  This style is not pre-defined, you may need to copy-paste and
+%%     %  adjust it.
+%%     png export/.style={
+%%         external/system call/.add=
+%%             {}
+%%             {; convert -density 300 -transparent white "\image.pdf" "\image.png"},
+%%         %
+%%         /pgf/images/external info,
+%%         /pgf/images/include external/.code={%
+%%           \includegraphics
+%%               [width=\pgfexternalwidth,height=\pgfexternalheight]
+%%               {##1.png}%
+%%         }
+%%     }
+%% }
+
+%%        \tikzset{png export}
+
+       %% \draw [help lines] (-1,-1) grid (10,5);
+       %% \tikzset{
+       %%   every pin/.style={fill=yellow!50!white,rectangle,rounded corners=3pt,font=\tiny},
+       %%   small dot/.style={fill=black,circle,scale=0.3}
+       %% }
+
+       \pgfmathsetmacro\valueMu{gaussian(\rMu,\rMu,\rSigma)}
+       \pgfmathsetmacro\valueSigma{gaussian(\rSigma,\rMu,\rSigma)}
+
+       \pgfmathsetmacro\valueB{gaussian(2,\rMu,\rSigma)}
+       \pgfmathsetmacro\valueC{gaussian(3,\rMu,\rSigma)}
+
+       \begin{axis}[
+           %% legend style={
+           %%   %% cells={anchor=east},
+           %%   %% legend pos=outer north east,
+           %% },
+           %% title={$\mu=3$, $\sigma=1$}],
+           clip=false,
+           no markers,
+           domain=-4:4,
+           samples=100,
+           xmin=-4.2,
+           xmax=4.2,
+           xlabel={},
+           xtick={-4,4},
+           %% xticklabel=\empty,
+           axis x line=bottom,
+           x axis line style={<->},
+           ymin=0,
+           ymax=1.2,
+           ylabel={},
+           ytick={0,1},
+           %% yticklabel=\empty,
+           axis y line=left,
+           %% every axis y label/.style={at=(current axis.above origin),anchor=south},
+           %% every axis x label/.style={at=(current axis.below),anchor=south},
+           height=5cm,
+           width=10cm,
+           %% xtick=\empty,
+           %% ytick=\empty,
+           %% enlargelimits=false,
+           %% clip=false,
+           %% axis on top,
+           %% grid = major
+           %% hide y axis
+         ]
+         %% \addlegendentry[align=left]{$\sigma=\rSigma$};
+         \addplot [gray] {gaussian(x,0,1)};
+         \addplot [very thick,cyan!50!black] {gaussian(x, \rMu, \rSigma)};
+
+         %% \node (25.4,.5) {$\mu=3$} ;
+         %% \node[small dot,pin=-30:{$(1,1)$}] at (axis description cs:1,1) {};
+         \draw [gray] (axis cs:-\rSigma,0) -- (axis cs:-\rSigma,\valueSigma)
+         (axis cs:\rSigma,0) -- (axis cs:\rSigma,\valueSigma);
+
+         %% \node[below] at (axis cs:\rMu, 0)  {$\mu=\rMu$};
+         %% \node[pin=west:{$1$}] at (axis cs:-3.2, 1) {};
+         \draw (axis cs:-0.5,-.1) node[below] {$\mu=0$} -- (axis cs:0,0) ;
+         \draw (axis cs:1,-.1) node[below right] {$\sigma=\rSigma$} -- (axis cs:\rSigma,0) ;
+
+         %% \draw [gray] (axis cs:-2\rSigma,0) -- (axis cs:-2\rSigma,1)
+         %% (axis cs:2\rSigma,0) -- (axis cs:2\rSigma,1);
+         \draw [black] (axis cs:0,0) -- (axis cs:0,\valueMu) ;
+         %% \draw [yshift=2.6cm, latex-latex](axis cs:-1, 0) -- node [fill=white] {$0.683$} (axis cs:1, 0);
+         %% \draw [yshift=2.0cm, latex-latex](axis cs:-2, 0) -- node [fill=white] {$0.954$} (axis cs:2, 0);
+         %% \node[above] at (axis cs:1, 1)  {$\mu - 2\sigma$};
+         %% \node[above] at (axis cs:2, 1)  {$\mu - \sigma$};
+         %% \node[above] at (axis cs:3, 1)  {$\mu$};
+       \end{axis}
+     \end{tikzpicture}
+   }
+\end{animateinline}
+
+%%%%%%%%%%%%%%%%
+% define the bounding box
+%% % Create n frames with \xb as parameter
+%% \foreach \xb in {0,0.1,...,2.1}{
+%%     \def\setA{(0,0) circle (1)}
+
+%% \begin{animateinline}[poster=first,controls]{8}%
+%%    \multiframe{21}{rxb=0+.1,icount=1+1,rvo=3+0}{%
+
+%%     \begin{tikzpicture}
+%%      \draw (-2,2) rectangle (4,-2) ; % bbox
+
+%%     \def\setB{(\rxb,0) circle (1)}
+
+%%         % intersection
+%%         \begin{scope}
+%%             \clip \setA;
+%%             \fill[black!20] \setB;
+%%         \end{scope}
+%%         \begin{scope}[even odd rule]% first circle without the second
+%%             \clip \setB \boundb;
+%%             \fill[red!20] \setA;
+%%         \end{scope}
+%%         \begin{scope}[even odd rule]% first circle without the second
+%%             \clip \setA \boundb;
+%%             \fill[blue!20] \setB;
+%%         \end{scope}
+%%         \draw \setA;
+%%         \draw \setB;
+%%         \node at (-1,0) [left] {$A$};
+%%         \node at (\rxb+1,0) [right] {$B$};
+%%         \node at (4,2) [below left] {$A\cap B$};
+%%     \end{tikzpicture}
+%% }% multiframe
+%% \end{animateinline}
+
+\end{document}

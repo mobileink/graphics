@@ -1,0 +1,95 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+%% Preamble:
+\pgfplotsset{width=7cm,compat=1.9}
+%% \pgfplotsset{xticklabel={\tick},scaled x ticks=false}
+\pgfplotsset{plot coordinates/math parser=false}
+
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+\usepackage{pgffor}
+
+\usepackage{animate}
+
+\usepackage{arrayjobx}
+\usepackage{multido}
+
+\usepackage{layouts}
+
+\usepackage{etoolbox}
+
+\newcounter{mylistcounter}
+
+\def\saveitem#1{%
+\stepcounter{mylistcounter}%
+\expandafter\def\csname mylist\themylistcounter\endcsname{#1}}
+
+\forcsvlist{\saveitem}{%
+  1,
+  2,
+  3
+}%
+
+\def\getnthelement#1{\csname mylist#1\endcsname}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\def\FrameCount{30}
+\def\FrameRate{30}
+\def\dist{1}
+
+\def\pts{(0,1),(1,2),(2,3)}
+\expandafter\def\expandafter\coords{\foreach \pt in \pts {\pt}}
+
+\begin{animateinline}[poster=first,%
+    controls,
+    begin={\begin{tikzpicture}[scale=1]%
+        %% \useasboundingbox[draw=black] (0,0) rectangle (\dist,\dist);
+    },%
+    end={\end{tikzpicture}}%
+  ]%
+  {\FrameRate}%
+  %% \filldraw (0,0) circle (.4pt);
+  %% \newframe %% step 0
+  %% \filldraw (0,0) circle (.4pt);
+  \multiframe{\FrameCount}{iCurrFrame=1+1}{%
+    \message{\iCurrFrame}
+    \pgfmathsetmacro{\pct}{\iCurrFrame/\FrameCount};
+    \pgfmathsetmacro{\delta}{\pct*\dist}
+    \begin{axis}[%
+      title={Step \iCurrFrame, delta: \delta}%
+      ,xmin=-.5
+      ,ymin=-.5
+      ,ymax=10
+      ]%
+      \pgfplotstableread{lineplot.dat}\plotdata
+      %% \addplot[sharp plot] coordinates \coords;
+      %% \addplot+[sharp plot] coordinates {(0,0) (1,2) (2,3)};
+      \def\dists{1,2,3}
+      \pgfmathparse{\getnthelement{1}}\pgfmathresult
+      \addplot+[sharp plot]
+      	table[header=true
+          ,x=a, y expr=\thisrow{b}+(\coordindex+1)*\pct
+        ]%
+        {\plotdata};
+      \end{axis}
+  }
+\end{animateinline}
+\end{document}

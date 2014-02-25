@@ -1,0 +1,73 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+%% \pgfplotsset{compat=1.9}
+
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+\usepackage{pgffor}
+
+\usepackage{animate}
+
+\usepackage{arrayjobx}
+\usepackage{multido}
+
+\usepackage{layouts}
+
+%%%% macros %%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\def\FrameCount{30}
+\def\FrameRate{30}
+\def\dist{1}
+
+%% Preamble: \pgfplotsset{width=7cm,compat=1.9}
+
+\begin{tikzpicture}
+\begin{loglogaxis}[
+xlabel=Dof,
+ylabel=$L_\infty$ error]
+\addplot table[x=dof,y=Lmax] {
+dof L2 Lmax maxlevel
+5 8.31160034e-02 1.80007647e-01 2
+17 2.54685628e-02 3.75580565e-02 3
+49 7.40715288e-03 1.49212716e-02 4
+};
+\end{loglogaxis}
+\end{tikzpicture}
+
+%% \begin{animateinline}[poster=first,%
+%%     begin={\begin{tikzpicture}[scale=4]%
+%%         \useasboundingbox[draw=black] (0,0) rectangle (\dist,\dist);},%
+%%     end={\end{tikzpicture}}%
+%%   ]%
+%%   {\FrameRate}%
+%%   \filldraw (0,0) circle (.4pt);
+%%   \newframe %% step 0
+%%   \filldraw (0,0) circle (.4pt);
+%%   \multiframe{\FrameCount}{iCurrFrame=1+1}{%start at 1 to get the full line
+%%     \message{\iCurrFrame}
+%%     \pgfmathsetmacro{\pct}{\iCurrFrame/\FrameCount};
+%%     \pgfmathsetmacro{\delta}{\pct*\dist}
+%%     \draw (0,0) -- (\delta,\delta);
+%%     \draw[color=red] (0,0) parabola (\delta,\delta);
+%%   }
+%% \end{animateinline}
+
+\end{document}

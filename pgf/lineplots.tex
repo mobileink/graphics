@@ -1,0 +1,56 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+%% Preamble:
+\pgfplotsset{compat=1.9}
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+\usepackage{pgffor}
+
+\usepackage{animate}
+
+\usepackage{arrayjobx}
+\usepackage{multido}
+
+\usepackage{layouts}
+
+\usepackage{etoolbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{tikzpicture}
+\begin{axis}[samples=8]
+\addplot+[jump mark left,domain=-5:0]
+{4*x^2 - 5};
+\addplot+[jump mark right,domain=-5:0]
+{0.7*x^3 + 50};
+\end{axis}
+\end{tikzpicture}
+
+\vspace{36pt}
+
+\begin{tikzpicture}
+\begin{axis}
+\addplot+[const plot mark right]
+coordinates
+{(0,0.1) (0.1,0.15) (0.2,0.5) (0.3,0.62)
+(0.4,0.56) (0.5,0.58) (0.6,0.65) (0.7,0.6)
+(0.8,0.58) (0.9,0.55) (1,0.52)};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}

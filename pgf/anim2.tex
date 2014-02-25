@@ -1,0 +1,175 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+%% \usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+
+%% \usepackage{verbatim}
+%% \usepackage[active,tightpage]{preview}
+%% \setlength\PreviewBorder{0pt}%
+%% %%%>
+
+
+%% \begin{comment}
+%% :Title: Animated Ball
+
+%% \end{comment}
+
+\usepackage{animate}
+
+\usepackage{xifthen}
+
+%%%% macros %%%%
+
+%% Math.easeInQuad = function (t, b, c, d) {
+%% 	t /= d;
+%% 	return c*t*t + b;
+%% };
+
+\pgfmathdeclarefunction{easein}{4}{%
+  \pgfmathparse{#3*(#1/#4)^2+#2}%
+}
+
+%% Math.easeOutQuint = function (t, b, c, d) {
+%% 	t /= d;
+%% 	t--;
+%% 	return c*(t*t*t*t*t + 1) + b;
+%% };
+
+\pgfmathdeclarefunction{easeout5}{4}{%
+  \pgfmathparse{#1/#4)-1}%
+  \pgfmathsetmacro\t{\pgfmathresult}%
+  \pgfmathparse{#3*(\t^5+3)+#2}%
+}
+
+%% easeOutBounce: function (x, t, b, c, d) {
+%%   if ((t/=d) < (1/2.75)) {
+%%     return c*(7.5625*t*t) + b;
+%%   } else if (t < (2/2.75)) {
+%%     return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+%%   } else if (t < (2.5/2.75)) {
+%%     return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+%%   } else {
+%%     return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+%%   }
+%% }
+
+%% to handle floats in ifthenelse:
+\newdimen\tdimen
+\newdimen\testa
+\newdimen\tf
+
+\pgfmathdeclarefunction{easeoutbounce}{4}{%
+  \message{">bounce"}
+  \pgfmathparse{#1/#4}%
+  \pgfmathsetmacro\t{\pgfmathresult}%
+  \tdimen = \t pt
+  \pgfmathparse{1/2.75}
+  \pgfmathsetmacro\ta{\pgfmathresult}%
+  \testa = \ta pt
+\message{\ta}
+  \pgfmathparse{\t<\ta}
+  \pgfmathsetmacro\tb{\pgfmathresult}%
+  \tf = \tb pt
+\message{\tb}
+  %% \ifthenelse{\tb}{1}{1}
+}
+%%   \pgfmathparse{1/2.75}
+%% \message{\pgfmathresult}
+%% %% \message{\t < 1/2.75}
+
+    %% {\pgfmathparse{#3*7.5625\t^2+#2}\pgfmathresult}
+%%     \ifthenelse{\pgfmathless{#1}{2/2.75}}
+%%       {\pgfmathparse{#1-(1.5/2.75)}
+%%       \pgfmathsetmacro\t\pgfmathresult
+%%       \pgfmathparse{#3*(7.5625*(\t^2 + .75)) + #2}\pgfmathresult}
+%%     {%else
+%%       \ifthenelse{\pgfmathless{#1}{2.5/2.75}}
+%%         {\pgfmathparse{#1-(2.25/2.75)}
+%%         \pgfmathsetmacro\t\pgfmathresult
+%%         \pgfmathparse{#3*(7.5625*(\t^2 + .9375)) + #2}\pgfmathresult}
+%%       {%else
+%%         \pgfmathparse{#1-(2.625/2.75)}
+%%         \pgfmathsetmacro\t\pgfmathresult
+%%         \pgfmathparse{#3*(7.5625*(\t^2 + .984375)) + #2}\pgfmathresul}
+%%     }
+%%   }
+%% }
+
+
+%% http://sol.gfxile.net/interpolation/
+%% for (i = 0; i < N; i++)
+%% {
+%%   v = i / N;		-  
+%%   v = 0.5 - cos(-v * Pi) * 0.5;
+%%   X = (A * v) + (B * (1 - v));
+%%% here A - beg pt B - end pt
+%% }
+\pgfmathdeclarefunction{easeOutSin}{4}{%
+  % #1 = time elapsed (secs or frame nbr)
+  % #2 = beginning val (B)
+  % #3 = change (end pt - beg pt)
+  % #4 = duration in secs or frames
+  \pgfmathparse{#1/#4)}%
+  \pgfmathsetmacro\v{\pgfmathresult}%
+  \pgfmathparse{0.5-cos(-\v*pi)*0.5}%
+  \pgfmathsetmacro\vv{\pgfmathresult}%
+  \pgfmathparse{#2*\vv+(#2+#4)*(1-\vv)}%
+}
+
+%% v = ((v * (N - 1)) + w) / N; 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\def\x{+0}
+%% \def\y{+4}
+
+\def\FrameCount{60}
+\def\FrameRate{30}
+
+\begin{animateinline}[poster=first,controls]{\FrameRate}%
+  \multiframe{\FrameCount}{rCurrFrame=0+1}{%
+    \message{\rCurrFrame}
+
+    \begin{tikzpicture}
+      \useasboundingbox{(-1,-1) rectangle (6,6)};
+      \pgfmathparse{\rCurrFrame/\FrameCount};
+      \pgfmathsetmacro\pct{\pgfmathresult};
+      \message{\pct};
+
+      %% \pgfmathparse{5*\pct};
+      %% \pgfmathsetmacro\y{\pgfmathresult};
+      %% \message{\y};
+
+      \pgfmathsetmacro\y{easeoutbounce(\rCurrFrame,1,5,\FrameCount)};
+
+      \filldraw (0,5-2) circle (8pt);
+
+      \draw (0,5) -- (5,5) ;
+
+      \draw[->] (0,0) -- (2,2) ;
+
+      \draw (0,0) -- (5,0) ;
+
+    \end{tikzpicture}
+  }
+\end{animateinline}
+
+\end{document}

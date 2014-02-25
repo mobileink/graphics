@@ -1,0 +1,130 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+%% \pgfplotsset{compat=1.9}
+
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+\usepackage{pgffor}
+
+\usepackage{animate}
+
+\usepackage{arrayjobx}
+\usepackage{multido}
+
+\usepackage{layouts}
+
+%%%% macros %%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\newarray\Actors \newarray\Dates \newarray\Sexes
+
+\readarray{Actors}{Louise Brooks&Marlene Dietrich&Clark Gable} \readarray{Dates}{1906--1985&1902--1992&1901--1960} \readarray{Sexes}{2&2&1}
+\begin{description} \item[\Actors(1)] : \Dates(1) \item[\Actors(2)] : \Dates(2) \item[\Actors(3)] : \Dates(3)
+\end{description}
+
+\newcommand{\NumberActors}{3}
+\begin{description} \multido{\iActor=1+1}{\NumberActors}{%
+\item[\Actors(\iActor)] : \Dates(\iActor)} \end{description}
+
+\newlength\point
+\newlength\dist
+
+\def\FrameCount{60}
+
+\global\pgfplotsarraynewempty\Pts
+\global\pgfplotsarraynewempty\Cts
+
+\multido{\i=1+1}{\FrameCount}{%
+  \pgfplotsarraypushback\i\to\Cts;
+}
+       \pgfplotsarrayforeach\Cts\as\c{
+         \message{\c}
+         %% \draw (\theta r:\d) circle (2pt);
+       }
+
+       \pgfmathparse{2*pi};
+       \pgfmathsetmacro\twopi{\pgfmathresult}
+       \pgfmathparse{random(0,2*pi)};
+       \pgfmathsetmacro\theta{\pgfmathresult}
+
+       %% \pgfmathsetmacro\radius{\pgfmathresult}
+       %% \multido{\i=1+1}{\iCurrFrame}{%
+       %%   \Actors(\i)={\pgfmathresult pt};
+       %% }
+
+       %% \pgfmathparse{rnd}
+       \pgfmathsetmacro{\radius}{rnd}
+       \message{\radius}
+       %% \Actors(1)={\radius}
+       %% \message{\Actors(1)}
+       \pgfmathsetlength{\dist}{10*\radius}
+       \message{\the\dist}
+       %% Actors(\iCurrFrame)={\dist}
+
+
+
+\begin{animateinline}[poster=first]{10}%
+   \multiframe{\FrameCount}{iCurrFrame=1+1}{%
+     \message{\iCurrFrame}
+     %% \pgfmathsetmacro\x{\pgfmathparse{rnd}\pgfmathresult}
+     \begin{tikzpicture}
+       \useasboundingbox (-1,-1) rectangle (2,2);
+
+       \draw (0,0) circle (1);
+       %% \draw (0,0) -- (3cm,3cm);
+%% \message{\pgfmathresult}
+%%        %% \Pts(\iCurrFrame)={.7};
+%%        \Pts(1)={1};
+%%  \message{\Pts(1)}
+
+%%        \foreach \i in {1,..\iCurrFrame} {
+%% \message{\i}
+
+         %% \filldraw (\pts(\iCurrFrame).3,0) circle (.1);
+       %% }
+
+%% see http://tex.stackexchange.com/questions/83979/programming-with-pgf-arrays-how-to-create-an-array
+
+       %% \pgfplotsarrayforeach\Pts\as\d{
+       %%   \message{\the\d}
+       %%   \draw (\theta r:\d) circle (2pt);
+       %% }
+
+       \pgfplotsarrayforeach\Cts\as\c{
+         \message{\c}
+         %% \draw (\theta r:\d) circle (2pt);
+       }
+
+       %% \multido{\i=1+1}{\iCurrFrame}{%
+       %%   %% \setlength\point{\pgfmathresult pt}
+       %%   %% \setlength\point{\Actors(\i)}
+       %%   \message{\the\point}
+       %%   %% \draw (0,0) circle (2pt);
+       %% }
+
+     \end{tikzpicture}
+       %% \multido{\i=1+1}{\iCurrFrame}{%
+       %%   %% \setlength\point{\i pt}
+       %%   \i
+       %%   \the\point
+       %% }
+   }
+\end{animateinline}
+
+\end{document}

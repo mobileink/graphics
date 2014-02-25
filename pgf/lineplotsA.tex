@@ -1,0 +1,30 @@
+\documentclass{article} % say
+\usepackage{tikz}
+\pgfrealjobname{lineplotsA}
+
+\begin{document}
+
+\def\xmax{1}
+\def\ymax{1}
+\def\xmargin{.2}
+\def\ymargin{.2}
+
+\beginpgfgraphicnamed{galinsky-coefficients}
+\begin{tikzpicture}[domain=-\xmax:\xmax,
+scale=6
+  ]
+  \useasboundingbox[draw=black] (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+3*\xmargin,\ymax+\ymargin);
+  %% \draw[very thin,color=gray] (-0.1,-0.1) grid (100,100);
+  \draw (-\xmax/2,0) -- (\xmax/2,0) node[right] {}; %% x axis
+  \draw (0,-\ymax/2) -- (0,\ymax/2) node[above] {}; %% y axis
+  \draw[color=red] plot (\x,.12*\x) ;
+  \def\xpt{\xmax}
+  %% \filldraw[] (\xpt,.12*\xpt) circle (2pt) node (sex) {};
+  \draw[color=green!50!black] plot (\x,.25*\x) node[pos=.8] (ownpysc) {};
+  \draw[color=blue] plot (\x,.11*\x) node[pos=.7] (otherpsyc) {};
+
+  %% \draw (\xmax/2,\ymax/4) node {Sex freq} -- (sex) ;
+\end{tikzpicture}
+\endpgfgraphicnamed
+
+\end{document}

@@ -1,0 +1,82 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+\setmainfont[Mapping=tex-text]{Times New Roman}
+\setromanfont[Mapping=tex-text]{Times New Roman}
+\setsansfont[Mapping=tex-text]{Arial}
+
+%% \setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+
+\pgfrealjobname{lineplotsB}
+
+\usepackage{animate}
+
+%% \usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+%% \usepackage{pgffor}
+
+
+%% \usepackage{arrayjobx}
+%% \usepackage{multido}
+
+%% \usepackage{layouts}
+
+%%%% macros %%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\def\FrameCount{30}
+\def\FrameRate{30}
+
+\def\xmax{5}
+\def\ymax{5}
+
+%% Preamble: \pgfplotsset{width=7cm,compat=1.9}
+%% \beginpgfgraphicnamed{galinsky-coefficients}%
+\begin{animateinline}[poster=first,%
+    %% step,
+    controls,
+    begin={%
+      \begin{tikzpicture}[domain=-\xmax:\xmax,scale=1]%
+        \useasboundingbox[draw=black] (-\xmax,-\ymax)
+        rectangle (\xmax,\ymax);%
+    },
+    end={\end{tikzpicture}%
+    }%
+  ]%
+  {\FrameRate}%
+  %% \draw[->] (-\xmax,0) -- (\xmax,0) node[right] {$x$}; %% x axis
+  %% \draw[->] (0,-\ymax) -- (0,\ymax) node[above] {$y$}; %% y axis
+  %% \draw[color=blue] plot (\x,0.12*\x) node[above right] {$0.12$};
+  \multiframe{\FrameCount}{iCurrFrame=1+1}{%
+    \draw[->] (-\xmax,0) -- (\xmax,0) node[right] {$x$}; %% x axis
+    \draw[->] (0,-\ymax) -- (0,\ymax) node[above] {$y$}; %% y axis
+    \pgfmathsetmacro{\pct}{\iCurrFrame/\FrameCount};
+    \pgfmathsetmacro{\dist}{0.25-0.12};
+    \pgfmathsetmacro{\delta}{0.12+(\pct*\dist)};
+    \draw[color=blue] plot (\x,\delta*\x) node[above right] {$\iCurrFrame$};
+  }
+  \newframe
+  \draw[->] (-\xmax,0) -- (\xmax,0) node[right] {$x$}; %% x axis
+  \draw[->] (0,-\ymax) -- (0,\ymax) node[above] {$y$}; %% y axis
+  \draw[color=blue] plot (\x,0.25*\x) node[above right] {$0.25$};
+  \multiframe{\FrameCount}{iCurrFrame=1+1}{%
+    \draw[->] (-\xmax,0) -- (\xmax,0) node[right] {$x$}; %% x axis
+    \draw[->] (0,-\ymax) -- (0,\ymax) node[above] {$y$}; %% y axis
+    \pgfmathsetmacro{\pct}{\iCurrFrame/\FrameCount};
+    \pgfmathsetmacro{\dist}{0.11-0.25};
+    \pgfmathsetmacro{\delta}{0.25+(\pct*\dist)};
+    \draw[color=blue] plot (\x,\delta*\x) node[above right] {$\iCurrFrame$};
+  }
+\end{animateinline}
+%% \endpgfgraphicnamed
+
+\end{document}

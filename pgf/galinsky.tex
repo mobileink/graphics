@@ -1,0 +1,150 @@
+\documentclass{article} % say
+\usepackage[landscape]{geometry}
+\usepackage{tikz}
+\usepackage{adjustbox}
+
+\setlength{\textwidth}{11in}
+\setlength{\marginparwidth}{0in}
+%% \pgfrealjobname{lineplotsA}
+
+\begin{document}
+
+\def\xmax{1}
+\def\ymax{1}
+\def\xmargin{.4}
+\def\ymargin{.4}
+
+\def\scale{1.3}
+
+
+\adjustbox{center=8in}{
+
+%% \beginpgfgraphicnamed{galinsky-coefficients}
+
+\begin{tikzpicture}[x=2cm,y=2cm]
+%% [every node/.style={draw=black,anchor=base,font=\normalsize}]
+\matrix [draw=black,column sep=24pt]
+{
+%% \begin{tikzpicture}[domain=-\xmax:\xmax,
+%% scale=6
+%%   ]
+  \begin{scope}[scale=\scale]
+  \useasboundingbox[draw=black] (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  %% \draw[very thin,color=gray] (-0.1,-0.1) grid (100,100);
+  \draw (-\xmax/4,0) -- (\xmax/4,0); %% x axis
+  \draw (0,-\ymax/4) -- (0,\ymax/4); %% y axis
+  \draw[color=green!50!black] (-1,-0.12) -- (1,0.12) coordinate[pos=.2,anchor=base] (sexfreq) {};
+  \draw (0,-1) node[align=center] {Own Reported\\ \color{green!50!black}{Sexual Frequency}} ;
+  \draw[->,color=green!40!black] (-1,.5) node[above] {$b=0.12^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (sexfreq) ;
+  \end{scope}
+%% \end{tikzpicture}
+ &
+  \begin{scope}[scale=\scale]
+  \useasboundingbox (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  \end{scope}
+&
+  \begin{scope}[scale=\scale]
+  \useasboundingbox (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  \end{scope}
+\\
+};
+\end{tikzpicture}
+
+} %adjustbox
+
+\vspace{24pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\adjustbox{center=8in}{
+
+\begin{tikzpicture}[x=2cm,y=2cm]
+%% [every node/.style={draw=black,anchor=base,font=\normalsize}]
+\matrix [draw=black,column sep=24pt]
+{
+%% \begin{tikzpicture}[domain=-\xmax:\xmax,
+%% scale=6
+%%   ]
+  \begin{scope}[scale=\scale]
+  \useasboundingbox[draw=black] (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  %% \draw[very thin,color=gray] (-0.1,-0.1) grid (100,100);
+  \draw (-\xmax/4,0) -- (\xmax/4,0); %% x axis
+  \draw (0,-\ymax/4) -- (0,\ymax/4); %% y axis
+  \draw[color=green!50!black] (-1,-0.12) -- (1,0.12) coordinate[pos=.2,anchor=base] (sexfreq) {};
+  \draw (0,-1) node[align=center] {Own Reported\\ \color{green!50!black}{Sexual Frequency}} ;
+  \draw[->,color=green!40!black] (-1,.5) node[above] {$b=0.12^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (sexfreq) ;
+  \end{scope}
+%% \end{tikzpicture}
+ &
+  \begin{scope}[scale=\scale]
+  \useasboundingbox[draw=black] (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  \draw (-\xmax/4,0) -- (\xmax/4,0); %% x axis
+  \draw (0,-\ymax/4) -- (0,\ymax/4); %% y axis
+  \draw[color=green!50!black] (-1*.8,-0.12*.8) -- (.8*1,.8*0.12) coordinate[pos=.2,anchor=base] (sexfreq) {};
+  \draw[color=blue] (-1,-0.25) -- (1,0.25) coordinate[pos=.8] (selfpsyc) {};
+  \draw (0,-1) node[align=center] {Own Self-Reported\\ \color{blue}{Mental Health}} ;
+  \draw[->,color=green!40!black] (-1,.5) node[above] {$b=0.12^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (sexfreq) ;
+  \draw[->,color=blue] (0,.5) node[above] {$b=0.25^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (selfpsyc) ;
+  \end{scope}
+&
+  \begin{scope}[scale=\scale]
+  \useasboundingbox (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  \end{scope}
+\\
+};
+\end{tikzpicture}
+
+%% \endpgfgraphicnamed
+}%adjustbox
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\adjustbox{center=8in}{
+
+\begin{tikzpicture}[x=2cm,y=2cm]
+%% [every node/.style={draw=black,anchor=base,font=\normalsize}]
+\matrix [draw=black,column sep=24pt]
+{
+%% \begin{tikzpicture}[domain=-\xmax:\xmax,
+%% scale=6
+%%   ]
+  \begin{scope}[scale=\scale]
+  \useasboundingbox[draw=black] (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  %% \draw[very thin,color=gray] (-0.1,-0.1) grid (100,100);
+  \draw (-\xmax/4,0) -- (\xmax/4,0); %% x axis
+  \draw (0,-\ymax/4) -- (0,\ymax/4); %% y axis
+  \draw[color=green!50!black] (-1,-0.12) -- (1,0.12) coordinate[pos=.2,anchor=base] (sexfreq) {};
+  \draw (0,-1) node[align=center] {Own Reported\\ \color{green!50!black}{Sexual Frequency}} ;
+  \draw[->,color=green!40!black] (-1,.5) node[above] {$b=0.12^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (sexfreq) ;
+  \end{scope}
+%% \end{tikzpicture}
+ &
+  \begin{scope}[scale=\scale]
+  \useasboundingbox[draw=black] (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  \draw (-\xmax/4,0) -- (\xmax/4,0); %% x axis
+  \draw (0,-\ymax/4) -- (0,\ymax/4); %% y axis
+  \draw[color=green!50!black] (-1*.8,-0.12*.8) -- (.8*1,.8*0.12) coordinate[pos=.2,anchor=base] (sexfreq) {};
+  \draw[color=blue] (-1,-0.25) -- (1,0.25) coordinate[pos=.8] (selfpsyc) {};
+  \draw (0,-1) node[align=center] {Own Self-Reported\\ \color{blue}{Mental Health}} ;
+  \draw[->,color=green!40!black] (-1,.5) node[above] {$b=0.12^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (sexfreq) ;
+  \draw[->,color=blue] (0,.5) node[above] {$b=0.25^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (selfpsyc) ;
+  \end{scope}
+&
+  \begin{scope}[scale=\scale]
+  \useasboundingbox[draw=black] (-\xmax-\xmargin,-\ymax-\ymargin) rectangle (\xmax+\xmargin,\ymax+\ymargin);
+  \draw (-\xmax/4,0) -- (\xmax/4,0); %% x axis
+  \draw (0,-\ymax/4) -- (0,\ymax/4); %% y axis
+  \draw[color=green!80!black,line width=2pt] (-1*.6,-0.12*.6) -- (.6*1,.6*0.12) coordinate[pos=.2,anchor=north] (sexfreq) {};
+  \draw[color=blue] (-1*.8,-0.25*.8) -- (1*.8,0.25*.8) coordinate[pos=.8] (selfpsyc) {};
+  \draw[color=red!80!black] (-1,-0.11) -- (1,.11) coordinate[pos=.95] (otherpsyc) {};
+  \draw (0,-1) node[align=center] {Partner's Self-Reported\\ \color{red!80!black}{Mental Health}} ;
+  \draw[->,color=green!40!black] (-1,.5) node[above] {$b=0.12^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (sexfreq) ;
+  \draw[->,color=blue] (0,.5) node[above] {$b=0.25^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (selfpsyc) ;
+  \draw[->,color=red!80!black] (1,.5) node[above] {$b=0.11^{***}$} .. controls +(down:12pt) and +(up:12pt) .. (otherpsyc) ;
+  \end{scope}
+\\
+};
+\end{tikzpicture}
+
+%% \endpgfgraphicnamed
+}%adjustbox
+
+\end{document}

@@ -35,12 +35,34 @@
 
 %%%% macros %%%%
 
-%% Math.easeInQuad = function (t, b, c, d) {
-%% 	t /= d;
-%% 	return c*t*t + b;
-%% };
+%% from http://gizma.com/easing/
 
-\pgfmathdeclarefunction{easein}{4}{%
+%% args for all easing funcs:  t b c d
+%% t : ``time'' elapsed (clock time or frames) since start of anim
+%% b : start val
+%% c : change in val; b+c = end val
+%% d : duration (total ``time'' of change, same units as t)
+
+%% latex conventions:
+%% t : iFrame
+%% b : rFrom
+%% c : rDelta
+%% d : iFrames
+%% ex: \pgfmathsetmacro\y{easeInQuad(\iFrame,\rFrom,\rDelta,\iFrames)};
+
+%% THE ONLY ARG that changes is t.
+
+%% Common computations:
+%% 	t/d = percent of the way between b and b+c
+
+%% EASEINQUAD t b c d
+\pgfmathdeclarefunction{easeInQuad}{4}{%
+  \pgfmathparse{#3*(#1/#4)^2+#2} %% c(t/d)^2 + b
+}
+
+%% easeInCube t b c d
+%% \pgfmathsetmacro\y{easeIinCube(\iCurrFrame,1,\delta,\FrameCount)};
+\pgfmathdeclarefunction{easeInCube}{4}{%
   \pgfmathparse{#3*(#1/#4)^2+#2}%
 }
 
@@ -50,7 +72,7 @@
 %% 	return c*(t*t*t*t*t + 1) + b;
 %% };
 
-\pgfmathdeclarefunction{easeout5}{4}{%
+\pgfmathdeclarefunction{easeoutquint}{4}{%
   \pgfmathparse{#1/#4)-1}%
   \pgfmathsetmacro\t{\pgfmathresult}%
   \pgfmathparse{#3*(\t^5+3)+#2}%
@@ -141,32 +163,42 @@
 \def\x{+0}
 %% \def\y{+4}
 
-\def\FrameCount{60}
-\def\FrameRate{30}
+%% anim ``time''
+\def\iFrames{60}
+\def\iFrameRate{30}
 
-\begin{animateinline}[poster=first,controls]{\FrameRate}%
-  \multiframe{\FrameCount}{rCurrFrame=0+1}{%
-    \message{\rCurrFrame}
+%% anim location
+\def\rFromY{5}
+\def\rToY{0}
+\pgfmathsetmacro\rDeltaY{\rToY-\rFromY}
+
+\begin{animateinline}[poster=first,controls]{\iFrameRate}%
+  \multiframe{\iFrames}{iFrame=1+1}{%
+    \message{\iFrame}
 
     \begin{tikzpicture}
       \useasboundingbox{(-1,-1) rectangle (6,6)};
-      \pgfmathparse{\rCurrFrame/\FrameCount};
-      \pgfmathsetmacro\pct{\pgfmathresult};
-      \message{\pct};
 
-      %% \pgfmathparse{5*\pct};
-      %% \pgfmathsetmacro\y{\pgfmathresult};
-      %% \message{\y};
+%% latex conventions:
+%% t : iFrame
+%% b : rFrom
+%% c : rDelta
+%% d : iFrames
+%% ex: \pgfmathsetmacro\y{easeInQuad(\iFrame,\rFrom,\rDelta,\iFrames)};
 
-      \pgfmathsetmacro\y{easeoutbounce(\rCurrFrame,1,5,\FrameCount)};
+%% easeInQuad t b c d
+%% easeoutquint t b c d
+%% easeoutsin t b c d
+%% easeoutbounce t b c d
 
-      \filldraw (0,5-2) circle (8pt);
+      \draw (0,\rFromY) -- (1,\rFromY);
+      \draw (0,\rToY) -- (1,\rToY);
 
-      \draw (0,5) -- (5,5) ;
+      \pgfmathsetmacro\y{easeInQuad(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw (0,\y) circle (8pt);
 
-      \draw[->] (0,0) -- (2,2) ;
 
-      \draw (0,0) -- (5,0) ;
+      %% \draw[->] (0,0) -- (2,2) ;
 
     \end{tikzpicture}
   }

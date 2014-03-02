@@ -1,0 +1,430 @@
+\documentclass{article}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+%% \usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.9}
+
+\usepgflibrary{fpu}
+
+%% \usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+
+%% \usepackage{verbatim}
+%% \usepackage[active,tightpage]{preview}
+%% \setlength\PreviewBorder{0pt}%
+%% %%%>
+
+
+%% \begin{comment}
+%% :Title: Animated Ball
+
+%% \end{comment}
+
+\usepackage{animate}
+
+\usepackage{xifthen}
+
+%%%% macros %%%%
+
+%% see http://gizma.com/easing/
+%% see https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
+
+%% args for all easing funcs:  t b c d
+%% t : ``time'' elapsed (clock time or frames) since start of anim
+%% b : start val
+%% c : change in val; b+c = end val
+%% d : duration (total ``time'' of change, same units as t)
+
+%% latex conventions:
+%% t : iFrame
+%% b : rFrom
+%% c : rDelta
+%% d : iFrames
+%% ex: \pgfmathsetmacro\y{easeInQuadratic(\iFrame,\rFrom,\rDelta,\iFrames)};
+
+%% THE ONLY ARG that changes is t.
+
+%% Common computations:
+%% 	t/d = percent of the way between b and b+c
+
+%% easeInQuadratic t b c d
+\pgfmathdeclarefunction{easeInQuadratic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^2+#2} %% c(t/d)^2 + b
+}
+
+%% easeInCubic t b c d
+\pgfmathdeclarefunction{easeInCubic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^3+#2}%
+}
+
+%% easeInQuartic t b c d
+\pgfmathdeclarefunction{easeInQuartic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^4+#2}%
+}
+
+%% easeInQuintic t b c d
+\pgfmathdeclarefunction{easeInQuintic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^5+#2}%
+}
+
+
+\pgfmathsetmacro\halfpi{pi/2}
+
+%% easeInSin t b c d
+%% js: return -c * Math.cos(t/d * (Math.PI/2)) + c + b;
+\pgfmathdeclarefunction{easeInSin}{4}{%
+  \pgfmathparse{ -#3 * cos(#1/#4 * \halfpi r) + #3 + #2}% radians
+}
+
+%% easeInExp t b c d
+%% js: return (t==0) ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;
+%% \pgfkeys{/pgf/fpu,/pgf/fpu/output format=float}
+\pgfmathdeclarefunction{easeInExp}{4}{%
+  \pgfmathparse{pow(2, 10 * (#1/#4 -1))}
+  \pgfmathparse{ #3 * \pgfmathresult + #2}%
+}
+%% \pgfkeys{/pgf/fpu=false}
+
+
+%% easeInCirc t b c d
+%% js: -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;
+\pgfmathdeclarefunction{easeInCirc}{4}{%
+  \pgfmathparse{ -#3 * (sqrt(1 - (#1/#4)^2) - 1) + #2}
+}
+
+%% easeInElastic: function (t, b, c, d) {
+%% 		var s=1.70158;var p=0;var a=c;
+%% 		if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
+%% 		if (a < Math.abs(c)) { a=c; var s=p/4; }
+%% 		else var s = p/(2*Math.PI) * Math.asin (c/a);
+%% 		return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+%% }
+%% easeInElastic t b c d
+%% js: -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;
+
+\newdimen\a
+\newdimen\s
+\newdimen\p
+\newdimen\t
+\newdimen\pct
+\pgfmathsetlength{\s}{1.70158}
+\pgfmathsetlength{\p}{0}
+
+%% \pgfmathdeclarefunction{easeInElastic}{4}{%
+%% \pgfmathsetlength{\a}{#3}
+%% \pgfmathsetlength{\t}{#1}
+%% \pgfmathsetlength{\pct}{#1/#4}
+%% \ifdim\t=0pt
+%%     \message{b eq 0}
+%%     #2 %% b
+%% \fi
+%% \ifdim\pct=1pt
+%% 	\message{t/d eq 1}
+%%       \pgfmathparse{#2+#3}\pgfmathresult %% b+c
+%% \fi
+%% \ifdim\p<0pt %% latex lacks a not op!!
+%% 	\message{p lt 0}
+%%       \pgfmathsetlength{p}{\p*\d*.3}
+%% \else
+%%       \ifdim\p>0pt %% latex lacks a not op!!
+%% 		\message{p gt 0}
+%%               \pgfmathsetlength{p}{\p*\d*.3}
+%%       \else
+%%         	\message{p eq 0}
+%%       \fi
+%% \fi
+
+%% }
+
+%% easeInBack: function (t, b, c, d, s) {
+%% 		if (s == undefined) s = 1.70158;
+%% 		return c*(t/=d)*t*((s+1)*t - s) + b;
+\pgfmathdeclarefunction{easeInBack}{4}{%
+  \pgfmathsetmacro\s{1.70158}
+  \pgfmathsetmacro\dt{#1/#4}
+  \pgfmathparse{ #3 * (\dt)^2 * ((\s+1)*\dt - \s) + #2}
+}
+
+%% easeOutBack: function (t, b, c, d, s) {
+%% if (s == undefined) s = 1.70158;
+%% 	return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+\pgfmathdeclarefunction{ezoutback}{4}{%
+  \pgfmathsetmacro\s{1.70158}
+  \pgfmathsetmacro\dt{#1/#4-1}
+  \pgfmathparse{ #3*((\dt)^2*((\s+1)*\dt+\s)+1) + #2}
+}
+
+%% easeInOutBack: function (t, b, c, d, s) {
+%% 		if (s == undefined) s = 1.70158; 
+%% 		if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
+%% 		return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
+\newdimen\dtp
+\pgfmathdeclarefunction{easeinoutback}{4}{%
+  \pgfmathsetmacro{\s}{1.70158}
+  \pgfmathsetlength{\dtp}{#1/(#4/2)}
+%% \message{\the\dtp}
+  \pgfmathsetmacro{\dt}{#1/(#4/2)}
+  \pgfmathsetmacro{\dtt}{\dt-2)}
+%% \message{\dt}
+  \ifdim\dtp<1pt
+  	\message{dtp < 1}
+  	\pgfmathparse{#3/2*(\dt*\dt*(((\s*1.525))+1)*\dt - (\s*1.525)) + #2}
+  \else
+  	\message{dtp ge 1}
+  	\pgfmathparse{#3/2*((\dtt)*\dtt*(((\s*1.525))+1)*\dtt + (\s*1.525) + 2) + #2}
+  %% \pgfmathparse{#3*(#1/#4)^5+#2}%
+  \fi
+}
+
+%% Math.easeOutQuint = function (t, b, c, d) {
+%% 	t /= d;
+%% 	t--;
+%% 	return c*(t*t*t*t*t + 1) + b;
+%% };
+
+\pgfmathdeclarefunction{easeoutquint}{4}{%
+  \pgfmathparse{#1/#4)-1}%
+  \pgfmathsetmacro\t{\pgfmathresult}%
+  \pgfmathparse{#3*(\t^5+3)+#2}%
+}
+
+%% easeOutBounce: function (x, t, b, c, d) {
+%%   if ((t/=d) < (1/2.75)) {
+%%     return c*(7.5625*t*t) + b;
+%%   } else if (t < (2/2.75)) {
+%%     return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+%%   } else if (t < (2.5/2.75)) {
+%%     return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+%%   } else {
+%%     return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+%%   }
+%% }
+
+%% to handle floats in ifthenelse:
+\newdimen\tdimen
+\newdimen\testa
+\newdimen\tf
+
+\pgfmathdeclarefunction{easeoutbounce}{4}{%
+  \message{">bounce"}
+  \pgfmathparse{#1/#4}%
+  \pgfmathsetmacro\t{\pgfmathresult}%
+  \tdimen = \t pt
+  \pgfmathparse{1/2.75}
+  \pgfmathsetmacro\ta{\pgfmathresult}%
+  \testa = \ta pt
+  \message{\ta}
+  \pgfmathparse{\t<\ta}
+  \pgfmathsetmacro\tb{\pgfmathresult}%
+  \tf = \tb pt
+  \message{\tb}
+  %% \ifthenelse{\tb}{1}{1}
+}
+%%   \pgfmathparse{1/2.75}
+%% \message{\pgfmathresult}
+%% %% \message{\t < 1/2.75}
+
+%% {\pgfmathparse{#3*7.5625\t^2+#2}\pgfmathresult}
+%%     \ifthenelse{\pgfmathless{#1}{2/2.75}}
+%%       {\pgfmathparse{#1-(1.5/2.75)}
+%%       \pgfmathsetmacro\t\pgfmathresult
+%%       \pgfmathparse{#3*(7.5625*(\t^2 + .75)) + #2}\pgfmathresult}
+%%     {%else
+%%       \ifthenelse{\pgfmathless{#1}{2.5/2.75}}
+%%         {\pgfmathparse{#1-(2.25/2.75)}
+%%         \pgfmathsetmacro\t\pgfmathresult
+%%         \pgfmathparse{#3*(7.5625*(\t^2 + .9375)) + #2}\pgfmathresult}
+%%       {%else
+%%         \pgfmathparse{#1-(2.625/2.75)}
+%%         \pgfmathsetmacro\t\pgfmathresult
+%%         \pgfmathparse{#3*(7.5625*(\t^2 + .984375)) + #2}\pgfmathresul}
+%%     }
+%%   }
+%% }
+
+
+%% http://sol.gfxile.net/interpolation/
+%% for (i = 0; i < N; i++)
+%% {
+%%   v = i / N;		-  
+%%   v = 0.5 - cos(-v * Pi) * 0.5;
+%%   X = (A * v) + (B * (1 - v));
+%%% here A - beg pt B - end pt
+%% }
+\pgfmathdeclarefunction{easeOutSin}{4}{%
+  % #1 = time elapsed (secs or frame nbr)
+  % #2 = beginning val (B)
+  % #3 = change (end pt - beg pt)
+  % #4 = duration in secs or frames
+  \pgfmathparse{#1/#4)}%
+  \pgfmathsetmacro\v{\pgfmathresult}%
+  \pgfmathparse{0.5-cos(-\v*pi)*0.5}%
+  \pgfmathsetmacro\vv{\pgfmathresult}%
+  \pgfmathparse{#2*\vv+(#2+#4)*(1-\vv)}%
+}
+
+%% v = ((v * (N - 1)) + w) / N; 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\def\x{+0}
+%% \def\y{+4}
+
+%% easeInQuadratic t b c d
+%% easeInCubic t b c d
+%% easeInQuartic t b c d
+%% easeInQuintic t b c d
+%% easeInSin t b c d
+
+%% easeOutQuint t b c d
+%% easeOutSin t b c d
+%% easeOutBounce t b c d
+
+%% animate package api conventions:
+%% t : iFrame  (``time'' elapsed, in frames)
+%% b : rFrom   (beginning value to be eased)
+%% c : rDelta  (total change in value; b+c = end value
+%% d : iFrames (``duration'' of animation, in frames
+%% ex: \pgfmathsetmacro\y{easeInQuad(\iFrame,\rFrom,\rDelta,\iFrames)};
+
+\def\iFrameRate{30}	%%
+\def\iFrames{60}	%% d : duration
+\def\rFromY{14}	%% b : begin point
+\def\rToY{0}	%%   : end point
+\pgfmathsetmacro\rDeltaY{\rToY-\rFromY}  %% c :  end-begin, total change
+
+\def\r{8pt} %% circle radius
+
+\begin{animateinline}[poster=first%
+    %% ,loop
+    ,controls%
+  ]{\iFrameRate}%
+
+  %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
+
+  \begin{tikzpicture}
+    \useasboundingbox[draw] {(-1,-2) rectangle (10,16)};
+
+    %% \draw (0,\rFromY) -- (5,\rFromY);
+    %% \draw (0,\rToY) -- (5,\rToY);
+
+    %% \node[draw] (0,15) {Quadratic};
+    %% \pgfmathsetmacro\y{easeInQuadratic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw (0,\rFromY) circle (\r) ;
+    \draw (0,15) node[rotate=45] {In$^2$};
+
+    %% \pgfmathsetmacro\y{easeInCubic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw (1,\rFromY) circle (\r) ;
+    \draw (1,15) node[rotate=45] {In$^3$};
+
+    %% \pgfmathsetmacro\y{easeInQuartic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw (2,\rFromY) circle (\r) ;
+    \draw (2,15) node[rotate=45] {In$^4$};
+
+    %% \pgfmathsetmacro\y{easeInQuintic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw (3,\rFromY) circle (\r) ;
+    \draw (3,15) node[rotate=45] {In$^5$};
+
+    %% \pgfmathsetmacro\y{easeInSin(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw (4,\rFromY) circle (\r) ;
+    \draw (4,15) node[rotate=45] {InSin};
+
+    %% Exp broken - fails with ``Dimension too large''
+    %% \pgfmathsetmacro\y{easeInExp(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    %% \filldraw (5,\rFromY) circle (\r) ;
+    \draw (5,15) node[rotate=45] {InExp};
+
+    %% \pgfmathsetmacro\y{easeInCirc(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw (6,\rFromY) circle (\r) ;
+    \draw (6,15) node[rotate=45] {InCirc};
+
+    %% \pgfmathsetmacro\y{easeInElastic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    %% \message{\y}
+    %% %% \filldraw (6,\rFromY) circle (\r) ;
+    \draw (7,15) node[rotate=45] {InElastic};
+
+    %% \pgfmathsetmacro\y{easeInBack(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw[fill=green] (8,\rFromY) circle (\r) ;
+    \draw (8,15) node[rotate=45] {InBack};
+
+    %% \pgfmathsetmacro\y{ezoutback(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+    \filldraw[fill=red] (9,\rFromY) circle (\r) ;
+    \draw (9,15) node[rotate=45] {OutBack};
+
+  \end{tikzpicture}
+  \newframe
+
+  %%%% MULTIFRAMES START FROM 1 NOT 0
+  \multiframe{\iFrames}{iFrame=1+1}{%
+    \message{\iFrame}
+
+    \begin{tikzpicture}
+      \useasboundingbox[draw] {(-1,-2) rectangle (10,16)};
+
+      %% \draw (0,\rFromY) -- (5,\rFromY);
+      %% \draw (0,\rToY) -- (5,\rToY);
+
+      %% \node[draw] (0,15) {Quadratic};
+      \pgfmathsetmacro\y{easeInQuadratic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw (0,\y) circle (\r) ;
+      \draw (0,15) node[rotate=45] {In$^2$};
+
+      \pgfmathsetmacro\y{easeInCubic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw (1,\y) circle (\r) ;
+      \draw (1,15) node[rotate=45] {In$^3$};
+
+      \pgfmathsetmacro\y{easeInQuartic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw (2,\y) circle (\r) ;
+      \draw (2,15) node[rotate=45] {In$^4$};
+
+      \pgfmathsetmacro\y{easeInQuintic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw (3,\y) circle (\r) ;
+      \draw (3,15) node[rotate=45] {In$^5$};
+
+      \pgfmathsetmacro\y{easeInSin(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw (4,\y) circle (\r) ;
+      \draw (4,15) node[rotate=45] {InSin};
+
+      %% Exp broken - fails with ``Dimension too large''
+      %% \pgfmathsetmacro\y{easeInExp(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      %% \filldraw (5,\y) circle (\r) ;
+      \draw (5,15) node[rotate=45] {InExp};
+
+      \pgfmathsetmacro\y{easeInCirc(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw[fill=blue] (6,\y) circle (\r) ;
+      \draw (6,15) node[rotate=45] {InCirc};
+
+      %% \pgfmathsetmacro\y{easeInElastic(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      %% \message{\y}
+
+      \pgfmathsetmacro\y{easeInBack(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw (7,\y) circle (\r) ;
+      \draw (7,15) node[rotate=45] {InBack};
+
+      \pgfmathsetmacro\y{ezoutback(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw[fill=green] (8,\y) circle (\r) ;
+      \draw (8,15) node[rotate=45] {OutBack};
+
+      \pgfmathsetmacro\y{easeinoutback(\iFrame,\rFromY,\rDeltaY,\iFrames)};
+      \filldraw[fill=red] (9,\y) circle (\r) ;
+      \draw (9,15) node[rotate=45] {InOutBack};
+
+    \end{tikzpicture}
+  }
+\end{animateinline}
+
+\end{document}

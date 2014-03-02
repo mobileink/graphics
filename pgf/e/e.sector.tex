@@ -1,0 +1,126 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  e sector
+\begin{figure}[ht]
+\begin{tikzpicture}[scale=2,domain=-.3:3]
+
+ \draw[very thin,color=gray] (-1.2,-1.2) grid (3.9,3.9);
+  \draw[->] (-1.2,0) -- (4.2,0) node[right] {$x$};
+  \draw[->] (0,-1.2) -- (0,4.2) node[above] {$f(x)$};
+
+  % shade e sector
+  \begin{scope}[domain=1:\e]
+    \clip (0,0)--(1,1) -- plot (\x,{(1/\x)}) -- (\e,\inve) -- cycle;
+    \fill[opacity=.25] (0,0) -- (\e,0) -- (\e,1) -- (0,1);
+%    \foreach \step in {0,.05,...,4} {
+%      \pgfmathsetmacro\inc{\step}
+%      \draw (1+\inc,0) -- (1+\inc,1);
+%    }
+  \end{scope}
+
+ %% axis:  f(x) = x
+%  \draw[color=gray] plot (\x,\x) node[right] {$f(x) =x$};
+  \draw[color=gray] (0,0) -- (3.2,3.2) node[right] {$f(x) =x$};
+  \draw[black] (0,0) -- (1,1);
+
+%% f(x) = 1/x
+  \draw[domain=.3:3.2,color=green!50!black] plot (\x,{(1/\x)});
+  \draw[color=green!50!black] (.3,3.3) node[right] {$f(x) = \frac{1}{x}$};
+  % \draw[] (1,.3) node[anchor=west] {$\scriptsize 1=\ln e$};
+
+  %% (e,y) axis
+  \draw[red, dashed] (\e,-1.1) -- (\e, 3.9);
+  %% (x,e) axis
+  \draw[red, dashed] (0,\e) -- (3.9,\e);
+
+  %% (x,1) axis and label
+  \draw[red, dashed] (-0.1,1) -- (3.9,1);
+  \fill[black] (0,1) node[left] {$1$};
+
+  %% secant
+  \draw[dashed] (0,0) -- (\e, 1);
+
+  %% e diameter
+  \draw[black] (0,0) -- (\e, \inve);
+
+  %% circle
+  \draw (0,0) circle (1);
+
+  \draw[gray] (1/\sqrttwo,0) node[below] {$\frac{1}{\sqrt{2}}$}
+  -- (1/\sqrttwo,1/\sqrttwo);
+  \draw[gray] (0,1/\sqrttwo) -- (1/\sqrttwo,1/\sqrttwo);
+
+  \draw[gray] (\sqrttwo,0) node[below left] {$\scriptsize\sqrt{2}$}
+  -- (\sqrttwo,\sqrttwo);
+  \draw[gray] (0,\sqrttwo) -- (\sqrttwo,\sqrttwo);
+
+  %%%%
+  \draw[gray] (0,e/\sqrttwo) -- (e/\sqrttwo,e/\sqrttwo);
+ \draw[gray] (e/\sqrttwo,0) node[below] {$\frac{e}{\small\sqrt{2}}$}
+  -- (e/\sqrttwo,e/\sqrttwo);
+
+  %%%%
+  \draw[gray] (0,3/2) node[left] {$\frac{3}{2}$} -- (3/2,3/2);
+  \draw[gray] ({2-\sqrttwo+1},0) node[below=10pt] {$2-\frac{1}{e}$} -- ({2-\sqrttwo+1},{2-\sqrttwo+1});
+
+  %% dot origin
+  \fill[black] (0,0) node[below left] {$O$} circle (.7pt);
+
+  %% dot (0,1/e)
+ \fill[black] (0,\inve) circle (.7pt);
+
+  %% dot (0,1)
+  \fill[black] (0,1) node[above right] { $A$}  circle (.7pt);
+
+  %% dot (1,1)
+  \fill[black] (1,1) node[above right] { $B$}  circle (.7pt);
+
+ %% label (1,e)
+  \fill[black] (1,\e) node[anchor=south west] {$(1,e)$} circle (.7pt);
+
+ %% segment
+  \draw[black] (1,1) -- (e,1/e);
+
+ %% dot (e,1)
+  \fill[black] (\e,1) node[above right]  {$C$} circle (.7pt); 
+
+  %% dot (e,0)
+  \fill[black] (\e,0) node[below right]{$E$} node[below] {$e$} circle (.7pt);
+
+  %% dot (0, 1/e)
+  \fill[black] (0, \inve) circle (.7pt) node[left]  {$\frac{1}{e}$}
+  node[right] {$F$};
+
+  %% dot (e, e)
+  \fill[red] (\e, e) circle (.7pt) node[below right]  {$(e,e)$};
+
+
+  %% 1 - 1/e label
+  \draw (\e,0) -- (\e,1);
+%  \draw[<-] (\e, .7) -- (\e+.4,.7) node[anchor=west] {$1-\frac{1}{e}$};
+  % \fill[black] (1,\e) node[anchor=south west] {$(1,e)$} circle (.7pt);
+
+  %% dot (1,0)
+  \fill[black] (1,0) circle (.7pt);
+
+ \draw (\e,0) arc (0:90:\e);
+ \fill (canvas polar cs:angle=45,radius=2.71cm) circle (.7pt)
+ node[right] {$P$};
+ \fill (canvas polar cs:angle=30,radius=2.71cm)
+ node[right]{$\frac{\pi\,e}{4} = PE$};
+
+%  \fill (0,\e) circle (.7pt) node[anchor=east] {($0,e$)};
+
+  %% dot (0, 1/e)
+  \fill[black] (1, \inve) circle (.7pt);
+ %% dot (e, 1/e)
+  \fill[black] (\e, \inve) node[right] {$D$} circle (.7pt);
+  \draw[gray] (0,\inve) -- (\e,\inve);
+
+\end{tikzpicture}
+\caption{e sector}
+\end{figure}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

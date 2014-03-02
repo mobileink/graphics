@@ -1,0 +1,70 @@
+% Author: Gregg Reynolds
+\documentclass{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{rotating}
+
+\usepackage{tikz}
+\usetikzlibrary{%
+  calc,%
+  patterns,%
+  arrows,%
+  decorations,%
+  decorations.markings%
+}
+
+\usepackage{animate}
+
+\usepackage{verbatim}
+
+\begin{comment}
+  :Title: Logarithm
+  :Tags: Plots, GNUPLOT, External file
+
+\end{comment}
+
+\title{e}
+\author{Gregg Reynolds}
+%\date{}                                           % Activate to display a given date or no date
+
+\includeonly{%
+%% rectangle.unit
+%% ,hyperbola.equilateral
+%% ,hyperbola.rotation
+%% ,hyperbola.sweep
+,hyperbola.sweep.animated
+%% ,e.complete
+%% ,e.sector
+}
+
+%%%% macros
+
+\pgfmathdeclarefunction{easeInQuadratic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^2+#2} %% c(t/d)^2 + b
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\pagestyle{empty}
+
+%% \maketitle
+%\tableofcontents
+
+  \pgfmathsetmacro{\inve}{1/e}
+  \pgfmathsetmacro{\e}{e}
+  \pgfmathsetmacro{\esq}{e^2}
+  \pgfmathsetmacro{\esqinv}{1/(e^2)}
+
+  \pgfmathsetmacro{\sqrttwo}{sqrt(2)}
+
+\include{rectangle.unit}
+\include{hyperbola.equilateral}
+\include{hyperbola.rotation}
+\include{hyperbola.sweep}
+\include{hyperbola.sweep.animated}
+\include{e.complete}
+\include{e.sector}
+
+\noindent
+\end{document}

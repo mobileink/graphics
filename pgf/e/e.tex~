@@ -54,12 +54,21 @@
 %% constants
 %%  counters: use i prefix
 
-%% tikz bounding boxes
-%% e graphs
+%% tikz bounding box
 \pgfmathsetmacro\bbminx{-2}
 \pgfmathsetmacro\bbminy{-2}
-\pgfmathsetmacro\bbmaxx{e^2+1}
-\pgfmathsetmacro\bbmaxy{3}
+\pgfmathsetmacro\bbmaxx{12}
+\pgfmathsetmacro\bbmaxy{6}
+
+%% e graphs
+\pgfmathsetmacro\bbminx{-1}
+\pgfmathsetmacro\bbminy{-1}
+\pgfmathsetmacro\bbmaxx{e^2+.2}
+\pgfmathsetmacro\bbmaxy{2.2}
+
+\newcommand{\bbdraw}{draw}
+
+
 
 %% tkz bounding box
 \pgfmathsetmacro\tkzminx{-2}
@@ -67,22 +76,18 @@
 \pgfmathsetmacro\tkzmaxx{12}
 \pgfmathsetmacro\tkzmaxy{6}
 
-\newcommand{\bbdraw}{draw}
-
-\newcommand{\tikzscale}{1.3}
+\newcommand{\tikzscale}{2}
 
 \newcounter{iFrameRate}
-\setcounter{iFrameRate}{30}
+\pgfmathsetcounter{iFrameRate}{30}
 
 \newcounter{iFrames}
-\setcounter{iFrames}{30}
+\pgfmathsetcounter{iFrames}{30}
 
 \def\rFromXa{1}	%% b : begin point
 \def\rToXa{e}	%%   : end point
 \def\rFromXb{e}	%% b : begin point
-\def\rFromXb{e}	%% b : begin point
-\pgfmathparse{e^2}
-\pgfmathsetmacro\rToXb{\pgfmathresult} %%   : end point
+\pgfmathsetmacro\rToXb{e^2} %%   : end point
 \def\rFromY{14}	%% b : begin point
 \def\rToY{0}	%%   : end point
 \pgfmathsetmacro\rDeltaXa{\rToXa-\rFromXa}  %% c :  end-begin, total change
@@ -95,6 +100,13 @@
 
 %% \maketitle
 %\tableofcontents
+
+\pgfmathsetmacro{\inve}{1/e}
+\pgfmathsetmacro{\e}{e}
+\pgfmathsetmacro{\esq}{e^2}
+\pgfmathsetmacro{\esqinv}{1/(e^2)}
+
+\pgfmathsetmacro{\sqrttwo}{sqrt(2)}
 
 \include{rectangle.unit}
 \include{hyperbola.equilateral}

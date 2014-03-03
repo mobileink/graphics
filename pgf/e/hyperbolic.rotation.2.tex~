@@ -1,11 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  SWEEP e
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{animateinline}[poster=first,loop]{\value{iFrameRate}}%
+\begin{animateinline}[
+    poster=first%
     %% ,draft
-
-    %% ,controls%
-  %% ]
+    %% ,loop
+    ,controls%
+  ]{\value{iFrameRate}}%
   %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
   %% \begin{tikzpicture}
   %%   \useasboundingbox[draw] {(-1,-2) rectangle (10,16)};
@@ -18,11 +19,11 @@
     \message{\iFrame}
 
     \begin{tikzpicture}[%
-        scale=\tikzscale
+        scale=\tikzscale%
         ,domain=-.3:7.4%
       ]
       %% \if usebb
-      \useasboundingbox[\bbdraw]{(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+      \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
       %% \fi
 
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,24 +46,24 @@
       %% \fill[black] (0,\inve) circle (.4pt);
 
       %% log scale
-      \fill[black] (-1,0) node[below] {$logarithmic:$};
+      \fill[black] (0,0) node[below,right] {$logarithmic:$};
       \fill[black] (1,0) node[below] {$0$};
       \fill[black] (e,0) node[below] {$1$};
       \draw[black] (e,0) -- (e,2.2);
       \fill[black] (e^2,0) node[below] {$2$};
       \draw[black] (e^2,0) -- (e^2,2.2);
 
-      \fill[gray] (-1,-.5) node {$arithmetic:$};
-      \fill[gray] (0,-.5) node {$0$};
-      \fill[gray] (1,-.5) node {$1$};
-      \fill[gray] (2,-.5) node {$2$};
-      \fill[gray] (e,-.5) node {$e^1$};
-      \fill[gray] (3,-.5) node {$3$};
-      \fill[gray] (4,-.5) node {$4$};
-      \fill[gray] (5,-.5) node {$5$};
-      \fill[gray] (6,-.5) node {$6$};
-      \fill[gray] (7,-.5) node {$7$};
-      \fill[gray] (e^2,-.5) node {$e^2$};
+      \fill[gray] (-.6,-.4) node {$arithmetic:$};
+      \fill[gray] (0,-.4) node {$0$};
+      \fill[gray] (1,-.4) node {$1$};
+      \fill[gray] (2,-.4) node {$2$};
+      \fill[gray] (e,-.4) node {$e^1$};
+      \fill[gray] (3,-.4) node {$3$};
+      \fill[gray] (4,-.4) node {$4$};
+      \fill[gray] (5,-.4) node {$5$};
+      \fill[gray] (6,-.4) node {$6$};
+      \fill[gray] (7,-.4) node {$7$};
+      \fill[gray] (e^2,-.4) node {$e^2$};
 
 
       %%%%%%%%%%%%%%%%
@@ -88,13 +89,13 @@
         \begin{scope}
           \pgfmathsetmacro\samps{1-\iFrame/\value{iFrames}}
           \clip[samples=100*\samps,domain=\xb:\rToXb*.9]
-          (\xb,0) -- plot (\x,{(1/\x)}) -- (e^2,1/e^2) -- (e^2,0) -- cycle;
+          (\xb,0) -- plot (\x,{(1/\x)}) -- (e^2,1/\e^2) -- (e^2,0) -- cycle;
           %% (\xb,0) -- (\xb,{(1/\xb)}) -- (\rToXb,1/\rToXb) -- (\rToXb,0) -- cycle;
           \draw[opacity=.5,pattern=crosshatch dots light steel blue] (0,0) rectangle (e^2,1);
         \end{scope}
         %% f(x) = 1/x
-        \draw[>->,samples=100,domain=.4:e^2+.2,color=green!50!black] plot (\x,{(1/\x)});
-        \draw[color=green!50!black] (.5,1/.5) node[above right] {$f(x) = \frac{1}{x}$};
+        \draw[>->,samples=100,domain=.4:e^2+.2,color=green!50!black] plot (\x,{(1/\x)}) coordinate (esq);
+        \draw[color=green!50!black] (esq) node[above left] {$f(x) = \frac{1}{x}$};
         %% border rotated region
         \draw[green!50!black,very thick,samples=100,domain=\xa:\xb]
         (\xa,0) -- plot (\x,{(1/\x)}) -- (\xb,0) -- cycle ;

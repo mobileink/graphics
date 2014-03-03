@@ -1,0 +1,82 @@
+% Author: Gregg Reynolds
+\documentclass{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{rotating}
+
+\usepackage{tkz-euclide}
+\usetkzobj{all}
+
+%% \usepackage{tikz}
+%% \usetikzlibrary{%
+%%   calc,%
+%%   patterns,%
+%%   arrows,%
+%%   decorations,%
+%%   decorations.markings%
+%% }
+
+\usepackage{animate}
+
+\usepackage{verbatim}
+
+\begin{comment}
+  :Title: Logarithm
+  :Tags: Plots, GNUPLOT, External file
+
+\end{comment}
+
+\title{e}
+\author{Gregg Reynolds}
+%\date{}                                           % Activate to display a given date or no date
+
+%%%% macros
+
+\pgfmathdeclarefunction{easeInQuadratic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^2+#2} %% c(t/d)^2 + b
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\pagestyle{empty}
+
+\pgfmathsetmacro{\sqrttwo}{sqrt(2)}
+
+%% tikz bounding box
+\pgfmathsetmacro\bbminx{-2}
+\pgfmathsetmacro\bbminy{-2}
+\pgfmathsetmacro\bbmaxx{12}
+\pgfmathsetmacro\bbmaxy{6}
+\newcommand{\bbdraw}{draw}
+
+%% tkz bounding box
+\pgfmathsetmacro\tkzminx{-2}
+\pgfmathsetmacro\tkzminy{-2}
+\pgfmathsetmacro\tkzmaxx{12}
+\pgfmathsetmacro\tkzmaxy{6}
+
+%% control tikz pictures
+\newcommand{\tikzscale}{scale=.5}
+
+\newcounter{iFrameRate}
+\setcounter{iFrameRate}{20}	%% d : duration
+\newcounter{iFrames}
+\setcounter{iFrames}{10}	%% d : duration
+\def\rFromX{1}	%% b : begin point
+\def\rToX{e}	%%   : end point
+\def\rFromY{14}	%% b : begin point
+\def\rToY{0}	%%   : end point
+\pgfmathsetmacro\rDeltaX{\rToX-\rFromX}  %% c :  end-begin, total change
+\pgfmathsetmacro\rDeltaY{\rToY-\rFromY}  %% c :  end-begin, total change
+
+\def\r{8pt} %% circle radius
+
+\begin{figure}[ht]
+  \centering
+  \caption{Homothetic Transform}
+  \hspace*{-3cm}
+  \include{homothetic.transform}
+\end{figure}
+
+\end{document}

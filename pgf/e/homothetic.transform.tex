@@ -1,0 +1,60 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  HOMOTHETIC TRANSFORM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{animateinline}[
+    poster=first%
+    %% ,draft
+    %% ,loop
+    ,controls%
+  ]{\value{iFrameRate}}%
+
+  %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
+  %% \begin{tikzpicture}
+  %%   \useasboundingbox[draw] {(-1,-2) rectangle (10,16)};
+  %% \end{tikzpicture}
+  %% \newframe
+  %%%% MULTIFRAMES START FROM 1 NOT 0
+  \multiframe{\value{iFrames}}{iFrame=0+1}{%
+    \message{\iFrame}
+
+    \begin{tikzpicture}[%
+        scale=.6
+      ]%
+      %% \if usebb
+      	\useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+      %% \fi
+
+      \tkzInit[ymin=\tkzminy,ymax=\tkzmaxy,xmin=\tkzminx,xmax=\tkzmaxx]
+      \tkzGrid
+      \tkzAxeXY
+      \tkzClip
+
+      \tkzDefPoint(0,0){O}
+      \tkzDefPoint(1,0){I}
+      \tkzDefPointBy[homothety=center O ratio  10 ](I)  \tkzGetPoint{A}
+      \tkzDefMidPoint(O,A)              \tkzGetPoint{M}
+      \tkzDefPointWith[orthogonal](I,M) \tkzGetPoint{H}
+      \tkzInterLC(I,H)(M,A)             \tkzGetSecondPoint{B}
+
+      \tkzDrawSegment(O,A)
+      \tkzDrawSegment[style=dashed](I,H)
+      \tkzDrawPoints(O,I,A,B,M)
+      \tkzDrawArc(M,A)(O)
+      \tkzMarkRightAngle(A,I,B)
+
+      \tkzLabelSegment[right=4pt](I,B){$\sqrt{a}$}
+      \tkzLabelSegment[below](O,I){$1$}
+      \tkzLabelSegment[below](I,M){$a/2$}
+      \tkzLabelSegment[below](M,A){$a/2$}
+      \tkzLabelPoints(I,M,B,A)
+      \tkzLabelPoint[below left](O){$O$}
+
+
+    \end{tikzpicture}
+  }% multiframe
+\end{animateinline}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

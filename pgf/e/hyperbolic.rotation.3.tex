@@ -1,0 +1,189 @@
+%% tikzies - tikz easing library
+\def\iFrameRate{20}	%%
+\def\iFrames{30}	%% d : duration
+\def\rFromXa{1}	%% b : begin point
+\def\rToXa{e}	%%   : end point
+\def\rFromXb{e}	%% b : begin point
+\pgfmathsetmacro\rToXb{e^2} %%   : end point
+\def\rFromY{14}	%% b : begin point
+\def\rToY{0}	%%   : end point
+\pgfmathsetmacro\rDeltaXa{\rToXa-\rFromXa}  %% c :  end-begin, total change
+\pgfmathsetmacro\rDeltaXb{\rToXb-\rFromXb}  %% c :  end-begin, total change
+\pgfmathsetmacro\rDeltaY{\rToY-\rFromY}  %% c :  end-begin, total change
+
+\def\r{8pt} %% circle radius
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  SWEEP e
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[ht]
+  \centering
+  \caption{Hyperbolic Rotation 3}
+  \hspace*{-3cm}
+  \begin{animateinline}[poster=first%
+      %% ,loop
+      ,controls%
+    ]{\iFrameRate}%
+    %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
+    %% \begin{tikzpicture}
+    %%   \useasboundingbox[draw] {(-1,-2) rectangle (10,16)};
+    %% \end{tikzpicture}
+    %% \newframe
+    %%%% MULTIFRAMES START FROM 1 NOT 0
+    \multiframe{\iFrames}{iFrame=1+1}{%
+      \message{\iFrame}
+
+      \begin{tikzpicture}[scale=2,domain=-.3:7.4]
+        \useasboundingbox {(-1,-1) rectangle (e^2+.2,2.2)};
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        %% grid
+        \draw[very thin,gray!50] (0,0) grid (e^2+.2,2.2);
+        %% axes
+        \draw[<->,black] (-.2,0) -- (e^2+.2,0);
+        \draw[<->,black] (0,-.2) -- (0,2.2);
+
+        %% ref segments
+        \draw[gray] (0,.5) node[left] {} -- (.1,.5);
+        %% dot (0,0.5)
+        %% \fill[gray] (0,.5) node[left] {$0.5$} circle (.4pt);
+
+        %% dot origin
+        %% \fill[black] (0,0) node[below left] {$0$} circle (.4pt);
+
+        %% dot (0,1/e)
+        %% \fill[black] (0,\inve) circle (.4pt);
+
+        %% log scale
+        \fill[black] (0,0) node[below,right] {$logarithmic:$};
+        \fill[black] (1,0) node[below] {$0$};
+        \fill[black] (e,0) node[below] {$1$};
+        \draw[black] (e,0) -- (e,2.2);
+        \fill[black] (e^2,0) node[below] {$2$};
+        \draw[black] (e^2,0) -- (e^2,2.2);
+
+        \fill[gray] (-.6,-.4) node {$arithmetic:$};
+        \fill[gray] (0,-.4) node {$0$};
+        \fill[gray] (1,-.4) node {$1$};
+        \fill[gray] (2,-.4) node {$2$};
+        \fill[gray] (e,-.4) node {$e^1$};
+        \fill[gray] (3,-.4) node {$3$};
+        \fill[gray] (4,-.4) node {$4$};
+        \fill[gray] (5,-.4) node {$5$};
+        \fill[gray] (6,-.4) node {$6$};
+        \fill[gray] (7,-.4) node {$7$};
+        \fill[gray] (e^2,-.4) node {$e^2$};
+
+
+        %%%%%%%%%%%%%%%%
+        %% % 1.  hyperbolic rectilinear rotation
+        %% \draw[-latex,red] (1,1) -- (e,1);
+        %% \draw[-latex,red] (e,1) -- (e,1/e);
+
+        %% hyperbolic rotation animation
+        \begin{scope}[even odd rule]
+          \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\iFrames)};
+          \pgfmathsetmacro\xb{easeInQuadratic(\iFrame,\rFromXb,\rDeltaXb,\iFrames)};
+          %% shade unit square
+          \fill[gray,opacity=.2] (0,0) rectangle (1,1);
+          %% shade unit rectangle
+          \draw[pattern=horizontal lines light blue] (0,0) rectangle (\xb,1/\xb);
+          \draw (0,1/\xb) node[left] {$e^n$} -- (\xb,1/\xb);
+          %% shade rotated region - source
+          \begin{scope}
+            \clip[samples=100,domain=\xa:\xb] (\xa,0) -- plot (\x,{(1/\x)}) -- (\xb,0) -- cycle ;
+            \fill[green,opacity=.25] (0,0) rectangle (e^2,1);
+          \end{scope}
+          %% shade rotated region - destination
+          \begin{scope}
+            \pgfmathsetmacro\samps{1-\iFrame/\iFrames}
+            \clip[samples=100*\samps,domain=\xb:\rToXb*.9]
+            	(\xb,0) -- plot (\x,{(1/\x)}) -- (e^2,1/\e^2) -- (e^2,0) -- cycle;
+            	%% (\xb,0) -- (\xb,{(1/\xb)}) -- (\rToXb,1/\rToXb) -- (\rToXb,0) -- cycle;
+            \draw[opacity=.5,pattern=crosshatch dots light steel blue] (0,0) rectangle (e^2,1);
+          \end{scope}
+          %% f(x) = 1/x
+          \draw[>->,samples=100,domain=.4:e^2+.2,color=green!50!black] plot (\x,{(1/\x)}) coordinate (esq);
+          \draw[color=green!50!black] (esq) node[above left] {$f(x) = \frac{1}{x}$};
+          %% border rotated region
+          \draw[green!50!black,very thick,samples=100,domain=\xa:\xb]
+          	(\xa,0) -- plot (\x,{(1/\x)}) -- (\xb,0) -- cycle ;
+          %% area labels
+          \draw (3.5,.7) node[above] (area) {area = $1$};
+          %% label of rotated region - source
+          \draw[->] (area)
+          	.. controls +(down:12pt) and +(up:12pt) .. ({\xa+(\xb-\xa)*.2},{(1/\xa)*.5});
+          %% label of unit square
+          \draw[->] (area) .. controls +(left:36pt) and +(up:24pt) .. (.5,.5);
+          %% label of unit rectangle
+          \draw[->] (area) .. controls +(left:36pt) and +(up:24pt) .. (\xa/2,{(1/\xa)*.2});
+          %% label of rotated region - destination
+          \draw[->,opacity=(1-\iFrame/\iFrames)] (area)
+          	.. controls +(right:12pt) and +(up:12pt) .. (4.5,.1);
+        \end{scope}
+
+
+        %% hyperbolic sweep animation
+        %% \draw[-latex,thick,red,domain=1:e] plot (\x,{(1/\x)});
+        %% \pgfmathsetmacro\x{easeInQuadratic(\iFrame,\rFromX,\rDeltaX,\iFrames)};
+        %% \draw[thick,red,domain=1:\x] plot (\x,{(1/\x)}) coordinate (endpt) {};
+        %% \draw (0,{1/\x}) -- (endpt);
+
+        %% unit square
+        %% \begin{scope}[domain=1:\e, even odd rule]
+        %%   \draw[ultra thick,black,domain=1:e] (0,0) -- (0,{1/\x}) -- (endpt) -- (\x,0) -- cycle;
+        %%   \clip[domain=1:\x] (0,0) -- (0,{1/\x}) -- (endpt) -- (\x,0) -- cycle;
+        %%   \draw[pattern=horizontal lines light blue] (0,0) rectangle (e,1);
+        %% \end{scope}
+
+        %% e area shading
+        %% \begin{scope}[domain=1:\e, even odd rule]
+        %%   \clip[domain=1:\x] (1,0) --  plot (\x,{(1/\x)}) -- (\x,0) -- cycle;
+        %%   \draw[pattern=vertical lines,pattern color=blue] (0,0) rectangle (e,1);
+        %% \end{scope}
+
+        %% hyperbolic axis sweep shading
+        %% \begin{scope}[domain=1:\e, even odd rule]
+        %%   \clip[domain=1:\x] (0,0) --  plot (\x,{(1/\x)}) -- cycle;
+        %%   \fill[color=green!50!blue,opacity=.15] (0,0) rectangle (e,1);
+        %% \end{scope}
+
+        %% \draw[semithick] (0,0) -- (endpt);
+
+        %%%%%%%%%%%%%%%%
+
+        %% sweeping vector
+        %%  \draw[-latex,black,postaction={decorate,
+        %%                     decoration={markings,
+        %%                       mark=at position 0.74 with {\arrow{latex}},
+        %%                       mark=at position 0.82 with {\arrow{latex}};}
+        %%                    }] (0,0) -- (1.8, 1);
+        %% \draw [->] (1.8,.975) -- (1.85,.975);
+
+        %%%%%%%%%%%%%%%%
+
+
+        %% dot (1,1)
+        %  \fill[red] (1,1) node[above right] { $A'$}  circle (.5pt);
+
+        %% label (1,e)
+        %  \fill[black] (1,\e) node[anchor=south west] {$(1,e)$} circle (.7pt);
+
+        %% %% dot (e,1)
+        %% \fill[red] (\e,1) node[above right,color=red]  {$B'$} circle (.4pt); 
+
+        %% %% dot (e,1/e)
+        %% \fill[red] (\e, \inve) node[right] {$C'$} circle (.4pt);
+
+      \end{tikzpicture}
+    }% multiframe
+  \end{animateinline}
+
+\end{figure}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

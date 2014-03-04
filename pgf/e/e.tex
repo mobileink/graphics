@@ -1,4 +1,3 @@
-% Author: Gregg Reynolds
 \documentclass{article}
 
 \usepackage[latin1]{inputenc}
@@ -36,9 +35,13 @@
   %% ,hyperbola.equilateral
   %% ,hyperbola.rotation
   %% ,homothetic.transform
-  %% hyperbolic.rotation.1
-  hyperbolic.rotation.2
+  %% ,hyperbolic.rotation.1
+  %% ,hyperbolic.rotation.2
   %% ,hyperbolic.rotation.3
+  %% ,hyperbolic.rotation.4
+  %% ,hyperbolic.rotation.strain.1
+  ,hyperbolic.rotation.strain.2
+  %% ,hyperbolic.rotation.strain.3
   %% ,hyperbola.sweep
   %% ,hyperbola.sweep.animated
   %% ,e.complete
@@ -72,22 +75,25 @@
 \newcommand{\tikzscale}{1.3}
 
 \newcounter{iFrameRate}
-\setcounter{iFrameRate}{30}
+\setcounter{iFrameRate}{15}
 
 \newcounter{iFrames}
-\setcounter{iFrames}{30}
+\setcounter{iFrames}{15}
 
 \def\rFromXa{1}	%% b : begin point
 \def\rToXa{e}	%%   : end point
 \def\rFromXb{e}	%% b : begin point
-\def\rFromXb{e}	%% b : begin point
 \pgfmathparse{e^2}
 \pgfmathsetmacro\rToXb{\pgfmathresult} %%   : end point
-\def\rFromY{14}	%% b : begin point
-\def\rToY{0}	%%   : end point
 \pgfmathsetmacro\rDeltaXa{\rToXa-\rFromXa}  %% c :  end-begin, total change
 \pgfmathsetmacro\rDeltaXb{\rToXb-\rFromXb}  %% c :  end-begin, total change
-\pgfmathsetmacro\rDeltaY{\rToY-\rFromY}  %% c :  end-begin, total change
+
+\def\rFromYa{1}	%% b : begin point
+\def\rToYa{1/e}	%%   : end point
+\def\rFromYb{1/e}	%% b : begin point
+\def\rToYb{1/e^2}	%%   : end point
+\pgfmathsetmacro\rDeltaYa{\rToYa-\rFromYa}  %% c :  end-begin, total change
+\pgfmathsetmacro\rDeltaYb{\rToYb-\rFromYb}  %% c :  end-begin, total change
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -103,6 +109,10 @@
 \include{hyperbolic.rotation.1}
 \include{hyperbolic.rotation.2}
 \include{hyperbolic.rotation.3}
+\include{hyperbolic.rotation.4}
+\include{hyperbolic.rotation.strain.1}
+\include{hyperbolic.rotation.strain.2}
+\include{hyperbolic.rotation.strain.3}
 \include{hyperbola.sweep}
 \include{hyperbola.sweep.animated}
 \include{e.complete}

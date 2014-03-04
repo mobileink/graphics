@@ -1,13 +1,14 @@
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  Hyperbolic Rotation 1
+%% Hyperbolic Rotation 1
+%% simple circular and hyperbolic rotation - sweep of radius
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfmathparse{\value{iFrameRate}}
 \begin{animateinline}[%
     poster=first%
     %% ,draft
     %% ,loop
     ,controls%
-  ]{\value{iFrameRate}}%
+  ]{\pgfmathresult}%
 
   %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
 
@@ -18,134 +19,103 @@
   %% \newframe
 
   %%%% MULTIFRAMES START FROM 1 NOT 0
-  \multiframe{\value{iFrames}}{iFrame=1+1}{%
-    \message{\iFrame}
+  \multiframe{\pgfmathresult}{iFrame=1+1}{%
+    %% \message{\iFrame}
+    %% \message{\arabic{iFrames}}
+    %% \message{\rFromXa}
+    %% \message{\rToXa}
+    %% \message{\rFromXb}
+    %% \message{\rToXb}
+
+    \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
+    \pgfmathsetmacro\xb{easeInQuadratic(\iFrame,\rFromXb,\rDeltaXb,\value{iFrames})};
+    %% \pgfmathsetmacro\newx{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
 
     \begin{tikzpicture}[%
         scale=\tikzscale
         %% ,domain=-.3:1.3
       ]
       %% \if usebb
-      	%% \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+      \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
       %% \fi
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+      \draw[very thin,color=gray] (-1,0) grid (3.2,1.2);
 
-  %%%%%%%%%%%%%%%%
-  %% % 1.  hyperbolic rectilinear rotation
-  %% \draw[-latex,red] (1,1) -- (e,1);
-  %% \draw[-latex,red] (e,1) -- (e,1/e);
+      %% axis of symmetry:  f(x) = x
+      \draw[<->,color=gray] (-1,-1) -- (1.2,1.2) node[right] {$f(x) =x$};
+      \draw[black] (0,0) -- (1,1);
 
-  %% f(x) = 1/x
-  \draw[<->,domain=.7:3.2,color=green!50!black] plot (\x,{(1/\x)});
-  \draw[color=green!50!black] (.8,1.2) node[left] {$f(x) = \frac{1}{x}$};
+      %% e diameter
+      \draw[black] (0,0) -- (e,1/e);
 
-  %% sweep animation
-  %% \draw[-latex,thick,red,domain=1:e] plot (\x,{(1/\x)});
-  \pgfmathsetmacro\x{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
-  \draw[thick,red,domain=1:\x] plot (\x,{(1/\x)}) coordinate (endpt) {};
-  %% \draw (0,{1/\x}) -- (endpt);
+      %% %% coordinate rectangle
+      %% \begin{scope}[domain=1:e, even odd rule]
+      %%   \draw[ultra thick,black,domain=1:e] (0,0) -- (0,{1/\xa}) -- (\xa,{1/\xa}) -- (\xa,0) -- cycle;
+      %%   \clip[domain=1:e] (0,0) -- (0,{1/\xa}) -- (\xa,{1/\xa}) -- (\xa,0) -- cycle;
+      %%   \draw[pattern=horizontal lines light blue] (0,0) rectangle (e,1);
+      %% \end{scope}
 
-  %% unit square
-  \begin{scope}[domain=1:e, even odd rule]
-    \draw[ultra thick,black,domain=1:e] (0,0) -- (0,{1/\x}) -- (endpt) -- (\x,0) -- cycle;
-    \clip[domain=1:\x] (0,0) -- (0,{1/\x}) -- (endpt) -- (\x,0) -- cycle;
-    \draw[pattern=horizontal lines light blue] (0,0) rectangle (e,1);
-  \end{scope}
+      %%  unit circle
+      \begin{scope}
+        %% \clip (0,0) rectangle (1.1,1.1);
+        \draw (0,0) circle (1);
+      \end{scope}
 
-  %% e area
-  \begin{scope}[domain=1:e, even odd rule]
-    \clip[domain=1:\x] (1,0) --  plot (\x,{(1/\x)}) -- (\x,0) -- cycle;
-    \draw[pattern=vertical lines,pattern color=blue] (0,0) rectangle (e,1);
-  \end{scope}
+      %% ref segments
+      \draw[gray] (e,0) -- (e,1/e);
 
-  %% hyperbolic axis sweep
-  \begin{scope}[domain=1:e, even odd rule]
-    \clip[domain=1:\x] (0,0) --  plot (\x,{(1/\x)}) -- cycle;
-    \fill[color=green!50!blue,opacity=.15] (0,0) rectangle (e,1);
-  \end{scope}
+      \draw[gray] (0,1/e) node[left] {$e^{-1}$} -- (e,1/e);
 
-  \draw[very thick] (1,0) -- (1,1);
-  \draw[semithick] (0,0) -- (endpt);
+      \draw[gray] (0,.5) node[left] {$0.5$} -- (e,.5);
 
- %%%%%%%%%%%%%%%%
+      %% dot origin
+      \fill[black] (0,0) node[below left] {$O$} circle (.4pt);
 
- %% sweeping vector
-%%  \draw[-latex,black,postaction={decorate,
-%%                     decoration={markings,
-%%                       mark=at position 0.74 with {\arrow{latex}},
-%%                       mark=at position 0.82 with {\arrow{latex}};}
-%%                    }] (0,0) -- (1.8, 1);
-%% \draw [->] (1.8,.975) -- (1.85,.975);
+      %% dot (0,1/e)
+      \fill[black] (0,1/e) circle (.4pt);
 
-%%%%%%%%%%%%%%%%
+      %% dot (0,1)
+      \fill[black] (0,1) node[above left] {$1$} {} circle (.4pt);
+      %% dot (1,0)
+      \fill[black] (1,0) node[below right] {$1$} circle (.4pt);
 
- \draw[very thin,color=gray] (-1,0) grid (3.2,1.2);
+      %% dot (e,0)
+      \fill[black] (e,0) node[below] {$e$} circle (.4pt) -- (e,1.2);
 
-  %% some ref lines
-  %% \draw[gray] (1/{sqrt(2)},0) node[color=black, below] {$\frac{1}{\sqrt{2}}$}
-  %% -- (1/{sqrt(2)},1/{sqrt(2)});
-  %% \draw[gray] (0,1/{sqrt(2)}) -- (1/{sqrt(2)},1/{sqrt(2)});
+      %% e area
+      \begin{scope}[domain=1:e, even odd rule]
+        \clip[domain=\xa:\xb] (1,0) --  plot (\xa,{(1/\xa)}) -- (\xa,0) -- cycle;
+        \draw[pattern=vertical lines,pattern color=blue] (0,0) rectangle (e,1);
+      \end{scope}
 
-  %%%%%%%%%%%%%%%%
-  % shade hyperbolic and circle sectors
- %%  \begin{scope}[domain=1:e, even odd rule]
- %%    \clip (0,0) -- (e,1/e) -- (1,1) -- cycle;
- %%    \fill[color=blue,opacity=.15] (0,0) circle(1);
+      %% hyperbolic sector
+      \begin{scope}[domain=1:e, even odd rule]
+        \clip[domain=1:\xa] (0,0) --  plot (\xa,{(1/\xa)}) -- cycle;
+        \fill[color=green!50!blue,opacity=.15] (0,0) rectangle (e,1);
+      \end{scope}
 
- %%    \clip (0,0) circle(1) (0,0)--(1,1) -- plot (\x,{(1/\x)}) -- (e,1/e) -- cycle;
- %%    \fill[opacity=.15] (0,0)--(1,1) -- plot (\x,{(1/\x)}) -- (e,1/e) -- cycle;
- %% \end{scope}
+      %% f(x) = 1/x
+      \draw[<->,domain=.7:3.2,color=green!50!black] plot (\xa,{(1/\xa)});
+      \draw[color=green!50!black] (.8,1.2) node[left] {$f(x) = \frac{1}{x}$};
 
- %% axis:  f(x) = x
-  \draw[<->,color=gray] (-1,-1) -- (1.2,1.2) node[right] {$f(x) =x$};
-  \draw[black] (0,0) -- (1,1);
+      %% hyperbolic arc
+      \draw[thick,red,domain=1:\xa] plot (\x,{(1/\x)});
+      %% hyperbolic radii
+      \draw[very thick] (1,0) -- (1,1);
+      \draw[semithick] (0,0) -- (\xa,1/\xa);
 
-  %% e diameter
-  \draw[black] (0,0) -- (e,1/e);
+      %%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%
-%% circle stuff
-%%  unit circle
-  \begin{scope}
-    %% \clip (0,0) rectangle (1.1,1.1);
-    \draw (0,0) circle (1);
-   \end{scope}
+      %% sweeping vector
+      %%  \draw[-latex,black,postaction={decorate,
+      %%                     decoration={markings,
+      %%                       mark=at position 0.74 with {\arrow{latex}},
+      %%                       mark=at position 0.82 with {\arrow{latex}};}
+      %%                    }] (0,0) -- (1.8, 1);
+      %% \draw [->] (1.8,.975) -- (1.85,.975);
 
- %% ref segments
-  \draw[gray] (e,0) -- (e,1/e);
-
-  \draw[gray] (0,1/e) node[left] {$e^{-1}$} -- (e,1/e);
-
-  \draw[gray] (0,.5) node[left] {$0.5$} -- (e,.5);
-
-  %% dot origin
-  \fill[black] (0,0) node[below left] {$O$} circle (.4pt);
-
-  %% dot (0,1/e)
- \fill[black] (0,1/e) circle (.4pt);
-
-  %% dot (0,1)
-  \fill[black] (0,1) node[above left] {$1$} {} circle (.4pt);
-  %% dot (1,0)
-  \fill[black] (1,0) node[below right] {$1$} circle (.4pt);
-
-  %% dot (1,1)
-%  \fill[red] (1,1) node[above right] { $A'$}  circle (.5pt);
-
- %% label (1,e)
-%  \fill[black] (1,e) node[anchor=south west] {$(1,e)$} circle (.7pt);
-
- %% dot (e,0)
-  \fill[black] (e,0) node[below] {$e$} circle (.4pt) -- (e,1.2);
-
-  %% %% dot (e,1)
-  %% \fill[red] (e,1) node[above right,color=red]  {$B'$} circle (.4pt); 
-
-  %% %% dot (e,1/e)
-  %% \fill[red] (e, 1/e) node[right] {$C'$} circle (.4pt);
-
+      %%%%%%%%%%%%%%%%
     \end{tikzpicture}
   }% multiframe
 \end{animateinline}

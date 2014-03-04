@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage{tkz-euclide}
+\begin{document}
+
+\begin{tikzpicture}
+    % The triangle
+    \tkzDefPoint(2,2){A}
+    \tkzDefPoint(5,-2){B}
+    \tkzDefPoint(1,-2){C}
+    \tkzDrawSegments(A,B B,C C,A)
+
+    % circumcircle
+    \tkzCircumCenter(A,B,C)\tkzGetPoint{G}
+    \tkzDrawPoint(G)
+    \tkzDrawCircle(G,A)
+
+    % incircle
+    \tkzDefCircle[in](A,B,C)\tkzGetPoint{I}\tkzGetLength{rIN}
+    \tkzDrawPoint(I)
+    \tkzDrawCircle[R](I,\rIN pt)
+
+    \tkzLabelPoints[below](B)
+    \tkzLabelPoints[below left](C)
+    \tkzLabelPoints[above left](A,I,G)
+\end{tikzpicture}
+\end{document}

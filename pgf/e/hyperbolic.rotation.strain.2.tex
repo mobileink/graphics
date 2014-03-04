@@ -1,0 +1,283 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Hyperbolic Rotation - Strain
+%% show strains explicitly
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{animateinline}[%
+    poster=first%
+    %% ,draft
+    %% ,loop
+    ,controls%
+  ]{\the\value{iFrameRate}}%
+
+  %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
+
+  %% \begin{tikzpicture}
+  %%   \useasboundingbox[draw] {(-1,-2) rectangle (10,16)};
+
+  %% \end{tikzpicture}
+  %% \newframe
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% STEP 1:  strain right e units
+  \multiframe{\value{iFrames}}{iFrame=1+1}{%
+    %% \message{\arabic{iFrames}}
+    %% \message{\iFrame}
+    %% \message{\rFromXa}
+    %% \message{\rToXa}
+    %% \message{\rFromXb}
+    %% \message{\rToXb}
+
+    \begin{tikzpicture}[%
+        scale=\tikzscale
+        ,domain=-.3:7.4%
+      ]
+      %% \if usebb
+      \useasboundingbox[\bbdraw]{(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+      %% \fi
+
+      \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
+      \pgfmathsetmacro\xb{easeInQuadratic(\iFrame,\rFromXb,\rDeltaXb,\value{iFrames})};
+
+      %% grid
+      \draw[very thin,gray!50] (0,0) grid (e^2+.2,3);
+      %% axes
+      \draw[<->,black] (-.2,0) -- (e^2+.2,0);
+      \draw[<->,black] (0,-.2) -- (0,2.2);
+
+      %% ref segments
+      \draw[gray] (0,.5) node[left] {} -- (.1,.5);
+      %% dot (0,0.5)
+      %% \fill[gray] (0,.5) node[left] {$0.5$} circle (.4pt);
+
+      %% dot origin
+      %% \fill[black] (0,0) node[below left] {$0$} circle (.4pt);
+
+      %% dot (0,1/e)
+      %% \fill[black] (0,\inve) circle (.4pt);
+
+      %% log scale
+      \fill[black] (-1,0) node[below] {$logarithmic:$};
+      \fill[black] (1,0) node[below] {$0$};
+      \fill[black] (e,0) node[below] {$1$};
+      \draw[black] (e,0) -- (e,2.2);
+      \fill[black] (e^2,0) node[below] {$2$};
+      \draw[black] (e^2,0) -- (e^2,2.2);
+
+      \fill[gray] (-1,-.5) node {$arithmetic:$};
+      \fill[gray] (0,-.5) node {$0$};
+      \fill[gray] (1,-.5) node {$1$};
+      \fill[gray] (2,-.5) node {$2$};
+      \fill[gray] (e,-.5) node {$e^1$};
+      \fill[gray] (3,-.5) node {$3$};
+      \fill[gray] (4,-.5) node {$4$};
+      \fill[gray] (5,-.5) node {$5$};
+      \fill[gray] (6,-.5) node {$6$};
+      \fill[gray] (7,-.5) node {$7$};
+      \fill[gray] (e^2,-.5) node {$e^2$};
+
+      %% v axis labels
+      \fill[->,gray] (0,e) node {$e^1$} -- (e^2+.2,e);
+
+      %%%%%%%%%%%%%%%%
+      %% % 1.  hyperbolic rectilinear rotation
+      %% \draw[-latex,red] (1,1) -- (e,1);
+      %% \draw[-latex,red] (e,1) -- (e,1/e);
+
+      %% hyperbolic rotation animation
+      \begin{scope}[even odd rule]
+        %% %% shade unit square
+        %% \fill[gray,opacity=.2] (0,0) rectangle (1,1);
+        %% %% coordinate rectangle
+        %% \draw[pattern=horizontal lines light blue] (0,0) rectangle (\xb,1/\xb);
+        %% \draw (0,1/\xb) node[left] {$e^n$} -- (\xb,1/\xb);
+
+        %% shade rotated region - source
+        %% \begin{scope}
+        %%   \clip[samples=100,domain=1:e] (1,0) -- plot (\x,1/\x+e*(1/\x)) -- (\xb,0) -- cycle ;
+        %%   \fill[green,opacity=.25] (0,0) rectangle (e^2,1);
+        %% \end{scope}
+
+        %% \draw[red,samples=100,domain=1:e] plot (\x,{1/\x+(e-1/\x)*\xa}); % (e-1/\x)*pct
+
+        \pgfmathsetmacro\pct{\iFrame/\value{iFrames}}
+
+        %% \draw[red,dashed,samples=100,domain=1:e] plot (\x,1/\x);
+
+        %% \draw[red,dashed,samples=100,domain=1:e] plot (\x,{1+1/\x+((e-1)/\x)});
+
+        \draw[<->,green!10!black,samples=100,domain=.5:e^2+.2]
+        	plot (\x,{1/(\x/\xa)});
+        	%% plot (\x,{1/\x+(1+(e-1)/\x)});
+
+                %% upper left to upper right
+        \draw[green!50!black,ultra thick,samples=100,domain=\xa:\xb]
+        	(\xa,0) -- plot (\x,{1/(\x/\xa))}) -- (\xb,0) -- cycle;
+        	%% (\xa,1) -- plot (\x,{1/\x+(1+(e-1)/\x)}) -- (\xb,1) -- cycle;
+
+        %% %% shade rotated region - destination
+        %% \begin{scope}
+        %%   \pgfmathsetmacro\samps{1-\iFrame/\value{iFrames}}
+        %%   \clip[samples=100*\samps,domain=\xb:\rToXb*.9]
+        %%   (\xb,0) -- plot (\x,{(1/\x)}) -- (e^2,1/e^2) -- (e^2,0) -- cycle;
+        %%   %% (\xb,0) -- (\xb,{(1/\xb)}) -- (\rToXb,1/\rToXb) -- (\rToXb,0) -- cycle;
+        %%   \draw[opacity=.5,pattern=crosshatch dots light steel blue] (0,0) rectangle (e^2,1);
+        %% \end{scope}
+        %% %% f(x) = 1/x
+        %% \draw[>->,samples=100,domain=.4:e^2+.2,color=green!50!black] plot (\x,{(1/\x)});
+        %% \draw[color=green!50!black] ({((e^2)-.5)},{1/((e^2)-.5)}) node[above left] {$f(x) = \frac{1}{x}$};
+        %% %% border rotated region
+        %% \draw[green!50!black,very thick,samples=100,domain=\xa:\xb]
+        %% (\xa,0) -- plot (\x,{(1/\x)}) -- (\xb,0) -- cycle ;
+        %% %% area labels
+        %% \draw (3.5,.7) node[above] (area) {area = $1$};
+        %% %% label of rotated region - source
+        %% \draw[->] (area)
+        %% .. controls +(down:12pt) and +(up:12pt) .. ({\xa+(\xb-\xa)*.2},{(1/\xa)*.5});
+        %% %% label of unit square
+        %% \draw[->] (area) .. controls +(left:36pt) and +(up:24pt) .. (.5,.5);
+        %% %% label of unit rectangle
+        %% \draw[->] (area) .. controls +(left:36pt) and +(up:24pt) .. (\xa/2,{(1/\xa)*.2});
+        %% %% label of rotated region - destination
+        %% \draw[->,opacity=(1-\iFrame/\value{iFrames})] (area)
+        %% .. controls +(right:12pt) and +(up:12pt) .. (4.5,.1);
+      \end{scope}
+    \end{tikzpicture}
+  }% multiframe
+
+  \newframe*
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% STEP 2:  strain down e units
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \multiframe{\value{iFrames}}{iFrame=1+1}{%
+    %% \message{\arabic{iFrames}}
+    %% \message{\iFrame}
+    %% \message{\rFromXa}
+    %% \message{\rToXa}
+    %% \message{\rFromXb}
+    %% \message{\rToXb}
+
+    \begin{tikzpicture}[%
+        scale=\tikzscale
+        ,domain=-.3:7.4%
+      ]
+      %% \if usebb
+      \useasboundingbox[\bbdraw]{(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+      %% \fi
+
+      \pgfmathsetmacro\ya{easeInQuadratic(\iFrame,\rFromYa,\rDeltaYa,\value{iFrames})};
+      \pgfmathsetmacro\yb{easeInQuadratic(\iFrame,\rFromYb,\rDeltaYb,\value{iFrames})};
+
+      %% grid
+      \draw[very thin,gray!50] (0,0) grid (e^2+.2,7);
+      %% axes
+      \draw[<->,black] (-.2,0) -- (e^2+.2,0);
+      \draw[<->,black] (0,-.2) -- (0,2.2);
+
+      %% ref segments
+      \draw[gray] (0,.5) node[left] {} -- (.1,.5);
+      %% dot (0,0.5)
+      %% \fill[gray] (0,.5) node[left] {$0.5$} circle (.4pt);
+
+      %% dot origin
+      %% \fill[black] (0,0) node[below left] {$0$} circle (.4pt);
+
+      %% dot (0,1/e)
+      %% \fill[black] (0,\inve) circle (.4pt);
+
+      %% log scale
+      \fill[black] (-1,0) node[below] {$logarithmic:$};
+      \fill[black] (1,0) node[below] {$0$};
+      \fill[black] (e,0) node[below] {$1$};
+      \draw[black] (e,0) -- (e,2.2);
+      \fill[black] (e^2,0) node[below] {$2$};
+      \draw[black] (e^2,0) -- (e^2,2.2);
+
+      \fill[gray] (-1,-.5) node {$arithmetic:$};
+      \fill[gray] (0,-.5) node {$0$};
+      \fill[gray] (1,-.5) node {$1$};
+      \fill[gray] (2,-.5) node {$2$};
+      \fill[gray] (e,-.5) node {$e^1$};
+      \fill[gray] (3,-.5) node {$3$};
+      \fill[gray] (4,-.5) node {$4$};
+      \fill[gray] (5,-.5) node {$5$};
+      \fill[gray] (6,-.5) node {$6$};
+      \fill[gray] (7,-.5) node {$7$};
+      \fill[gray] (e^2,-.5) node {$e^2$};
+
+      %% v axis labels
+      \fill[->,gray] (0,e) node {$e^1$} -- (e^2+.2,e);
+
+      %%%%%%%%%%%%%%%%
+      %% % 1.  hyperbolic rectilinear rotation
+      %% \draw[-latex,red] (1,1) -- (e,1);
+      %% \draw[-latex,red] (e,1) -- (e,1/e);
+
+      %% hyperbolic rotation animation
+      \begin{scope}[even odd rule]
+        %% %% shade unit square
+        %% \fill[gray,opacity=.2] (0,0) rectangle (1,1);
+        %% %% coordinate rectangle
+        %% \draw[pattern=horizontal lines light blue] (0,0) rectangle (\xb,1/\xb);
+        %% \draw (0,1/\xb) node[left] {$e^n$} -- (\xb,1/\xb);
+
+        %% shade rotated region - source
+        %% \begin{scope}
+        %%   \clip[samples=100,domain=1:e] (1,0) -- plot (\x,1/\x+e*(1/\x)) -- (\xb,0) -- cycle ;
+        %%   \fill[green,opacity=.25] (0,0) rectangle (e^2,1);
+        %% \end{scope}
+
+        %% \draw[red,samples=100,domain=1:e] plot (\x,{1/\x+(e-1/\x)*\xa}); % (e-1/\x)*pct
+
+        \pgfmathsetmacro\pct{\iFrame/\value{iFrames}}
+
+        %% \draw[red,dashed,samples=100,domain=1:e] plot (\x,1/\x);
+
+        %% \draw[red,dashed,samples=100,domain=1:e] plot (\x,{1+1/\x+((e-1)/\x)});
+
+        \draw[<->,green!10!black,samples=100,domain=.5:e^2+.2]
+        	plot (\x,{1/\x+(1-\pct+(e-1)/\x)});
+
+%% strain down
+        \draw[green!50!black,ultra thick,samples=100,domain=e:e^2]
+        (e,0) -- plot (\x,\pct*\ya) -- (e^2,0) -- cycle;
+
+        %% (e,1) -- plot (\x,{1/\x+((1-\pct)*(1-/\x))})
+
+
+        %% %% shade rotated region - destination
+        %% \begin{scope}
+        %%   \pgfmathsetmacro\samps{1-\iFrame/\value{iFrames}}
+        %%   \clip[samples=100*\samps,domain=\xb:\rToXb*.9]
+        %%   (\xb,0) -- plot (\x,{(1/\x)}) -- (e^2,1/e^2) -- (e^2,0) -- cycle;
+        %%   %% (\xb,0) -- (\xb,{(1/\xb)}) -- (\rToXb,1/\rToXb) -- (\rToXb,0) -- cycle;
+        %%   \draw[opacity=.5,pattern=crosshatch dots light steel blue] (0,0) rectangle (e^2,1);
+        %% \end{scope}
+        %% %% f(x) = 1/x
+        %% \draw[>->,samples=100,domain=.4:e^2+.2,color=green!50!black] plot (\x,{(1/\x)});
+        %% \draw[color=green!50!black] ({((e^2)-.5)},{1/((e^2)-.5)}) node[above left] {$f(x) = \frac{1}{x}$};
+        %% %% border rotated region
+        %% \draw[green!50!black,very thick,samples=100,domain=\xa:\xb]
+        %% (\xa,0) -- plot (\x,{(1/\x)}) -- (\xb,0) -- cycle ;
+        %% %% area labels
+        %% \draw (3.5,.7) node[above] (area) {area = $1$};
+        %% %% label of rotated region - source
+        %% \draw[->] (area)
+        %% .. controls +(down:12pt) and +(up:12pt) .. ({\xa+(\xb-\xa)*.2},{(1/\xa)*.5});
+        %% %% label of unit square
+        %% \draw[->] (area) .. controls +(left:36pt) and +(up:24pt) .. (.5,.5);
+        %% %% label of unit rectangle
+        %% \draw[->] (area) .. controls +(left:36pt) and +(up:24pt) .. (\xa/2,{(1/\xa)*.2});
+        %% %% label of rotated region - destination
+        %% \draw[->,opacity=(1-\iFrame/\value{iFrames})] (area)
+        %% .. controls +(right:12pt) and +(up:12pt) .. (4.5,.1);
+      \end{scope}
+    \end{tikzpicture}
+  }% multiframe
+
+
+\end{animateinline}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

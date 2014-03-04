@@ -109,7 +109,7 @@
         	plot (\x,{1/(\x/\xa)});
         	%% plot (\x,{1/\x+(1+(e-1)/\x)});
 
-                %% upper left to upper right
+                %% strain right
         \draw[green!50!black,ultra thick,samples=100,domain=\xa:\xb]
         	(\xa,0) -- plot (\x,{1/(\x/\xa))}) -- (\xb,0) -- cycle;
         	%% (\xa,1) -- plot (\x,{1/\x+(1+(e-1)/\x)}) -- (\xb,1) -- cycle;
@@ -165,7 +165,9 @@
       %% \fi
 
       \pgfmathsetmacro\ya{easeInQuadratic(\iFrame,\rFromYa,\rDeltaYa,\value{iFrames})};
+\message{\ya}
       \pgfmathsetmacro\yb{easeInQuadratic(\iFrame,\rFromYb,\rDeltaYb,\value{iFrames})};
+\message{\yb}
 
       %% grid
       \draw[very thin,gray!50] (0,0) grid (e^2+.2,7);
@@ -235,11 +237,17 @@
         %% \draw[red,dashed,samples=100,domain=1:e] plot (\x,{1+1/\x+((e-1)/\x)});
 
         \draw[<->,green!10!black,samples=100,domain=.5:e^2+.2]
-        	plot (\x,{1/\x+(1-\pct+(e-1)/\x)});
+        plot (\x,{1/\x+1/\x*e*(1-(\ya/\rDeltaYa)});
+ %% (\x,{1/\x+(1-\pct+(e-1)/\x)});
+
+        %% right:
+        %% (\xa,0) -- plot (\x,{1/(\x/\xa))}) -- (\xb,0) -- cycle;
 
 %% strain down
         \draw[green!50!black,ultra thick,samples=100,domain=e:e^2]
-        (e,0) -- plot (\x,\pct*\ya) -- (e^2,0) -- cycle;
+        (e,0) -- plot (\x,{1/\x*e*(1-\pct)}) -- (e^2,0) -- cycle;
+
+        %% (e,0) -- plot (\x,\pct*\ya) -- (e^2,0) -- cycle;
 
         %% (e,1) -- plot (\x,{1/\x+((1-\pct)*(1-/\x))})
 

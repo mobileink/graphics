@@ -1,10 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  UNIT RECTANGLES
-unit rectangles
-\noindent
-\begin{figure}[ht]
-  \center
-  \hspace*{-3cm}
 \begin{tikzpicture}[xscale=5,yscale=10,domain=-.3:1.3]
 
 % \draw[very thin,color=gray] (-0.3,-0.3) grid (3.2,1.2);
@@ -28,7 +23,7 @@ unit rectangles
   {$e=\displaystyle\lim_{n\to\infty}(1+\frac{1}{n})^n$} circle (.4pt);
 
  %% dot (e,0)
-%  \fill[black] (\e,0) node[below] {$e$}
+%  \fill[black] (e,0) node[below] {$e$}
 %  node[right=15pt] {$x=(1+\frac{1}{n})^n$}
 %  circle (.4pt);
 
@@ -133,8 +128,8 @@ unit rectangles
   \draw[black] (0,0) -- (e,0);
 %  \draw[black] (0,0) rectangle (e,1/e);
 
-%  \draw[black] (0,\inve) -- (\e,\inve);
-%  \fill[black] (0, \inve) circle (.4pt) node[left]  {$\frac{1}{e}$};
+%  \draw[black] (0,1/e) -- (\e,1/e);
+%  \fill[black] (0, 1/e) circle (.4pt) node[left]  {$\frac{1}{e}$};
 
   %% vertical
   \filldraw[gray] (-.3,0) circle (.2pt) -- (-.3,1);
@@ -183,7 +178,7 @@ unit rectangles
   \fill[black] (0,0) node[below left] {$O$} circle (.4pt);
 
   %% dot (0,1/e)
- \fill[black] (0,\inve) circle (.4pt);
+ \fill[black] (0,1/e) circle (.4pt);
 
   %% dot (0,1)
   \fill[black] (0,1) node[left] {$1$} node[above right] {} circle (.4pt);
@@ -191,10 +186,9 @@ unit rectangles
   \fill[black] (1,0) node[below] {$1$} circle (.4pt);
 
 %% label (1,e)
-%  \fill[black] (1,\e) node[anchor=south west] {$(1,e)$} circle (.4pt);
+%  \fill[black] (1,e) node[anchor=south west] {$(1,e)$} circle (.4pt);
 
 \end{tikzpicture}
-\end{figure}
 
 %%% Local Variables: 
 %%% mode: latex

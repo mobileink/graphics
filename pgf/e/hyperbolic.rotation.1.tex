@@ -2,13 +2,12 @@
 %% Hyperbolic Rotation 1
 %% simple circular and hyperbolic rotation - sweep of radius
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pgfmathparse{\value{iFrameRate}}
 \begin{animateinline}[%
     poster=first%
     %% ,draft
     %% ,loop
     ,controls%
-  ]{\pgfmathresult}%
+  ]{\the\value{iFrameRate}}%
 
   %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
 
@@ -19,17 +18,22 @@
   %% \newframe
 
   %%%% MULTIFRAMES START FROM 1 NOT 0
-  \multiframe{\pgfmathresult}{iFrame=1+1}{%
-    %% \message{\iFrame}
+  \multiframe{\value{iFrames}}{iFrame=0+1}{%
+    \message{\iFrame}
     %% \message{\arabic{iFrames}}
     %% \message{\rFromXa}
     %% \message{\rToXa}
     %% \message{\rFromXb}
     %% \message{\rToXb}
 
-    \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
-    \pgfmathsetmacro\xb{easeInQuadratic(\iFrame,\rFromXb,\rDeltaXb,\value{iFrames})};
-    %% \pgfmathsetmacro\newx{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
+    %% \if usebb
+    \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+    %% \fi
+
+    \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})}
+    \pgfmathsetmacro\xb{easeInQuadratic(\iFrame,\rFromXb,\rDeltaXb,\value{iFrames})}
+    \message{\xa}
+    \message{\xb}
 
     \begin{tikzpicture}[%
         scale=\tikzscale
@@ -38,7 +42,6 @@
       %% \if usebb
       \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
       %% \fi
-
 
       \draw[very thin,color=gray] (-1,0) grid (3.2,1.2);
 
@@ -85,25 +88,31 @@
 
       %% e area
       \begin{scope}[domain=1:e, even odd rule]
-        \clip[domain=\xa:\xb] (1,0) --  plot (\xa,{(1/\xa)}) -- (\xa,0) -- cycle;
-        \draw[pattern=vertical lines,pattern color=blue] (0,0) rectangle (e,1);
+        \ifdimcomp{\xa pt}{>}{1 pt}{%
+          \clip[domain=1:\xa] (1,0) --  plot (\x,{(1/\x)}) -- (\xa,0) -- cycle;
+          \draw[pattern=vertical lines,pattern color=blue] (0,0) rectangle (e,1);
+        }{}
       \end{scope}
-
       %% hyperbolic sector
       \begin{scope}[domain=1:e, even odd rule]
-        \clip[domain=1:\xa] (0,0) --  plot (\xa,{(1/\xa)}) -- cycle;
-        \fill[color=green!50!blue,opacity=.15] (0,0) rectangle (e,1);
+        \ifdimcomp{\xa pt}{>}{1 pt}{%
+          \clip[domain=1:\xa] (0,0) --  plot (\x,{(1/\x)}) -- cycle;
+          \fill[color=green!50!blue,opacity=.30] (0,0) rectangle (e,1);
+        }{}
       \end{scope}
 
+
       %% f(x) = 1/x
-      \draw[<->,domain=.7:3.2,color=green!50!black] plot (\xa,{(1/\xa)});
+      \draw[<->,domain=.7:3.2,color=green!50!black] plot (\x,{(1/\x)});
       \draw[color=green!50!black] (.8,1.2) node[left] {$f(x) = \frac{1}{x}$};
 
       %% hyperbolic arc
-      \draw[thick,red,domain=1:\xa] plot (\x,{(1/\x)});
+      \ifdimcomp{\xa pt}{>}{1 pt}{%
+        \draw[thick,red,domain=1:\xa] plot (\x,{(1/\x)});
+      }{}
       %% hyperbolic radii
-      \draw[very thick] (1,0) -- (1,1);
-      \draw[semithick] (0,0) -- (\xa,1/\xa);
+      %% \draw[very thick] (1,0) -- (1,1);
+      %% \draw[red,semithick] (0,0) -- (\xa,1/\xa);
 
       %%%%%%%%%%%%%%%%
 

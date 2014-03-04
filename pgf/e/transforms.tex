@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  HOMOTHETIC TRANSFORM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{animateinline}[
+\begin{animateinline}[%
     poster=first%
     %% ,draft
     %% ,loop
     ,controls%
-  ]{\value{iFrameRate}}%
+  ]{\the\value{iFrameRate}}%
 
   %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
   %% \begin{tikzpicture}
@@ -14,14 +14,14 @@
   %% \end{tikzpicture}
   %% \newframe
   %%%% MULTIFRAMES START FROM 1 NOT 0
-  \multiframe{\value{iFrames}}{iFrame=0+1}{%
+  \multiframe{\value{iFrames}}{iFrame=1+1}{%
     \message{\iFrame}
 
     \begin{tikzpicture}[%
         scale=\tikzscale
       ]%
       %% \if usebb
-      	\useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+      	%% \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
       %% \fi
 
       \tkzInit[ymin=\tkzminy,ymax=\tkzmaxy,xmin=\tkzminx,xmax=\tkzmaxx]

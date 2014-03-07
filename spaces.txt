@@ -194,11 +194,30 @@ composition.  We can think of cs:Omega as the top of a stack of
 cspaces, i.e. last (first) in a series of transforms, but we can use
 the same cspace in multiple stacks.]
 
+================
+
+Transform functions v. positioning functions
+
+Both kinds are total functions; the difference is in how they are
+used.  Transform functions are to be applied to entire coordinate
+systems, mapping every point.  Positioning functions are just like
+transforms, but are intended to be used on subsets of the space,
+esp. on single points in path expressions.
+
+Some of TikZ's coordinate systems effectively function as positioning functions.
+
+================
 
 An Algebra of Coordinate Spaces
 
+In addition to origin and axes, coordinate systems always have an
+algebra, which specifies operations on coordinate points.  This allows
+us to distinguish between e.g. cartesian and complex cspaces.
+
+Cartesian:
+
    +  =  scale unit of source arithmetically; e.g. cs:A[(0,0)]+(1,1)
-   *  =  scale unit of source geometrically; e.g. cs:A[(1,1)]*(2,2)
+   *  =  scale unit of source geometrically: (x,y)*(a,b) = (ax,by) e.g. cs:A[(1,1)]*(2,2) 
    ?  =  rotation
    ?  =  skew (shear)
    ?  =  reflection
@@ -208,13 +227,90 @@ NB: "scale" usually means scale multiplicatively, but it applies
 equally to arithmetic transformation.  We can talk of arithmetic,
 geometric, harmonic, etc. scaling.
 
+Complex:
+
+    * = (x+yi)*(a+bi) = (xa - yb) + (xb + ya)i
+      	(x,y)*(a,b)   = ((xa-yb), (xb+ya))
+	e.g. (1,0)(0,1) = ((0-0), (1+0)) = (0,1) = i
 ================
 
 Primitive Coordinate Spaces
 
-Cartesian
+Affine:  "In mathematics, an affine coordinate system is a coordinate system on an affine space where each coordinate is an affine map to the number line. In other words, it is an injective affine map from an affine space A to the coordinate space Kn, where K is the field of scalars, for example, the real numbers R.  The most important case of affine coordinates in Euclidean spaces is real-valued Cartesian coordinate system. Orthogonal affine coordinate systems are rectangular, and others are referred to as oblique." (http://en.wikipedia.org/wiki/Affine_coordinates)
+
+Homogenous:  "In mathematics, homogeneous coordinates or projective coordinates, introduced by August Ferdinand Möbius in his 1827 work Der barycentrische Calcül,[1][2] are a system of coordinates used in projective geometry, as Cartesian coordinates are used in Euclidean geometry. They have the advantage that the coordinates of points, including points at infinity, can be represented using finite coordinates. Formulas involving homogeneous coordinates are often simpler and more symmetric than their Cartesian counterpart." (http://en.wikipedia.org/wiki/Homogeneous_coordinates)
+
+Cartesian  (logarithmic a special case?)
 Polar
-DOM?
+Complex
+Cylindrical
+Spherical
+Log-polar
+
+TikZ:
+
+Canvas =  x,y with explicit "dimension" (empirical UOM)
+
+XYZ    =  x,y,z as "factors" multiplying unit vectors of length 1cm)
+
+Canvas Polar = radius expressed in canvas system, i.e. with UOM
+
+XYZ Polar  = radius and angle interpreted in as in xy csystem, i.e. factors (of unit vectors of 1cm) not dimensions
+
+XY Polar (=XYZ Polar)
+
+Barycentric  -  "In geometry, the barycentric coordinate system is a coordinate system in which the location of a point of a simplex (a triangle, tetrahedron, etc.) is specified as the center of mass, or barycenter, of masses placed at its vertices. Coordinates also extend outside the simplex, where one or more coordinates become negative."   (http://en.wikipedia.org/wiki/Barycentric_coordinate_system)
+
+Node (=DOM?)  The cs:node is parasitic the more primitive empirical
+systems.  It allows you to refer to a previously specified point by
+specifying its name and an "anchor" or predefined location relative to
+the node's position.  The anchor name effectively denotes a function
+that computes a point, given the node' base point.
+
+Tangent Like cs:node, cs:tangent supports specification of points by
+refering to previously specified points.  A tangent function is
+implicitly applied to the points refered to - actually a point and a
+figure - and computes the tangent from the point to the figure.
+
+Custom -- the job of a custom cs is to compute x and y in the canvas
+coordinate system.  So defining a custom coordinate system boils down
+to specifying a transformation function.
+
+TikZ has no abstract Cartesian coordinate system (contrast Asymptote);
+systems that allow unitless coordinate specifications (e.g. XYZ) use
+an implicit empirical UOM (default: 1cm).
+
+Thus all TikZ cspaces are empirical; some seem to provide means of
+expressing coordinates rather than establishing a distinct system;
+e.g. node and tangent systems.  They don't (at least not all of them)
+establish a primitive interpretation of (x,y).  For example, the
+tangent cs does not provide a meaning for any (x,y); instead, it
+allows you to specify a (tangent) point by reference to an already
+specified pair of a shape and a point.
+
+In other words, cs:node and cs:tangent are derived systems, the others
+primitive.  They are essentially transform functions using for
+positioning.  They do not need units of measure since that is already
+implicit in the points they reference.  Dunno about barycentric, which
+I don't really grok yet.
+
+Basically all the cspaces amount to positioning functions, which is
+why they can be mixed in single path expressions.
+
+Correction: they are NOT transform functions, in that they do not
+transform the entire csystem; instead they are positioning functions,
+designed to transform subsets of the space.
+
+Furthermore, TikZ's system allows for use of multiple coord systems in
+one expression.  So you can write (0,0) -- (polar cs:
+cs:angle=90,radius=1cm), using first the xyz system then the polar
+system to draw a line from the origin to (0,1), unit=cm.
+
+Note that the xyz cs seems to be the default for (x,y) syntax, where x
+and y are dimensionless.
+
+================
+
 
 Primitive cspaces always same, alterations come via transforms.
 Untransformed, the default is just plain Cartesian space, unit=1,
@@ -261,6 +357,9 @@ cs:DOM, to whatever cspace is associated with the DOM parent of the
 svg node.  Call it the "host" cspace?  In any case, this is all
 implicit.
 
+A DOM node always has an associated piece of geometry.  Compare TikZ
+nodes, which are named bits of geometry.
+
 Note that you cannot transform a cspace you are attaching to the DOM;
 attaching always means mapping origin to origin. (?)  You can
 transform subspaces within the cs:SVG, but you cannot use any
@@ -278,6 +377,7 @@ In any case, the goal pursued here is investigation of DOM as a kind
 of coordinate space.  Or more generally (covering XML as well as
 HTML), of tree structured data and their relation of graphic
 coordinate spaces.
+
 
 ================
 

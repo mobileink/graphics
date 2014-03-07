@@ -1,0 +1,339 @@
+Immature poets imitate; mature poets steal - TS Eliot
+
+Conditions of adequacy for a graphics language:
+
+    Expressivity
+
+    Coordinate space independence
+
+    Device Independence
+
+Drawing a figure always involves two specifications, one explicit, the
+other (usually) implicit.  The explicit specification describes the
+figure: size, shape, style, location.  The implicit specification
+describes the coordinate space.  The explicit specification (of a
+figure) is always relative to a coordinate space.
+
+CS (Coordinate Space) specification:  origin (always 0) + axes
+
+Axis specification:  name, unit (always 1?); angle of incidence; orientation; scale (??? see below)
+
+[NB: figure specification relative to space; cspace specification always absolute.]
+
+E.g. Cartesian space has x and y axes, each with unit of 1, angle of
+incidence of 0 and 90 deg, respectively, and orientation of x
+increases rightwards, y upwards.
+
+Example: unit circle centered at the origin.  The usual way to specify
+this is something like
+
+     (0,0 circle(1)  (using tikz syntax; any other would do as well)
+
+This is the explicit specification; implicit is the specification of the CS.
+
+But there are always two coordinate spaces: the one in which
+coordinates are directly expressed (as above), which we'll call the
+Omega space, and the "root" space to which the Omega space is mapped.
+In other words, specifying a figure and a space is not enough; the
+space itself must be located in a "parent" space, which in the
+simplest case is the "root" space.
+
+[Root space is axiomatic: x and y axes with unit = 1, incidence 0 and
+90, the usual orientation.  Root space is also absolute; it cannot be
+mapped to any other space (except device space?).]
+
+[NB this is all device independent.  Mapping root space to device
+space is a separate issue.]
+
+[NB third kind of space, between device independent (abstract) root
+space and device space: device-independent space with empirical units
+of measure.  E.g. x and y axes with unit = 1cm (instead of just 1).]
+
+An example will expose the distinction.  Most graphics languages have
+a "transform" function that allows the user to translate, scale,
+rotate, or skew figures.  The syntax usually makes it look like the
+figures are being transformed; e.g.
+
+    let c = (0,0) circle (1)  ;; figure: unit circle at origin
+    translate(c, (1,1))	      ;; move origin of circle to (1,1)
+
+But that is the wrong interpretation; what gets transformed is the
+entire coordinate space in terms of which the figure is directly
+expressed.  We need a vocabulary that allows us to express this
+explicitly.  In the example, we want a way to say explicitly that the
+transform operator applies to a CS, not to a figure.  For example (toy syntax):
+
+1)	  let origin(cs:Omega) = origin(cs:Root) + (1,1)  ;; start by specifying translation of cs:Omega
+2)	  let c = (0,0) circle (1) in cs:Omega  ;; then specify figure relative to cs:Omega
+3)	  result: unit circle located at (1,1) in cs:Root
+
+A more succinct (possible) notation, using [ ] to indicate a cs "context" :
+
+1)	  let cs:Omega[(0,0)] = cs:Root[(0,0)] + (1,1)  ;; origin in Omega coords = (1,1) in Abs coords
+2)	  cs:Omega[(0,0) circle 1]   ;; circle expressed in cs:Omega coordinates
+3)	  result: unit circle located at (1,1) in cs:Root
+
+This may get the idea across, but the problem is that the transform
+expression only specifies the translation of a single point; it does
+not explicitly say that the entire cs is transformed.  A
+transformation is a function, but 2) does not clearly express this.
+
+CS transformations are functions and should be expressed as such.
+
+We could associate transformations with the axes of a CS.  For
+example, for cs:Cartesian we might write:
+
+	 axis : {name="x", unit=1, transform=lambda x.x, incidence=0}
+	 axis : {name="y", unit=1, transform=lambda y.y, incidence=0}
+
+But where do the inputs to the transform functions come from, and what
+is the meaning of their outputs?  The basic idea of a transform is
+that it maps points in one CS to points in another CS.  But the
+definition of an axis is scoped its CS, which leaves open the question
+of where we find the xs and ys to which the transforms apply.
+
+The solution to this problem is to see that transformations are not
+associated with particular spaces.  They map one space to another,
+both of which are in themselves independent of the transformation.  So
+we do not want to include a transformation function as part of the
+definition of a CS.  It's tempting to do so (possibly because of the
+influence of Object-Oriented thinking), but incorrect; a
+transformation is just a function, and is not connected with any
+"class" or "object".  This will lead us below to consider an algebra
+of coordinate spaces.
+
+It follows that we have to define a default "scale" for each axis,
+just as we define a default unit of 1.  Axiomatically, as it were.
+
+In other words, it is not accurate to say that transforms "change"
+coordinate spaces.  Instead, they map all the coordinates from one
+space to another, leaving both spaces per se unchanged.  This is
+critical, since it allows us to express various figures, each in its
+own cs, and then map them to a single "parent" cs under different
+transforms.  If transforms had the effect of producing a "distorted"
+version of the source space, this would not be possible, or at least
+it would be much more awkward.
+
+So how should we express such transformations?  First, since they are
+functions, we can use lambda notation to express them.  E.g.
+
+3)	   lambda x.x
+4)	   lambda x.2x   ;; scale x axis by factor of 2
+5)	   lambda x.ln x ;; logarithmic x axis
+
+Second, we should make explicit the fact that inputs are coordinates
+in one space, and outputs are coordinates in another:
+
+6)     x_a = lambda x_b.x_b  ;; where _a = cs:Root, _b = cs:Omega
+
+In other words, we need a typed lambda calculus.
+
+Third, they are applied to cspaces, but not part of their definitions.
+So:
+
+7)	x:B["x"] = lambda a::A["x"].2a
+
+where foo::Bar["baz"] means foo is a coordinate on the "baz" axis of space Bar.
+
+(This notation is awkward, but at this point we are interested in
+clarity and explicitness.)
+
+Whatever sort of notation we come up with, we still have the problem
+of how to express the idea that one space is to be mapped into another
+("into" literally, points into space) /under/ a transformation
+function.  In other words, in addition to specifying the function
+(possibly as a lambda expression), we also need to express the domain
+and range.
+
+Maybe something like the following, which apes y=f(x) notation:
+
+	   cs:B.x = f(cs:A.x)
+
+But y=f(x) defines a function; it does not explicitly state dom and ran.
+
+To be really explicit we might try:
+
+      f = lambda x.2x
+      dom(f) = cs:Omega
+      ran(f) = cs:Root
+
+This has the virtue of clarity.  But each figure in a composition has
+its own "home" cspace, which we call Omega, so we may end up with lots
+of Omegas.  This would leave us to define f for each pair of spaces,
+even if they use the same function.  E.g.
+
+     f = lambda x.2x
+     dom(f) = cs:Omega.x, ran(f) = cs:Root.x
+     ... draw some stuff into cs:Omega
+     dom(f) = cs:Gamma.x, ran(f) = cs:Root.x
+     ... draw some stuff into cs:Gamma
+
+Here we use two spaces to draw stuff, but map them both to the same
+space using the same transformation.
+
+Advantage of lambda notation: much easier to express complex
+transformations.  Although vector/matrix notation is pretty handy.
+
+With lambda we don't need predefined functions like "translate",
+"scale", etc.  (Same is true of vector/matrix notation.)
+
+With lambda we also get non-linear transformations, e.g. 
+
+     f = lambda x.x^2
+
+So a key design decision: how to express transformation functions.
+lambda or matrix?
+
+Another key design decision: how to express the dom and ran of
+transformation functions.
+
+[We seem to be approaching something like the standard notion of
+layers.  But with the notion of cspace, we don't need layers.  Or
+rather, layering is a separate idea, which corresponds to order of
+composition.  We can think of cs:Omega as the top of a stack of
+cspaces, i.e. last (first) in a series of transforms, but we can use
+the same cspace in multiple stacks.]
+
+
+An Algebra of Coordinate Spaces
+
+   +  =  scale unit of source arithmetically; e.g. cs:A[(0,0)]+(1,1)
+   *  =  scale unit of source geometrically; e.g. cs:A[(1,1)]*(2,2)
+   ?  =  rotation
+   ?  =  skew (shear)
+   ?  =  reflection
+   ?  =  glide reflection (http://en.wikipedia.org/wiki/Transformation_(function))
+
+NB: "scale" usually means scale multiplicatively, but it applies
+equally to arithmetic transformation.  We can talk of arithmetic,
+geometric, harmonic, etc. scaling.
+
+================
+
+Primitive Coordinate Spaces
+
+Cartesian
+Polar
+DOM?
+
+Primitive cspaces always same, alterations come via transforms.
+Untransformed, the default is just plain Cartesian space, unit=1,
+scale is identity func, incidence 0 and 90, orientation standard.
+
+But what about polar space?  We can transform a cartesian space into a
+polar space, but we cannot draw directly into a polar space using
+cartesian coordinates.  So we need polar space as a primitive space.
+Two axes: angular (length along circumference) and radial (length of
+vector).
+
+================
+
+For browsers (rather, XML structures), treat the DOM as coordinate
+space?
+
+================
+
+Scales
+
+Note that some transform functions, e.g. scaling, can be applied to
+anything, not just axes.  For example, color gradients, color maps
+(see pgfplots).  So cspaces and axes and ink (styles) are all
+distinct, but transform functions can apply across the board.
+
+================
+
+D3 first "selects" DOM nodes, then brings in the data.  That seems
+backwards.  First read the data, then project to the design space.
+
+================
+
+The DOM+CSS model.  Boxes (some of them, anyway) implicitly define
+coordinate systems.  Adding an element - a paragraph, say - to the DOM
+does two things: it inserts a node into the (abstract) tree, and it
+maps the new node to a figure located in a coordinate space.  So to
+the hierarchy of the DOM corresponds a hierarchy of cspaces.
+Ultimately constrained by the display device.
+
+What about adding an svg circle (d3 examples)?  The svg cspace gets
+inserted into the cspace of the doc.  So there is an implicit
+transform mapping coords from the cs:SVG to cs:DOM. Or rather than
+cs:DOM, to whatever cspace is associated with the DOM parent of the
+svg node.  Call it the "host" cspace?  In any case, this is all
+implicit.
+
+Note that you cannot transform a cspace you are attaching to the DOM;
+attaching always means mapping origin to origin. (?)  You can
+transform subspaces within the cs:SVG, but you cannot use any
+transform other than the identity transform for mapping cs:SVG to
+cs:Host.
+
+Weeell, not really; you can use CSS positioning and offsetting.  So
+you can specify a transform, but not directly as a transform.  That's
+one of the design shortcomings of CSS.
+
+Plus, you rarely know where a host node cspace is itself going to end
+up after composition.
+
+In any case, the goal pursued here is investigation of DOM as a kind
+of coordinate space.  Or more generally (covering XML as well as
+HTML), of tree structured data and their relation of graphic
+coordinate spaces.
+
+================
+
+Kinds of "content coordinate spaces".  Sequence, Relation, Tree, Graph
+(net).  
+
+Plaintext is a sequential structure, so display of plaintext editor
+maps sequence to one cspace.
+
+Postscript has some hierarchy - pages, for example.  But basically the
+graphical figs on a postscript page do not map to a tree structure.
+You can reference variables, data structures, etc. within PS, but
+that's all internal.  There is no content data structure that stands
+separate from the language, as is the case with XML, where there is a
+data structure and API used by client languages.
+
+PDF?  Another page description language; I don't recall much of a
+content model standing separate from the graphic language, but it's
+been quite a while since I looked.
+
+In all these cases, when you add a figure to a space, you say where it
+is to be placed.  You might express that in terms of offsets or
+something, but you always refer to some known point of reference.  You
+don't just say "offset (x,y) from the upleft corner of parent
+figure, wherever that happens to end up" as is the case with HTML+CSS.
+
+Hmm.  Better review my PS/PDF.  As in most graphics languages, when
+you position something at (x,y) in PS/PDF, the implicit assumption is
+that the cspace involved may be transformed later.  So all positioning
+is relative until demonstrated otherwise.
+
+So what are we looking for here?  Uniformity of expression?  We want
+to use the same positioning language for both web and print targets.
+In particular, we want to completely hide the DOM, since a DOM API
+would be meaningless for e.g. PDF.  The D3 strategy of "selecting" DOM
+nodes and then binding data makes no sense if there is no DOM.
+
+A graphics language just specifies graphicky stuff, not content stuff.
+D3 and similar muddies the distinction by mingling content access
+vocab and graphics vocab.
+
+One approach: treat DOM nodes (and selectors) as names of coordinates
+in cspace.  Compare named nodes in TikZ/PGF.  Then the semantics would
+be purely geometric.  At least for accessing; what about
+adding/appending?  Appending a DOM node corresponds to specifying
+another point in cspace.  Think path v. ink.  Appending an empty div
+node is just like adding a point object to the path collection.  The
+difference is that the cs coords of the empty div are unresolved; it's
+like saying "add a point object, but I'll tell you the coordinates
+later".  In other words, like an unevaluated lambda(?), or a "virtual"
+point.  Another diff: DOM objects inherently ordered; add two empty
+divs and they will retain that order.  Add two virtual points and they
+are unordered.  Or: the only order in a cspace is that defined by the
+geometry of the space.  The temporal order in which stuff gets added
+is discarded.
+
+Or: the order of an XML tree is just abstract order, A precedes B,
+without any concrete definition of what "precedes" means (i.e. it does
+not mean greater than, less than, etc.)

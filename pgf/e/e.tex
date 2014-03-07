@@ -1,6 +1,10 @@
 \documentclass{article}
 \usepackage{etoolbox}
 
+\usepackage{adjustbox}
+
+\usepackage{pdflscape}
+
 \usepackage[latin1]{inputenc}
 \usepackage{amsmath}
 %% \usepackage{rotating}
@@ -32,10 +36,11 @@
 %\date{}                                           % Activate to display a given date or no date
 
 \includeonly{%
-  %% rectangle.unit
-  %% ,hyperbola.equilateral
-  %% ,hyperbola.rotation
-  ,transforms
+  hyperbolic.rectangle
+  %% ,hyperbolic.geomtery.equilateral
+  %% ,hyperbolic.geometry.1
+  %% ,hyperbolic.geometry.2
+  %% ,transforms
   %% ,hyperbolic.rotation.1
   %% ,hyperbolic.rotation.2
   %% ,hyperbolic.rotation.3
@@ -43,8 +48,7 @@
   %% ,hyperbolic.rotation.strain.1
   %% ,hyperbolic.rotation.strain.2
   %% ,hyperbolic.rotation.strain.3
-  %% ,hyperbola.sweep
-  %% ,hyperbola.sweep.animated
+  %% ,hyperbolic.rotation.strain.4
   %% ,e.complete
   %% ,e.sector
 }
@@ -59,6 +63,7 @@
 %%  counters: use i prefix
 
 \pgfmathsetmacro\sqrttwo{sqrt(2)}
+\pgfmathsetmacro\eeinv{1/e^2}
 
 %% tikz bounding boxes
 %% e graphs
@@ -105,8 +110,10 @@
 %% \maketitle
 %\tableofcontents
 
-\include{rectangle.unit}
-\include{hyperbola.equilateral}
+\include{hyperbolic.rectangle}
+\include{hyperbolic.geometry.equilateral}
+\include{hyperbolic.geometry.1}
+\include{hyperbolic.geometry.2}
 \include{transforms}
 \include{hyperbolic.rotation}
 \include{hyperbolic.rotation.1}
@@ -116,8 +123,7 @@
 \include{hyperbolic.rotation.strain.1}
 \include{hyperbolic.rotation.strain.2}
 \include{hyperbolic.rotation.strain.3}
-\include{hyperbola.sweep}
-\include{hyperbola.sweep.animated}
+\include{hyperbolic.rotation.strain.4}
 \include{e.complete}
 \include{e.sector}
 

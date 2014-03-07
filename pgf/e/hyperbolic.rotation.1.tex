@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Hyperbolic Rotation 1
-%% simple circular and hyperbolic rotation - sweep of radius
+%% sweep arc, shade sector and trapezoidal
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{animateinline}[%
     poster=first%
@@ -27,7 +27,7 @@
     %% \message{\rToXb}
 
     %% \if usebb
-    \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
+    %% \useasboundingbox[\bbdraw] {(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
     %% \fi
 
     \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})}

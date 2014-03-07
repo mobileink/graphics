@@ -1,8 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Hyperbolic Rotation 2
-%% sector and projection
+%% Hyperbolic Rotation 4
+%% trapezoidal and coord rect slide (dup of 3)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pgfmathparse{\value{iFrameRate}}
 \begin{animateinline}[%
     poster=first%
     %% ,draft
@@ -10,18 +9,18 @@
     ,controls%
   ]{\the\value{iFrameRate}}%
 
-  %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
+  %% %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
 
   %% \begin{tikzpicture}
   %%   \useasboundingbox[draw] {(-1,-2) rectangle (10,16)};
 
   %% \end{tikzpicture}
-  %% \newframe
+  %% %% \newframe
 
   %%%% MULTIFRAMES START FROM 1 NOT 0
-  \multiframe{\value{iFrameRate}}{iFrame=1+1}{%
+  \multiframe{\value{iFrameRate}}{iFrame=0+1}{%
+    \message{\iFrame}
     %% \message{\arabic{iFrames}}
-    %% \message{\iFrame}
     %% \message{\rFromXa}
     %% \message{\rToXa}
     %% \message{\rFromXb}
@@ -31,9 +30,10 @@
         scale=\tikzscale
         ,domain=-.3:7.4%
       ]
-      %% \if usebb
+  %%     %% \if usebb
       \useasboundingbox[\bbdraw]{(\bbminx,\bbminy) rectangle (\bbmaxx,\bbmaxy)};
-      %% \fi
+  %%     %% \fi
+
 
       \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
       \pgfmathsetmacro\xb{easeInQuadratic(\iFrame,\rFromXb,\rDeltaXb,\value{iFrames})};
@@ -74,13 +74,12 @@
       \fill[gray] (6,-.5) node {$6$};
       \fill[gray] (7,-.5) node {$7$};
       \fill[gray] (e^2,-.5) node {$e^2$};
-
       %%%%%%%%%%%%%%%%
       %% % 1.  hyperbolic rectilinear rotation
       %% \draw[-latex,red] (1,1) -- (e,1);
       %% \draw[-latex,red] (e,1) -- (e,1/e);
 
-      %% hyperbolic rotation animation
+  %%     %% hyperbolic rotation animation
       \begin{scope}[even odd rule]
         %% shade unit square
         \fill[gray,opacity=.2] (0,0) rectangle (1,1);

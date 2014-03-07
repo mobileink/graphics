@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Hyperbolic Rotation - Strain
-%% show strains explicitly
+%% Hyperbolic Rotation - oops. 
+%% three-move ``rotation'' - ignore!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{animateinline}[%
     poster=first%
@@ -8,9 +8,6 @@
     %% ,loop
     ,controls%
   ]{\the\value{iFrameRate}}%
-
-\message{\the\value{iFrameRate}}
-\message{\value{iFrames}}
 
   %%%%  INITIAL FRAME REQUIRED in order to get n+1 frames (good starts and ends)
 
@@ -424,7 +421,6 @@
 
       \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rToXa,-\rDeltaXa,\value{iFrames})};
 \message{\xa}
-
       \pgfmathsetmacro\xb{easeInQuadratic(\iFrame,\rToXb,-\rDeltaXb,\value{iFrames})};
 \message{\xb}
       %% \pgfmathsetmacro\xa{easeInQuadratic(\iFrame,\rFromXa,\rDeltaXa,\value{iFrames})};
@@ -499,11 +495,11 @@
 
         \draw[<->,green!10!black,samples=100,domain=.5:e^2+.2]
         plot (\x,{1/\x+(e-1)/\x});
-\message{foo}
+
         %% lower right to lower left
         \draw[green!50!black,ultra thick,samples=100,domain=\xa:\xb]
         (\xa,0) -- plot (\x,1/\x) -- (\xb,0) -- cycle;
-\message{bar}
+
         %% (e,0) -- plot (\x,{1/\x+\pct*(1+(e-1)/\x)})
 
         %% %% lower left to upper left

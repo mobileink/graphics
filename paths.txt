@@ -1,0 +1,20 @@
+
+
+	op	tikz fn
+
+	(,)	moveto
+	--	line-to
+	-|	horiz then vert
+	|-	vert then horiz
+	..	curve-to
+		circle
+		ellipse
+		arc
+		grid
+		parabola
+		sine/cosine
+		svg
+		plot
+		to
+		node
+		edge

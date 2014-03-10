@@ -17,8 +17,8 @@
 %% broken:
 %% \usepackage{ltcadiz-fam}
 
-\usepackage{fontspec,xltxtra,xunicode}
 \usepackage{fontspec}
+%% \usepackage{xltxtra,xunicode}
 \defaultfontfeatures{Scale=MatchLowercase}
 
 %% \defaultfontfeatures{Scale=MatchLowercase}
@@ -26,10 +26,11 @@
 %% \setsansfont[Mapping=tex-text]{Arial}
 %% \setmonofont{Courier}
 
-\setmainfont[Ligatures=TeX]{TeX Gyre Pagella}
-\setromanfont[Ligatures=TeX]{TeX Gyre Pagella}
-\setsansfont[Ligatures=TeX]{TeX Gyre Heros}
-\setmonofont{Courier}
+\setmainfont[Ligatures=TeX]{TeX Gyre Bonum}
+\setromanfont[Ligatures=TeX]{TeX Gyre Bonum}
+\setsansfont[Ligatures=TeX]{TeX Gyre Adventor}
+\setmonofont[Ligatures=TeX]{TeX Gyre Cursor}
+
 
 %% \setmainfont[Mapping=tex-text]{Minion Pro}
 %% \setromanfont[Mapping=tex-text]{Minion Pro}
@@ -38,7 +39,7 @@
 %% Bugfix: see https://code.google.com/p/tufte-latex/issues/detail?id=64
 % Set up the spacing using fontspec features
 \renewcommand\allcapsspacing[1]{{\addfontfeature{LetterSpace=15}#1}}
-\renewcommand\smallcapsspacing[1]{{\addfontfeature{LetterSpace=10}#1}}
+\renewcommand\smallcapsspacing[1]{{\addfontfeature{LetterSpace=0.0}#1}}
 
 \usepackage{epigraph}
 \setlength{\epigraphwidth}{.8\textwidth}
@@ -124,8 +125,8 @@
 \usepackage{tkz-euclide}
 \usetkzobj{all}
 
-%% prettier integral syms
-\usepackage{esint}
+%% prettier integral syms, but broken on miktex
+%% \usepackage{esint}
 
 
 \title{The Poetics of Coordinate Space}
@@ -135,25 +136,45 @@
 %%%%%%%%%%%%%%%%
 %% tufte-latex customizations
 
+\makeatletter
+\let\runauthor\@author
+\let\runtitle\@title
+\makeatother
+
+%% running headers
+\newcommand{\changefont}{%
+    \fontsize{7}{9.5}\selectfont
+}
+\fancypagestyle{plain}{
+	\fancyhead[LO,LE]{\leftmark }
+	\fancyhead[RO,RE]{\rightmark}
+	\fancyfoot[CO,CE]{\thepage}
+	\fancyfoot[LE]{\textsc{\runtitle}}
+	\fancyfoot[RO]{\textsc{\runtitle}}
+	\renewcommand{\headrulewidth}{0pt}
+	\renewcommand{\footrulewidth}{0pt}
+}
+\pagestyle{plain}
+
 \def\chpcolor{blue!45}
 \def\chpcolortxt{blue!60}
-%% \def\sectionfont{\sffamily\LARGE}
+\def\sectionfont{\LARGE}
 
 \setcounter{secnumdepth}{2}
 
 \makeatletter
-%Section:
+%% Section:
 \def\@sectionstrut{\vrule\@width\z@\@height12.5\p@}
 \def\@makesectionhead#1{%
   {%\par\vspace{20pt}%
-    \parindent -10pt\raggedleft%% \sectionfont
+    \parindent -10pt\raggedleft\sectionfont
     %% \colorbox{\chpcolor}{%
     %%   \parbox[t]{90pt}{\color{white}\@sectionstrut\@depth4.5\p@\hfill
     %%     \ifnum\c@secnumdepth>\z@\thesection\fi}%
     %% }%
     \vspace{10pt}%
     \begin{minipage}[t]{\textwidth}%{\dimexpr\textwidth-90pt-2\fboxsep\relax}
-      \@sectionstrut\hspace{-15pt}\textbf{\textit{\Large #1}}
+      \@sectionstrut\hspace{-15pt}\textit{\textbf\Huge #1}
     \end{minipage}\par
     \vspace{5pt}%
   }
@@ -360,58 +381,6 @@ of adequacy outlined above.
 \subsection{Math and Logic}
 \label{subs:mathlogic}
 
-%%%%%%%%
-\subsection{Sets and Functions}
-\label{subs:functions}
-
-\begin{remark}
-  Overview.  Motivate use of lambda calculus \& Z.
-
-  Two ways of thinking.  Elements v. relations, things v. structures,
-  set theory v. category theory.
-\end{remark}
-
-Identity function: expression of the form \ab are interpreted in terms
-of functions: (Id,Id)
-
-\begin{remark}
-  Functional thinking - from set theory (elements) to category theory
-  (arrows).  Or categorial logic.  Everything a function, even
-  numerical constants; functions as relations.
-\end{remark}
-
-Expressivity and function application - \(f(x)\) as \textit{denoting}
-a value but \textit{expressing} a relation between source and target
-values.  A lambda abstraction denotes a function qua set of ordered
-pairs, but expresses a function qua set of relations from source
-element to target elements.
-
-\begin{remark}
-  Evaluation strategies and expressivity of lambda calc.
-\end{remark}
-
-\begin{remark}
-  Operators?  An op is just a well-known function, so well-known that
-  convention has settled on a special symbol for it, e.g. \(\_+\_\)
-  instead of \(add(\_,\_)\).
-\end{remark}
-
-\begin{remark}
-  Continuous funcs applied to interval: use domain restriction op of
-  Z.  Express by giving lambda expression plus end points of range.
-\end{remark}
-
-\begin{remark}
-  Compare: \(f(x) = ax + b\) and TikZ's line op ``-\-''.  The domain
-  of the former is \R{}; the domain of the latter is
-  \((\real\cross\real)\cross(\real\cross\real)\).  So TikZ's func must
-  construct the func and the endpoints, which we can express in Z.
-\end{remark}
-
-Function polymorphism: accepts different arg types (and numbers?)
-
-Poylymorphic types
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Technical Preliminaries}
 \label{sect:prelims}
@@ -421,8 +390,12 @@ Poylymorphic types
 \end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Expressivity}
-\label{sect:expressivity}
+\section{Denotation}
+\label{sect:denotation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Expression}
+\label{sect:expression}
 
 \begin{remark}
   Use/mention distinction: ``(a,b)'' denotes (a,b)
@@ -622,9 +595,15 @@ Types we need to define for our topic:
 \item other?
 \end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Definitions in Z}
+\label{sect:zdefns}
+
+\begin{description}
+\item[Abbreviation definition]
 %%%%%%%%
-\subsection{Abbreviation definition}
-\label{subs:abbrevs}
+%% \subsection{Abbreviation definition}
+%% \label{subs:abbrevs}
 
 ``An abbreviation definition introduces a new global constant. The identifier on
 the left becomes a global constant; its value is given by the expression on the
@@ -638,9 +617,10 @@ This says that a point is a pair of coordinates, and a coordinate is a
 real number.  Here ``\(\cross\)'' is the cartesian cross-product
 operator.
 
+\item[Axiomatic definition]
 %%%%%%%%
-\subsection{Axiomatic definition}
-\label{subs:ztypedefns}
+%% \subsection{Axiomatic definition}
+%% \label{subs:ztypedefns}
 
 ``An axiomatic description introduces one or more global variables, and optionally
 specifies a constraint on their values.'' (Spivey, p.48)
@@ -654,9 +634,10 @@ of its argument:
   \forall n : \nat @ sq(n) = n\times n
 \end{axdef}
 
+\item[Schema definition]
 %%%%%%%%
-\subsection{Schema definition}
-\label{subs:zschemadefn}
+%% \subsection{Schema definition}
+%% \label{subs:zschemadefn}
 
 A Z schema \textit{binds} names to values; it is analogous to a struct
 in C or a record in other languages.
@@ -708,9 +689,10 @@ Same thing in horizontal form:
 \[Axis \defs [origin:COORD;offset:COORD;incidence:RADIAN;scale:COORD\fun COORD \\
   \quad\quad\quad | origin=(0,0); offset=scale(origin)]\]
 
-%%%%%%%%
-\subsection{Generic definition}
-\label{subs:zfndefns}
+\item[Generic definition]
+%% %%%%%%%%
+%% \subsection{Generic definition}
+%% \label{subs:zfndefns}
 
 General form of
 
@@ -753,6 +735,9 @@ they work on any pair of types.
 
 The second part of the definition (below the bar) states a predicate
 and a value expression.
+
+
+\end{description}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Lambda Calculus}
@@ -805,6 +790,82 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \item [Eager]  save the results of immediate evaluation of expressions to the cs.
   \item [Lazy] a/k/a lazy evaluation; save the expressions to the cs, rather than their evaluations.
   \end{description}
+
+%%%%%%%%
+\section{Thirty-six Views of a Function}
+\label{subs:functions}
+
+\begin{remark}
+  Overview.  Motivate use of lambda calculus \& Z.
+
+  Two ways of thinking.  Elements v. relations, things v. structures,
+  set theory v. category theory.
+\end{remark}
+
+Identity function: expression of the form \ab are interpreted in terms
+of functions: (Id,Id)
+
+\begin{remark}
+  Functional thinking - from set theory (elements) to category theory
+  (arrows).  Or categorial logic.  Everything a function, even
+  numerical constants; functions as relations.
+\end{remark}
+
+Expressivity and function application.  A lambda abstraction like
+``\(\lambda x.x)\)'', or a more tradition expression like \(f(x) = x\)
+\textit{expresses} a function, but its \textit{denotation} is
+undefined by the Lambda Calculus.
+
+By the same token, an application expression like \(\lambda x.2x(1)\)
+expresses and denotes a value.
+
+A function can be viewed in many ways.  From a strictly set-theoretic
+perspective, a function can be viewed as a set of ordered pairs.  From
+computational perspective, a function can be viewed as a computation
+(or potential computation).  It can also be viewed as a relation or
+set of relations between source and target values.
+
+\begin{remark}
+  Evaluation strategies and expressivity of lambda calc.
+\end{remark}
+
+Function application is most easily presented as the application of a
+function to a single value; but often we want to work with the value
+of a function over a range of values from its domain.  For this a
+special notation is available, analogous to notation for the integral:
+
+\[\bigg|_a^b f(x) \quad\textnormal{or}\quad\bigg|_a^b \lambda x.(\ldots x\ldots)\]
+\noindent expresses (denotes) the value of the function for every \(x\) between \(a\) and \(b\).
+
+\begin{remark}
+  Operators?  An op is just a well-known function, so well-known that
+  convention has settled on a special symbol for it, e.g. \(\_+\_\)
+  instead of \(add(\_,\_)\).
+\end{remark}
+
+\begin{remark}
+  Continuous funcs applied to interval: use domain restriction op of
+  Z.  Express by giving lambda expression plus end points of range.
+\end{remark}
+
+\begin{remark}
+  Compare: \(f(x) = ax + b\) and TikZ's line op ``-\-''.  The domain
+  of the former is \R{}; the domain of the latter is
+  \((\real\cross\real)\cross(\real\cross\real)\).  So TikZ's func must
+  construct the func and the endpoints, which we can express in Z.
+\end{remark}
+
+Function polymorphism: accepts different arg types (and numbers?)
+
+Poylymorphic types
+
+\subsection{Graph of a function}
+\subsection{Curve of a function}
+\subsection{Computation of a function}
+\subsection{Function Composition}
+Contract sequential evaluation
+\subsection{Partial Evaluation}
+\subsection{Currying}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -909,6 +970,107 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \end{description}
 
   %%%%%%%%
+  \subsection{Kinds of Axis}
+
+  \begin{description}
+    \item [Linear]
+    \item [Polar] ``The fixed point (analogous to the origin of a
+      Cartesian system) is called the pole, and the ray from the pole
+      in the fixed direction is the polar axis. The distance from the
+      pole is called the radial coordinate or radius, and the angle is
+      the angular coordinate, polar angle, or azimuth.[1]...The radial
+      coordinate is often denoted by r, and the angular coordinate by
+      φ, θ, or t. The angular coordinate is specified as φ by ISO
+      standard 31-11.''
+      \url{http://en.wikipedia.org/wiki/Polar_coordinate_system}
+
+      In other words, what corresponds to the unit ray in a unit
+      circle is called the polar axis.  By extension, the angle is the
+      radial axis.  To avoid confusion it might be better to rename
+      these, since ``radial'' could easily be taken to refer to
+      radius, and ``polar'' to angle.  Call the polar axis something
+      else, maybe the distance axis, and the radial axis the
+      rotational or azimuth or angular axis.
+
+      \begin{remark}
+        This would imply that the polar axis cannot take negative
+        values, although I don't see why we should not treat it as a
+        line so that we can have negative lengths, just as in
+        cartesian space.
+      \end{remark}
+
+      \begin{remark}
+        By analogy with linear spaces, we would like to think of the
+        angle (type \R) as being located along an axis.  But you
+        cannot have an angle without a length.  So it isn't clear how
+        to think about the ``radial axis'' as independent from the
+        polar axis.  Scaling an angle maps it to another angle, but
+        there is no place to ``locate'' angles without a length, which
+        comes from the other axis.  So ``point on the angular axis''
+        doesn't mean anything.
+
+        For example, in a linear space we can get parallel axes by
+        offsetting the center of the y axis and setting its angle of
+        incidence to zero.  What is the analog for polar spaces?  But:
+        offsetting center of y axis - assumption is that offset occurs
+        relative to absolute y axis, that is, moves the axis up or
+        down.  What's the analog?  Offsetting rotational axis relative
+        to absolute rotational axis?  But does the ``absolute
+        rotational axis'' even have a center?  It has an origin, which
+        normally corresponds to the origin (center) of the distance
+        axis, but that's not the same as a center.  Or is it - we can
+        do negative rotations, after all.  But is there a center
+        ``between'' positive and negative rotations?
+
+        One possible approach is to stipulate something involving the
+        unit circle and unit ray.  For example, we might just define
+        ``location (angle) on the rotational axis'' as the point on
+        the unit circle at that angle.  Then the center of the
+        rotational axis - the ``point'' between positive and negative
+        rotations - would be the unit ray of the unit circle.  
+
+        Better, define angle on rotational axis as the corresponding
+        arc on the unit circle.  This makes sense if we treat the unit
+        of the axis as 1, meaning 1 radian (rotational unit); this
+        corresponds exactly to making the unit of a linear axis 1,
+        meaning one linear unit.  In fact, we must have the unit
+        circle, since that is how we define angle: length of arc on
+        the unit circle.  So to find a point in polar space, we have
+        to find the angle on the unit circle, then multiply the unit
+        ray to the end point of the angle by the other coordinate of
+        the point.
+
+        Displacing the center of a linear axis means moving it some
+        number of units away from the absolute center.  The ``center''
+        of the rotational axis would be the arc of length zero,
+        i.e. the point at (1,0); moving the center without changing
+        the incidence would rotate the system, just as moving the
+        center of a linear axis without changing the incidence
+        translates linearly.  Moving the center of the rotational axis
+        and also changing its incidence would do what?  I'm not sure
+        angle of incidence makes sense for rotational axes.
+
+        But think abstractly.  Angle of incidence just means change
+        relative to an absolute base - in the case of linear axes, a
+        rotational change.  What is the analog for rotational axes?
+        Change (in what units) relative to unit circle?  Since the
+        axis is already rotational, maybe the unit should be linear.
+
+        We also might do something with hyperbolic space.  A location
+        on the rotational access might map to a point on the
+        hyperbola.  Then ``parallel axis'' in a polar space would
+        involve a unit circle and a unit hyperbola instead of two
+        lines.
+
+        Of course this is all very theoretical and may be of no use to
+        anybody, but it does force us to clarify our intuitions.
+      \end{remark}
+
+      \item[Hyperbolic]
+
+  \end{description}
+
+  %%%%%%%%
   \subsection{Name}
   \label{subs:axisname}
 
@@ -983,7 +1145,7 @@ Every axis must have a name.
     come from the root cspace, which will not be affected by axis
     scaling higher up the stack.}
 
-  \newthought{Now suppose} we scale the y axis by \(\lambda y.2y\).
+  \newthought{Now suppose we scale} the \(y\) axis by \(\lambda y.2y\).
   This will shift all y values up by a factor of \(2\).  If we then plot
   the function \(\lambda x.x\), the slope of the curve will change; it
   will look like the plot of \(\lambda x.2x\).  In this case, the

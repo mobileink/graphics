@@ -79,6 +79,7 @@
 \usepackage{hyperref}
 \hypersetup{
   bookmarks=true,         % show bookmarks bar?
+  bookmarksdepth=3,
   unicode=true,          % non-Latin characters in Acrobat’s bookmarks
   pdftoolbar=true,        % show Acrobat’s toolbar?
   pdfmenubar=true,        % show Acrobat’s menu?
@@ -226,6 +227,17 @@
 
 \maketitle
 
+\begin{abstract}
+  \begin{center}
+  \textit{Abstract}
+  \end{center}
+  The foundation of any graphics language or system is
+  its \cspace{}.  \Cspace{}s organize space.  Despite my title--a play
+  on G. Bachelard's famous \textit{The Poetics of Space}--this is a
+  paper on the design and specification of a technical language
+  of \cspace{}s.
+\end{abstract}
+
 \tableofcontents
 
 \begin{remark}
@@ -241,28 +253,11 @@
 \section{Introduction}
 \label{sect:intro}
 
-%%%%%%%%
-\subsection{Requirements for a Vector Graphics Language}
-\label{subs:reqts}
-
 \begin{remark}
-  Expressivity is what counts.  Just about everybody does cs and
-  device independece - a conspicous exception being HTML5 Canvas.
+  What this is about.  Two things: vector graphics, and language.  The
+  former motivates analysis and description of \cspace{}s; the latter
+  motivates use of formal notations (lambda calculus and Z) to do so.
 \end{remark}
-
-
-Conditions of adequacy for a graphics language:
-
-\begin{description}
-\item [Expressivity]
-\item [Coordinate space independence] i.e. support for transforms
-\item [Device Independence]
-\item [] etc.
-\end{description}
-
-
-This paper focuses on coordinate spaces and their relation to the
-forms that are inscribed in them.
 
 %%%%%%%%
 \subsection{Basic Concepts}
@@ -274,6 +269,105 @@ spaces (all points).  No fundamental distinction; a function that can
 be used for one can be used for the other.  It's a question of how one
 designs the language, what sort of expressiveness it has.
 
+%%%%%%%%
+\subsection{Vector Graphics Language}
+\label{subs:reqts}
+
+\begin{remark}
+  Expressivity is what counts.  Just about everybody does cs and
+  device independece - a conspicous exception being HTML5 Canvas.
+\end{remark}
+
+
+Conditions of adequacy for a graphics language:
+
+\begin{description}
+\item [Expressivity] ability to express any geometry
+\item [Usability] expressions in the language must be understandable
+  by both machines and humans.
+\item [Simplicity] as simple as possible, no simpler
+\item [Beauty] aesthetics is arguably the unacknowledged driver of
+  all design
+\item [Coordinate space independence] i.e. support for transforms
+\item [Device Independence]
+\item [etc]
+\end{description}
+
+This paper focuses on coordinate spaces and their relation to the
+figures that are inscribed in them.  The goal is to specify a semantic
+metalanguage for such spaces and figures that satisfies the criteria
+of adequacy outlined above.
+
+\begin{remark}
+  Is ``semantic metalanguage'' really the right term?  We're using Z
+  to describe a semantic domain, not another language.  We're using it
+  as a language, not a metalanguage.
+\end{remark}
+
+%%%%%%%%
+\subsection{Language and Metalanguage}
+\label{subs:langmetalang}
+
+\begin{remark}
+  We will use Z to define a semantic metalanguage, which can then be
+  used to define (fragments of) concrete languages (DSLs).
+\end{remark}
+
+%%%%%%%%
+\subsection{Math and Logic}
+\label{subs:mathlogic}
+
+%%%%%%%%
+\subsection{Sets and Functions}
+\label{subs:functions}
+
+\begin{remark}
+  Overview.  Motivate use of lambda calculus \& Z.
+
+  Two ways of thinking.  Elements v. relations, things v. structures,
+  set theory v. category theory.
+\end{remark}
+
+Identity function: expression of the form \ab are interpreted in terms
+of functions: (Id,Id)
+
+\begin{remark}
+  Functional thinking - from set theory (elements) to category theory
+  (arrows).  Or categorial logic.  Everything a function, even
+  numerical constants; functions as relations.
+\end{remark}
+
+Expressivity and function application - \(f(x)\) as \textit{denoting}
+a value but \textit{expressing} a relation between source and target
+values.  A lambda abstraction denotes a function qua set of ordered
+pairs, but expresses a function qua set of relations from source
+element to target elements.
+
+\begin{remark}
+  Evaluation strategies and expressivity of lambda calc.
+\end{remark}
+
+\begin{remark}
+  Operators?  An op is just a well-known function, so well-known that
+  convention has settled on a special symbol for it, e.g. \(\_+\_\)
+  instead of \(add(\_,\_)\).
+\end{remark}
+
+\begin{remark}
+  Continuous funcs applied to interval: use domain restriction op of
+  Z.  Express by giving lambda expression plus end points of range.
+\end{remark}
+
+\begin{remark}
+  Compare: \(f(x) = ax + b\) and TikZ's line op ``-\-''.  The domain
+  of the former is \R{}; the domain of the latter is
+  \((\real\cross\real)\cross(\real\cross\real)\).  So TikZ's func must
+  construct the func and the endpoints, which we can express in Z.
+\end{remark}
+
+Function polymorphism: accepts different arg types (and numbers?)
+
+Poylymorphic types
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Technical Preliminaries}
@@ -284,7 +378,341 @@ designs the language, what sort of expressiveness it has.
 \end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The Lambda Calculus}
+\section{Expressivity}
+\label{sect:expressivity}
+
+\begin{remark}
+  Use/mention distinction: ``(a,b)'' denotes (a,b)
+
+  Shades of Tarski, ``Snow is white'' means snow is white.  Of course
+  it is critical to make the distinction between expressions in a
+  language and their meanings - between mention and use.
+\end{remark}
+
+Having defined a collection of types, we need a means of expressing
+values of those types.  For this we need a language--a
+\textit{Domain-Specific Language} or DSL--and we can design our DSL in
+whatever way we please to suit our expressive purposes.\sidenote{As a
+  set of syntactic conventions, a language may be textual or visual.}
+
+Of course, we also needed a language in order to express our type
+definitions; we used Z, which has the virtue of formal semantics.
+
+Definitions in Z describe the \textit{semantic domain}
+(i.e. mathematical structure) of our intended DSL.  Since Z is based
+on standard (ZF, Zermelo-Frankel) set theory, Z itself is sufficiently
+expressive to describe anything describeable in set-theoretic terms,
+which is all we need in order to ``do graphics''.
+
+This means that we can furnish our DSL -- whatever form it takes --
+with a formal semantics.  All we need to do is map expressions in our
+language to the Z expressions we used to define the elements of our
+semantic domain.  For example, we will use Z to define \(POINT\) as a
+pair of real numbers; in our DSL we might prefer the symbol \(Pt\);
+all we need to do is specify a mapping from our DSL to our semantic
+language. Something like \(Pt\rightarrow POINT\), for
+example.\sidenote{In practice we would also need to indicate which
+  terms in such an expression come from our DSL and which from our
+  semantic language.  But such hairy details of actually specifying a
+  DSL are beyond the scope of this paper.}
+
+Expressiveness is a property of languages, not semantic domains.  The
+critical point here is that the formal definitions of our semantic
+language specification define \textit{types}.  They impose no
+constraint on \textit{expression} in our DSLs.
+
+This issue goes beyond mere renaming of constant symbols.
+\textit{Any} expression, no matter how complex, that evaluates to a
+value $x$ may be used to express that value in complex expressions.
+
+%% In particular, recalling that a function application expression is a
+%% kind of name for the value it denotes, we see that our DSL may give us
+%% many different ways to refer to the same semantic value.
+
+Consider the Z expression ``\((1,2)\)''.  This expression denotes a
+mathematical object, the ordered pairing of the first two integers.  Z
+follows convention in adopting parenthetical notation ``(,)'' for such
+expressions.  But Z also includes standard arithmetic operators so we
+have an unlimited number of ways of expressing this value:
+\(``(1,1+1)'', ``(2-1,\frac{6}{3})'', ``(|\sqrt{1}|,|\sqrt{4}|)''\)
+are distinct expressions all denoting the same value, namely
+\((1,2)\).\sidenote{The use/mention distinction is critical.
+  Quotation marks are the notational convention for expressing
+  mentions; unquoted expressions are used, quoted ones are mentioned.
+  Compare:
+
+  \vspace{4pt}
+         {\centering
+           ``Snow is white'' means snow is white.}
+
+         \vspace{4pt}
+         Another means of marking the distinction is to use ``semantic
+         brackets'' like \(\lbag\ \rbag\).  Then ``1+1'' (quoted) mentions
+         (refers to) the expression inside the quotes, and \(\lbag 1+1\rbag\)
+         denotes the value of the expression (i.e. the second integer), so we can say
+
+         \vspace{4pt}
+                {\centering
+                  ``\((1+1)\)'' denotes \(\lbag 2\rbag\)}
+
+}
+
+Most important, we can use function application expressions to denote
+values.  For example, the expression \(\lambda x.2x\) denotes the
+function that doubles its argument.  \textit{Applying} a function to a
+value--or rather, \textit{expressing} its application to a value by
+writing down the appropriate bit of notation--denotes the value of the
+function for that argument: \(\lambda x.2x(1) = 2\).  So we can
+express \((1,2)\) by writing \((1,\lambda x.2x(1))\).
+
+The significance of this will become clear when we discuss evaluation
+strategies in section \ref{sect:eval}.  The gist of the story is that
+compound expressions like \(1+1\) and \(\lambda x.2x(1)\) denote what
+they denote, \textit{whether we actually compute those values or not}.
+In the language of the Lambda Calculus, evaluation of such expressions
+is called \textit{reduction}, since it involves transforming them to
+the simplest possible expression having the same
+meaning.\sidenote{``Reduction'' is effectively a synonym for
+  ``computation''.}  The critical point is that the meaning of such
+expressions is independent of their reduction.  This means that, as we
+go about evaluating expressions in our DSL, we are not compelled to
+immediately reduce (or fully evaluate, completely compute, etc.) each
+expression as we encounter it.  We can just keep track of the
+expressions themselves, rather than their (computed) values, knowing
+as we do that the meanings of expressions are immutable.  We need not
+reduce them until we need them in order to continue with the computation.
+
+%%%%%%%%
+\section{Immutability}
+\label{sect:immutability}
+
+Virtually all vector graphics languages use mutable data structures.
+For example, path construction operators usually update a ``current
+point'' datum.
+
+\begin{remark}
+  Explain how immutable data structures do not sacrifice expressivity.
+  Maybe they improve it.
+
+  One way: paths/figures as sequences rather than sets of points; that
+  means they respond to a ``last'' function.  So path constructors
+  applied to a path/figure invokes ``last'' to obtain the analog of
+  ``current point''.  Except there's no temporal dimension to it, so
+  no notion of ``current'' point.
+\end{remark}
+
+\begin{remark}
+  the more general pt:  expressivity, with and without mutable data.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Z Notation}
+\label{sect:z}
+
+\begin{remark}
+  The end result of this paper will be a Z toolkit for graphics, which
+  in principle should be sufficient for the formal specification of
+  any graphics language.
+\end{remark}
+
+Z (pronounced ``Zed'') is a notation for formal
+specification.\sidenote{% The official definition of Z is
+  \citetalias{z-iso-13568}.  It is available for free download.
+
+See also
+\citet{spivey_z_1992} (free download),
+\citet{jacky_way_1997},
+\citet{woodcock_using_1996},
+\citet{potter_introduction_1996}
+}%
+It is based on
+standard mathematical and logical notation, but unlike the informal
+conventions governing such notation in schools and among scholars
+and professionals, Z is a formal notation, designed to enable its
+users to express systems and languages in formal specifications with
+rigorously defined semantics.  The Z definition document formally
+defines the syntax, type system, and semantics of the notation.
+
+The Z notation is clear, simple, concise, and expressive.  It allows
+us to express formal definitions with great precision and clarity,
+in an idiom that is easily recognizable and intuitive.  In this
+paper, we will extend Z to describe the structure and properties
+of \cspace{}s and geometry figures (graphics).
+
+%% Since the
+%% definition of Z specifies a formal notation (language) with an
+%% explicit formal semantics, expressions written in that notation,
+%% like ``\((0,0)\)'' or ``\RR'', have a precise and explicitly defined
+%% mathematical meaning.
+
+\begin{description}
+\item [binding] finite function from names to values
+\item [carrier set] of a type: set of all values in the type
+\item [schema] set of bindings
+\item [signature] function from names to types; i.e. each schema has a signature
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Types, Sets \& Values}
+\label{sect:types}
+
+\begin{remark}
+  Types are not sets. An expression like ``\(a:A\)'' means that \(a\)
+  is a value of type \(A\); it does \textit{not} mean that \(a\) is a
+  \textit{member} of the set \(A\).  That's the job of the
+  \textit{carrier set} of the type.  So if \(a:A\), then we cannot
+  infer \(a\in A\), but we can infer \(a\in carrier(A)\).
+
+  Type symbols e.g. \R do not denote sets of values; that's the job of
+  the carrier set of the type.
+\end{remark}
+
+Types we need to define for our topic:
+
+\begin{itemize}
+\item Coordinates
+\item Points
+\item Spaces
+\item Axes
+\item Paths
+\item Figures (?)
+\item other?
+\end{itemize}
+
+%%%%%%%%
+\subsection{Abbreviation definition}
+\label{subs:abbrevs}
+
+``An abbreviation definition introduces a new global constant. The identifier on
+the left becomes a global constant; its value is given by the expression on the
+right, and its type is the same as the type of the expression.'' (Spivey, p.50)\marginnote{TODO: bib entry for Spivey}
+
+Examples:
+
+\[COORD == \real \\ POINT == COORD\cross COORD \]
+
+This says that a point is a pair of coordinates, and a coordinate is a
+real number.  Here ``\(\cross\)'' is the cartesian cross-product
+operator.
+
+%%%%%%%%
+\subsection{Axiomatic definition}
+\label{subs:ztypedefns}
+
+``An axiomatic description introduces one or more global variables, and optionally
+specifies a constraint on their values.'' (Spivey, p.48)
+
+For example, this defines a \(sq\) function that computes the square
+of its argument:
+
+\begin{axdef}
+  sq : \nat\fun\nat
+  \where
+  \forall n : \nat @ sq(n) = n\times n
+\end{axdef}
+
+%%%%%%%%
+\subsection{Schema definition}
+\label{subs:zschemadefn}
+
+A Z schema \textit{binds} names to values; it is analogous to a struct
+in C or a record in other languages.
+
+Generic vertical and horizontal forms:
+\begin{marginfigure}[1in]
+  \begin{schema}{S}
+    D_1;\ldots ;D_m
+    \where
+    P_1;\ldots ;P_n
+  \end{schema}
+\end{marginfigure}
+\begin{schema}{S}
+  D_1;\ldots ;D_m
+  \where
+  P_1;\ldots ;P_n
+\end{schema}
+
+\noindent Equivalently: \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
+\begin{marginfigure}
+  \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
+\end{marginfigure}
+
+Example:
+
+\begin{marginfigure}[24pt]
+  \begin{schema}{Axis}
+    origin : COORD \\
+    offset : COORD \\
+    incidence : RADIAN \\
+    scale : COORD\fun COORD
+    \where
+    origin = (0,0) \\
+    offset = scale(origin)
+  \end{schema}
+\end{marginfigure}
+\begin{schema}{Axis}
+  origin : \real\cross\real \\
+  offset : \real\cross\real \\
+  incidence : \real \\
+  scale : \real\fun\real
+  \where
+  origin = (0,0) \\
+  offset = scale(origin)
+\end{schema}
+
+Same thing in horizontal form:
+
+\[Axis \defs [origin:COORD;offset:COORD;incidence:RADIAN;scale:COORD\fun COORD \\
+  \quad\quad\quad | origin=(0,0); offset=scale(origin)]\]
+
+%%%%%%%%
+\subsection{Generic definition}
+\label{subs:zfndefns}
+
+General form of
+
+\begin{description}
+\item [generic definition]
+  \begin{gendef}[X,Y]
+    <type declarations>
+    \where
+    <definitions>
+  \end{gendef}
+\end{description}
+
+Example:
+
+\begin{gendef}[X,Y]
+  first : X \cross Y \rightarrow X \\
+  second : X \cross Y \rightarrow Y
+  \where
+  \forall p : X \cross Y @ first\ p = p.1 \\
+  \forall p : X \cross Y @ second\ p = p.2
+\end{gendef}
+\begin{marginfigure}[-12pt]
+  \begin{gendef}[X,Y]
+    first : X \cross Y \rightarrow X \\
+    second : X \cross Y \rightarrow Y
+    \where
+    \forall p : X \cross Y @ first\ p = p.1 \\
+    \forall p : X \cross Y @ second\ p = p.2
+  \end{gendef}
+\end{marginfigure}
+
+This is a ``generic definition'' of the cartesian pair projection
+operators:
+\[first(a,b) = a,\quad second(a,b) = b\]
+\noindent The top part of the definition describes the types of these
+functions; each is of type ``function from set of ordered pairs of
+values to a single value.''  $X$ and $Y$ are used to denote generic
+types; in other words, these projection functions are polymorphic,
+they work on any pair of types.
+
+The second part of the definition (below the bar) states a predicate
+and a value expression.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Lambda Calculus}
 \label{sect:lambda}
 
 Terminology:
@@ -302,6 +730,17 @@ abstraction.  The result of contracting redex \((\lambda M) N\) is the
 term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   %%%%%%%%
+  \subsection{Types}
+  \label{subs:lambdatypes}
+
+  \begin{remark}
+    Untyped v. typed calculii.  Relevance to this project: Z expressions
+    are all strongly typed so if we're going to use lambda calc it needs
+    to be typed, at least implicitly.  But maybe we don't need to make
+    this a subsection.
+  \end{remark}
+
+  %%%%%%%%
   \subsection{Lambda Abstraction}
   \label{subs:lambda}
 
@@ -315,356 +754,18 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   Redex, etc.
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{The Z Formal Specification Notation}
-  \label{sect:z}
-
-  The Z notation is clear, concise, precise, etc. and \textit{very}
-  expressive.  It allows us to express formal definitions with a minimum
-  form and maximal information.\marginnote{TDOD: why Z is so great}
-
-  \citet{spivey_z_1992}
-
-  \citet{jacky_way_1997}
-
-  \citet{woodcock_using_1996}
-
-  \citet{potter_introduction_1996}
-
-  \begin{remark}
-    Also: formal semantics
-  \end{remark}
+  %%%%%%%%
+  \subsection{Evaluation Strategy}
+  \label{subs:evalstrat}
 
   \begin{description}
-  \item [binding] finite function from names to values
-  \item [carrier set] of a type: set of all values in the type
-  \item [schema] set of bindings
-  \item [signature] function from names to types; i.e. each schema has a signature
+  \item [Eager]  save the results of immediate evaluation of expressions to the cs.
+  \item [Lazy] a/k/a lazy evaluation; save the expressions to the cs, rather than their evaluations.
   \end{description}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \subsection{Types \& Values}
-  \label{sect:types}
-
-  \begin{remark}
-    Informal explanations in main body, formal Z definitions in
-    sidenotes.
-  \end{remark}
-
-  \begin{remark}
-    We use the Z (Zed) Specification language for our formal definitions.
-  \end{remark}
-
-  \begin{remark}
-    Type symbols e.g. \R do not denote sets of values; that's the job of the carrier set of the type.
-  \end{remark}
-
-  Types we need to define for our topic:
-
-  \begin{itemize}
-  \item Coordinates
-  \item Points
-  \item Spaces
-  \item Axes
-  \item Paths
-  \item Figures (?)
-  \item other?
-  \end{itemize}
-
-  \begin{remark}
-    Types are not sets. An expression like ``\(a:A\)'' means that \(a\)
-    is a value of type \(A\); it does \textit{not} mean that \(a\) is a
-    \textit{member} of the set \(A\).  That's the job of the
-    \textit{carrier set} of the type.  So if \(a:A\), then we cannot
-    infer \(a\in A\), but we can infer \(a\in carrier(A)\).
-  \end{remark}
-
-  %%%%%%%%
-  \subsection{Abbreviation definition}
-  \label{subs:abbrevs}
-
-  ``An abbreviation definition introduces a new global constant. The identifier on
-  the left becomes a global constant; its value is given by the expression on the
-  right, and its type is the same as the type of the expression.'' (Spivey, p.50)\marginnote{TODO: bib entry for Spivey}
-
-  Examples:
-
-  \[COORD == \real \\ POINT == COORD\cross COORD \]
-
-  This says that a point is a pair of coordinates, and a coordinate is a
-  real number.  Here ``\(\cross\)'' is the cartesian cross-product
-  operator.
-
-  %%%%%%%%
-  \subsection{Axiomatic definition}
-  \label{subs:ztypedefns}
-
-  ``An axiomatic description introduces one or more global variables, and optionally
-  specifies a constraint on their values.'' (Spivey, p.48)
-
-  For example, this defines a \(sq\) function that computes the square
-  of its argument:
-
-  \begin{axdef}
-    sq : \nat\fun\nat
-    \where
-    \forall n : \nat @ sq(n) = n\times n
-  \end{axdef}
-
-  %%%%%%%%
-  \subsection{Schema definition}
-  \label{subs:zschemadefn}
-
-  A Z schema \textit{binds} names to values; it is analogous to a struct
-  in C or a record in other languages.
-
-  Generic vertical and horizontal forms:
-  \begin{marginfigure}[1in]
-    \begin{schema}{S}
-      D_1;\ldots ;D_m
-      \where
-      P_1;\ldots ;P_n
-    \end{schema}
-  \end{marginfigure}
-  \begin{schema}{S}
-    D_1;\ldots ;D_m
-    \where
-    P_1;\ldots ;P_n
-  \end{schema}
-
-  \noindent Equivalently: \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
-  \begin{marginfigure}
-    \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
-  \end{marginfigure}
-
-  Example:
-
-  \begin{marginfigure}[24pt]
-    \begin{schema}{Axis}
-      origin : COORD \\
-      offset : COORD \\
-      incidence : RADIAN \\
-      scale : COORD\fun COORD
-      \where
-      origin = (0,0) \\
-      offset = scale(origin)
-    \end{schema}
-  \end{marginfigure}
-  \begin{schema}{Axis}
-    origin : \real\cross\real \\
-    offset : \real\cross\real \\
-    incidence : \real \\
-    scale : \real\fun\real
-    \where
-    origin = (0,0) \\
-    offset = scale(origin)
-  \end{schema}
-
-  Same thing in horizontal form:
-
-  \[Axis \defs [origin:COORD;offset:COORD;incidence:RADIAN;scale:COORD\fun COORD \\
-    \quad\quad\quad | origin=(0,0); offset=scale(origin)]\]
-
-  %%%%%%%%
-  \subsection{Function definition}
-  \label{subs:zfndefns}
-
-  General form of
-
-  \begin{description}
-  \item [generic definition]
-    \begin{gendef}[X,Y]
-      <type declarations>
-      \where
-      <definitions>
-    \end{gendef}
-  \end{description}
-
-  Example:
-
-  \begin{marginfigure}
-    \begin{gendef}[X,Y]
-      first : X \cross Y \rightarrow X \\
-      second : X \cross Y \rightarrow Y
-      \where
-      \forall p : X \cross Y @ first\ p = p.1 \\
-      \forall p : X \cross Y @ second\ p = p.2
-    \end{gendef}
-  \end{marginfigure}
-  \begin{gendef}[X,Y]
-    first : X \cross Y \rightarrow X \\
-    second : X \cross Y \rightarrow Y
-    \where
-    \forall p : X \cross Y @ first\ p = p.1 \\
-    \forall p : X \cross Y @ second\ p = p.2
-  \end{gendef}
-
-  This is a ``generic definition'' of the cartesian pair projection
-  operators:
-  \[first(a,b) = a,\quad second(a,b) = b\]
-  \noindent The top part of the definition describes the types of these
-  functions; each is of type ``function from set of ordered pairs of
-  values to a single value.''  $X$ and $Y$ are used to denote generic
-  types; in other words, these projection functions are polymorphic,
-  they work on any pair of types.
-
-  The second part of the definition (below the bar) states a predicate
-  and a value expression.
-
-  %%%%%%%%
-  \section{Expressivity}
-  \label{sect:expr}
-
-  Having defined a collection of types, we need a means of expressing
-  values of those types.  For this we need a language--a
-  \textit{Domain-Specific Language} or DSL--and we can design our DSL in
-  whatever way we please to suit our expressive purposes.\sidenote{As a
-    set of syntactic conventions, a language may be textual or visual.}
-
-  Of course, we also needed a language in order to express our type
-  definitions.  We used the language defined by the Z\marginnote{Z is
-    pronounced ``Zed''.} specification
-  notation.\sidenote{\citetalias{z-iso-13568}} Since the definition of Z
-  specifies a formal notation (language) with an explicit formal
-  semantics, expressions written in that notation, like ``\((0,0)\)'' or
-  ``\RR'', have a precise and explicitly defined mathematical meaning.
-
-  Definitions in Z describe the \textit{semantic domain} of our intended
-  DSL.  Since Z is based on standard (ZF, Zermelo-Frankel) set theory, Z
-  itself is sufficiently expressive to describe anything describeable in
-  set-theoretic terms, which is all we need in order to
-  describe \cspace{}s.
-
-  This means that we can furnish our DSL -- whatever form it takes --
-  with a formal semantics.  All we need to do is map expressions in our
-  language to the Z expressions we used to define the elements of our
-  semantic domain.  For example, we defined \(POINT\) in Z as a pair of
-  real numbers; in our DSL we might prefer the symbol \(Pt\); all we
-  need to do is specify a mapping from our DSL to our semantic
-  language. Something like \(Pt\rightarrow POINT\), for
-  example.\sidenote{In practice we would also need to indicate which
-    terms in such an expression come from our DSL and which from our
-    semantic language.  But such hairy details of actually specifying a
-    DSL are beyond the scope of this paper.}
-
-  Expressiveness is a property of languages, not semantic domains.  The
-  critical point here is that the formal definitions of our semantic
-  language specification define \textit{types}.  They impose no
-  constraint on \textit{expression} in our DSLs.
-
-  This issue goes beyond mere renaming of constant symbols.
-  \textit{Any} expression, no matter how complex, that evaluates to a
-  value $x$ may be used to express that value in complex expressions in
-  our DSL.
-
-  %% In particular, recalling that a function application expression is a
-  %% kind of name for the value it denotes, we see that our DSL may give us
-  %% many different ways to refer to the same semantic value.
-
-  Consider the Z expression ``\((1,2)\)''.  This expression denotes a
-  mathematical object, the ordered pairing of the first two integers.
-  Most DSL designs will, like Z, follow convention in adopting
-  parenthetical notation ``(,)'' for such expressions.  But if our DSL
-  includes standard arithmetic operators then we will have an unlimited
-  number of ways of expressing this value: \((1,1+1), (2-1,\frac{6}{3}),
-  (|\sqrt{1}|,|\sqrt{4}|)\) are distinct expressions all denoting the same
-  value, namely \((1,2)\).
-
-  Most important, our DSL can use function application expressions to
-  denote values.  For example, the expression \(\lambda x.2x\) denotes
-  the function that doubles its argument.  \textit{Applying} a function
-  to a value--or rather, \textit{expressing} its application to a value
-  by writing down the appropriate bit of notation--denotes the value of
-  the function for that argument: \(\lambda x.2x(1) = 2\).  So we can
-  express \((1,2)\) by writing \((1,\lambda x.2x(1))\).
-
-  The significance of this will become clear when we discuss evaluation
-  strategies in section \ref{sect:eval}.  The gist of the story is that
-  compound expressions like \(1+1\) and \(\lambda x.2x(1)\) denote their
-  values \textit{whether we actually compute those values or not}.  In
-  the language of the Lambda Calculus, evaluation of such expressions is
-  called \textit{reduction}, since it involves transforming them to the
-  simplest possible expression; reduction is effectively a synonym for
-  computation.  The critical point is that the meaning of such
-  expressions is independent of their reduction.  This means that, as we
-  go about evaluating expressions in our DSL, we are not compelled to
-  immediately reduce (or fully evaluate, completely compute, etc.) each
-  expression as we encounter it.  We can just keep track of the
-  expressions themselves, rather than their (computed) values, knowing
-  as we do that the meanings of expressions are immutable, and only
-  reduce them when we must, in order to continue with the valuation.
-
-  %%%%%%%%
-  \section{Immutability}
-  \label{sect:immutability}
-
-  Virtually all vector graphics languages use mutable data structures.
-  For example, path construction operators usually update a ``current
-  point'' datum.
-
-  \begin{remark}
-    Explain how immutable data structures do not sacrifice expressivity.
-    Maybe they improve it.
-
-    One way: paths/figures as sequences rather than sets of points; that
-    means they respond to a ``last'' function.  So path constructors
-    applied to a path/figure invokes ``last'' to obtain the analog of
-    ``current point''.  Except there's no temporal dimension to it, so
-    no notion of ``current'' point.
-  \end{remark}
-
-  \begin{remark}
-    the more general pt:  expressivity, with and without mutable data.
-  \end{remark}
-
-  %%%%%%%%
-  \subsection{Functions}
-  \label{subs:functions}
-
-  Identity function: expression of the form \ab are interpreted in terms
-  of functions: (Id,Id)
-
-  \begin{remark}
-    Category theory on elements as arrows.  Or categorial logic.
-    Everything a function, even numerical constants.
-  \end{remark}
-
-  \begin{remark}
-    Continuous funcs applied to interval: use domain restriction op of
-    Z.  Express by giving lambda expression plus end points of range.
-  \end{remark}
-
-  \begin{remark}
-    Compare: \(f(x) = ax + b\) and TikZ's line op ``-\-''.  The domain
-    of the former is \R{}; the domain of the latter is
-    \((\real\cross\real)\cross(\real\cross\real)\).  So TikZ's func must
-    construct the func and the endpoints, which we can express in Z.
-  \end{remark}
-
-  Function polymorphism: accepts different arg types (and numbers?)
-
-  Poylymorphic types
-
-  %%%%%%%%
-  \subsection{Eager Evaluation}
-  \label{subs:eager}
-
-  \begin{remark}
-    Save the results of immediate evaluation of expressions to the cs.
-  \end{remark}
-
-  %%%%%%%%
-  \subsection{Just-in-Time Evaluation}
-  \label{subs:lazy}
-
-  a/k/a Lazy Evaluation
-
-  \begin{remark}
-    Save the expressions to the cs, rather than their evaluations.
-  \end{remark}
-
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \part{Structure of Coordinate Spaces}
+  \part{Structure of Spaces}
   \label{sect:cspaces}
 
   \begin{abstract}
@@ -674,6 +775,10 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Basics}
   \label{sect:basic}
+
+  \begin{remark}
+    A tour of commonly used and obscure systems
+  \end{remark}
 
   %%%%%%%%
   \subsection{Coordinates}
@@ -711,7 +816,7 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   Set of points; type: powerset of POINT.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Coordinate Axes}
+  \section{Axes}
   \label{sect:axes}
 
   \begin{remark}
@@ -721,32 +826,57 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     axes requires a specialized set of functions or parameters.
   \end{remark}
 
-  ``Aspect ratio.  Octave has axis config options that set aspect ratio.
-  ``The following options control the aspect ratio of the axes.
-  "square" Force a square aspect ratio.
-  "equal" Force x distance to equal y-distance.
-  "normal" Restore default aspect ratio.''
+  \begin{remark}
+    Aspect ratio?  ``Octave has axis config options that set aspect
+    ratio.  ``The following options control the aspect ratio of the
+    axes.  "square" Force a square aspect ratio.  "equal" Force x
+    distance to equal y-distance.  "normal" Restore default aspect
+    ratio.''
 
-  I guess this refers to visual aspect ratio.
+    I guess this refers to visual aspect ratio.
+  \end{remark}
 
-  Properties:
+  Every \cspace{} is associated with one or more axes.  Polarity is a
+  property of axes, so it is properly included in their specification
+  (see \ref{sect:axes}).  The order of axes, by contrast, is a
+  property of the \cspace{} that contains (or uses) them; an axis has
+  no way of knowing (so to speak) how it will be used by a \cspace; it
+  doesn't even ``know'' how many other axes might be involved.  So it
+  would be counterproductive to attach order to axes - might render
+  unusable in other spaces.
+
+  Axes are defined by:
 
   \begin{description}
   \item [name]
+  \item [origin]
   \item [unit]
-  \item [scaling function]
-  \item [angle of incidence] (azimuth?) relative to x axis in absolute space.
-    Should the cspace be responsible for specifying this in terms of
-    angle between axes?  Maybe not, since more axes would mean
-    specifying angles pairwise.  Easier to give an absolute angle.
-  \item [polarity] direction of increasing values: default is rightward,
-    treated as ``positive''.  Left/down axes have ``negative'' polarity
-    (pos always means rightwards, neg always means leftwards).  Note we
-    only need one polarity scale rather than right/left and up/down,
-    since we have angle of incidence.  The cartesian y axis has right
-    polarity with 90 deg incidence.  Ex.: neg, neg increases in the 3rd
-    quad.
+  \item [scale]
+  \item [angle of incidence]
+  \item [polarity]
   \end{description}
+
+  %%%%%%%%
+  \subsection{Name}
+  \label{subs:axisname}
+
+Every axis must have a name.
+
+  %%%%%%%%
+  \subsection{Origin}
+  \label{subs:axisorigin}
+
+  Only axes have origins; \cspace{}s have points at \((0,0)\), but such
+  points only count as \textit{origin} points if an axis says so.
+
+  %%%%%%%%
+  \subsection{Unit}
+  \label{subs:axisunit}
+
+
+  %%%%%%%%
+  \subsection{Polarity}
+  \label{subs:polarity}
 
   \begin{remark}
     Polarity could be expressed in terms of the scaling function.  But
@@ -756,21 +886,31 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     primitive.
   \end{remark}
 
-  Axis specification:  name, unit (always 1?); angle of incidence; orientation; scale (??? see below)
+  Axes (but not \cspace{}s) have polarity.
 
-  [NB: figure specification relative to space; cspace specification always absolute.]
-
-  E.g. Cartesian space has x and y axes, each with unit of 1, angle of
-  incidence of 0 and 90 deg, respectively, and orientation of x
-  increases rightwards, y upwards.
-
-  %%%%%%%%
-  \subsection{Polarity}
-  \label{subs:polarity}
+  Direction of increasing values: default is rightward, treated as
+  ``positive''.  Left/down axes have ``negative'' polarity (pos always
+  means rightwards, neg always means leftwards).  Note we only need one
+  polarity scale rather than right/left and up/down, since we have angle
+  of incidence.  The cartesian y axis has right polarity with 90 deg
+  incidence.  Ex.: neg, neg increases in the 3rd quad.
 
   %%%%%%%%
-  \subsection{Scaling}
-  \label{subs:scaling}
+  \subsection{Incidence}
+  \label{subs:incidence}
+
+  (azimuth?) relative to x axis in absolute space.
+  Should the cspace be responsible for specifying this in terms of
+  angle between axes?  Maybe not, since more axes would mean
+  specifying angles pairwise.  Easier to give an absolute angle.
+
+  %%%%%%%%
+  \subsection{Scale}
+  \label{subs:axisscale}
+
+\begin{remark}
+  An axis scale is just a function of type \(\real\fun\real\).
+\end{remark}
 
   Suppose we scale our x axis by \(\lambda r.2r\).  This maps each \(x\)
   value to \(2x\), so e.g. \(2\) ends up at \(4\).
@@ -846,9 +986,54 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     does elaborate on cspace composition and specification of axis
     representations.}
 
+  %%%%%%%%
+  \subsection{Examples}
+  \label{subs:axiseg}
+
+
+  Cartesian space has x and y axes, each with unit of 1, angle of
+  incidence of 0 and 90 deg, respectively, and orientation of x
+  increases rightwards, y upwards.
+
+  Example:  parallel axes.  Set y-axis origin to 5, angle of incidence to zero.
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Axis Order}
+  \section{\CSpace{}s}
+  \label{sect:dspaces}
+
+  \begin{remark}
+    Take e.g. cartesian and polar as primitive spaces -
+    interconvertable, maybe, but having fundamentally different meanings.
+
+    How many primitive spaces are there?
+  \end{remark}
+
+  %%%%%%%%
+  \subsection{Carrier Set}
+  \label{subs:cscarrier}
+
+  A \cspace{} is a structure, of which its set of points is just one
+  component.  Hence the need to specify the \textit{carrier set} of
+  a \cspace{}.\sidenote{Compare Z, where each type has a carrier set.
+    We're abusing terminology here a bit: since a \cspace{} is a type,
+    it has a (Z) carrier set, but that is not what we mean by carrier
+    set here.  Maybe we should call it the root set or something
+    similar.}
+
+  %%%%%%%%
+  \subsection{Axes}
   \label{subs:orientation}
+
+  Every \cspace{} is associated with an ordered set of one or more
+  axes.  The ordering of this set is critical, because that is what
+  determines the interpretation of locative expressions like
+  \((a,b)\).
+
+  Axis order is reflected in writing convention: \((a,b)\) just means
+  that \(first(a,b)=a\) maps to the first axis (by convention, the $x$
+  axis), and \(second(a,b)=b\) maps to the second axis (by convention,
+  the $y$ axis).
+
   \newthought{The orientation of a \cspace{}} determines where points
   \((a,b)\) are positioned relative to the origin.  This depends on the
   \textit{polarity} of the axes--their directions of increasing value--
@@ -866,15 +1051,11 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
       \draw (-.4,-.4) node {Q3};
       \draw (.4,-.4) node {Q4};
     \end{tikzpicture}
-  }%
-  , \((x,y)\)
-  orientation: every point in the first quadrant is
-  (+,+)\sidenote{(+,+) \(\rightarrow\) positive in both coordinates}
-  with first coordinates increasing to the right and second coordinates
-  increasing upwards, and in positioning a point, the $x$-coordinate
-  ``comes first''\sidenote{\''Comes first'': the first
-    element of a coordinate pair \((a,b)\) maps to the \(x\) axis, the
-    second to the \(y\) axis.}
+  } \((x,y)\) orientation: every point in the first quadrant is
+  with first coordinates increasing to the right and second
+  coordinates increasing upwards.  To locate a point \((a,b)\) in the
+  space, find \(first(a,b)\) on the $x$-axis and \(second(a,b)\) on
+  the \(y\)-axis.
 
   Contrast this with the way cartesian space might be represented in
   cultures with right-to-left writing systems.  For such cultures, it
@@ -885,6 +1066,7 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \sidenote{%
     \(first(a,b)=a,\ second(a,b)=b\)
   }% would increase to the left rather than the right, placing (+,+)
+  %% (+,+)\sidenote{(+,+) \(\rightarrow\) positive in both coordinates}
   points in the second quadrant.  Since the order of the axes remains
   \((x,y)\), that this system is the mirror image of the standard
   cartesian space across the (vertical) y axis.
@@ -926,26 +1108,21 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     it changed our ways of thinking.  Maybe something from Bachelard's
     Poetics of Space?}
 
-  Polarity is a property of axes, so it is properly included in their
-  specification (see \ref{sect:axes}).  The order of axes, by contrast,
-  is a property of the \cspace{} that contains (or uses) them; an axis
-  has no way of knowing (so to speak) how it will be used by a \cspace;
-  it doesn't even ``know'' how many other axes might be involved.  So it
-  would be counterproductive to attach order to axes - might render
-  unusable in other spaces.
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{\CSpace{}s}
-  \label{sect:dspaces}
-
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{\DSpace{}s}
   \label{sect:dspaces}
 
+  \begin{remark}
+    Structure, then functions
+  \end{remark}
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Design \(\Lambda\)ocatives}
-  \label{sect:}
+  %%%%%%%%
+  \subsection{Design Points}
+  \label{sect:dpts}
+
+  \begin{remark}
+    Locatives denote locations?  Mention v. use; ``\((a,b)\)'' v. \((a,b)\)
+  \end{remark}
 
   \begin{remark}
     We use the term \textit{lambda point} to refer to points that have
@@ -1022,9 +1199,43 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     fully evaluated.
   \end{remark}
 
+  %%%%%%%%
+  \subsection{Ink}
+  \label{subs:ink}
+
+  a/k/a style or graphics state
+
+  %%%%%%%%
+  \subsection{\DSpace{} Application}
+  \label{subs:dsapplic}
+
+  A \dspace{} is formally defined as a function.  This allows us to
+  express what traditional languages usually call
+  \textit{transformations} as function applications.
+
+  \begin{gendef}[X,Y]
+    \_[\_] : \Delta\cross\Delta\fun\Delta \\
+    \_[\_] : \Gamma\cross\Gamma\fun\Gamma \\
+    \where
+    
+  \end{gendef}
+
+  A \textit{\dspace{} application} maps one \dspace to another \dspace{}.
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \part{Operations on \DSpace{}s}
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Transforms}
   \label{sect:transforms}
+
+  \begin{remark}
+    The interpretation of function application as expressing a
+    relation, mentioned in the intro, is critical in treating
+    transformations.  Or at least in working with intuitions about
+    transformations, as reflected in common CS design patterns.
+  \end{remark}
 
   %%%%%%%%
   \subsection{Coordinate Point Transforms}
@@ -1223,117 +1434,6 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{An Algebra of Coordinate Spaces}
-  \label{sect:csalgebra}
-
-
-  In addition to origin and axes, coordinate systems always have an
-  algebra, which specifies operations on coordinate points.  This allows
-  us to distinguish between e.g. cartesian and complex cspaces.
-
-  Cartesian:
-
-  \begin{itemize}
-  \item +  =  scale unit of source arithmetically; e.g. cs:A[(0,0)]+(1,1)
-  \item *  =  scale unit of source geometrically: (x,y)*(a,b) = (ax,by) e.g. cs:A[(1,1)]*(2,2) 
-  \item ?  =  rotation
-  \item ?  =  skew (shear)
-  \item ?  =  reflection
-  \item ?  =  glide reflection (http://en.wikipedia.org/wiki/Transformation\_(function))
-  \end{itemize}
-
-  NB: "scale" usually means scale multiplicatively, but it applies
-  equally to arithmetic transformation.  We can talk of arithmetic,
-  geometric, harmonic, etc. scaling.
-
-  Complex:
-
-  * = (x+yi)*(a+bi) = (xa - yb) + (xb + ya)i
-
-  (x,y)*(a,b)   = ((xa-yb), (xb+ya))
-
-  e.g. (1,0)(0,1) = ((0-0), (1+0)) = (0,1) = i
-  ================
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Primitive Coordinate Spaces}
-  \label{sect:primitives}
-
-  \begin{remark}
-    Only one truly primitive, axiomatic space: cartesian?  All the
-    others can be transformed into plain cartesian space.  But for
-    practical reasons we will include some predefined spaces that will
-    count as primitive in our language, even if they are not
-    mathematically primitive.  Primitive expressivity, as it were.
-  \end{remark}
-
-  Affine:  "In mathematics, an affine coordinate system is a coordinate system on an affine space where each coordinate is an affine map to the number line. In other words, it is an injective affine map from an affine space A to the coordinate space Kn, where K is the field of scalars, for example, the real numbers R.  The most important case of affine coordinates in Euclidean spaces is real-valued Cartesian coordinate system. Orthogonal affine coordinate systems are rectangular, and others are referred to as oblique." (http://en.wikipedia.org/wiki/Affine\_coordinates)
-
-  Homogenous:  "In mathematics, homogeneous coordinates or projective coordinates, introduced by August Ferdinand Mobius in his 1827 work Der barycentrische Calcul,[1][2] are a system of coordinates used in projective geometry, as Cartesian coordinates are used in Euclidean geometry. They have the advantage that the coordinates of points, including points at infinity, can be represented using finite coordinates. Formulas involving homogeneous coordinates are often simpler and more symmetric than their Cartesian counterpart." (http://en.wikipedia.org/wiki/Homogeneous\_coordinates)
-
-  \begin{itemize}
-  \item Cartesian  (logarithmic a special case?)
-  \item Polar
-  \item Complex
-  \item Cylindrical
-  \item Spherical
-  \item Log-polar
-  \end{itemize}
-
-  ================
-
-
-  Primitive cspaces always same, alterations come via transforms.
-  Untransformed, the default is just plain Cartesian space, unit=1,
-  scale is identity func, incidence 0 and 90, orientation standard.
-
-  But what about polar space?  We can transform a cartesian space into a
-  polar space, but we cannot draw directly into a polar space using
-  cartesian coordinates.  So we need polar space as a primitive space.
-  Two axes: angular (length along circumference) and radial (length of
-  vector).
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Canvases}
-  \label{sect:canvas}
-
-  \begin{remark}
-    A canvas is a space together with an empirical unit of measure,
-    e.g. 1cm.  So unlike a \cspace{}, a canvas is not an abstract,
-    purely mathematical object.\marginnote{TODO: how does TikZ handle
-      the distinction?}
-
-    Another perspective: a \cspace{} has a mathematical but not an
-    empirical denotation;\sidenote{Except perhaps space itself} a canvas
-    has both.  A canvas represents some physical surface, albeit
-    abstractly, whereas a \cspace{} represents
-    nothing.\marginnote{Caveat: we're talking about mathematical enties,
-      not expressions in a languge.  Of course, a \cspace{}
-      \textit{expressions} represents something, namely a \cspace{}; but
-      the space itself, as a mathematical ``object'', does not
-      represent.}
-  \end{remark}
-
-  In a \cspace{}, a point expression \ab{} denotes a \textit{position} in
-  a structure; in a canvas, the same expression denotes a
-  \textit{location} in (physical) space.\marginnote[-24pt]{Convention:
-    positions are structural, locations spatial.}
-
-  Numbers ``in'' a \cspace{} just \textit{are} structural positions;
-  ``on'' a canvas, they represent spatial
-  location.\marginnote[-12pt]{``Space'' and ``spatial'' are ambiguous
-    here. etc.  We should probably refer to coordinate structures rather
-    than \cspace{}s.}
-
-  Specifying a point on a canvas is analogous to dabbing a bit of paint
-  on a literal canvas.  Specifying a point in a \cspace{} is better
-  thought of as analogous to memorizing how to get to a place in a city
-  - five blocks west and two blocks north of the
-  Courthouse.\marginnote{Recall that numbers can be thought of as
-    methods or arcs, rather than objects.}
-
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \part{Representation}
   \label{sect:representation}
 
@@ -1375,7 +1475,46 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \label{subs:figexprs}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Geometry and Content}
+  \section{Canvases}
+  \label{sect:canvas}
+
+  \begin{remark}
+    A canvas is a space together with an empirical unit of measure,
+    e.g. 1cm.  So unlike a \cspace{}, a canvas is not an abstract,
+    purely mathematical object.\marginnote{TODO: how does TikZ handle
+      the distinction?}
+
+    Another perspective: a \cspace{} has a mathematical but not an
+    empirical denotation;\sidenote{Except perhaps space itself} a canvas
+    has both.  A canvas represents some physical surface, albeit
+    abstractly, whereas a \cspace{} represents
+    nothing.\marginnote{Caveat: we're talking about mathematical enties,
+      not expressions in a languge.  Of course, a \cspace{}
+      \textit{expressions} represents something, namely a \cspace{}; but
+      the space itself, as a mathematical ``object'', does not
+      represent.}
+  \end{remark}
+
+  In a \cspace{}, a point expression \ab{} denotes a \textit{position} in
+  a structure; in a canvas, the same expression denotes a
+  \textit{location} in (physical) space.\marginnote[-24pt]{Convention:
+    positions are structural, locations spatial.}
+
+  Numbers ``in'' a \cspace{} just \textit{are} structural positions;
+  ``on'' a canvas, they represent spatial
+  location.\marginnote[-12pt]{``Space'' and ``spatial'' are ambiguous
+    here. etc.  We should probably refer to coordinate structures rather
+    than \cspace{}s.}
+
+  Specifying a point on a canvas is analogous to dabbing a bit of paint
+  on a literal canvas.  Specifying a point in a \cspace{} is better
+  thought of as analogous to memorizing how to get to a place in a city
+  - five blocks west and two blocks north of the
+  Courthouse.\marginnote{Recall that numbers can be thought of as
+    methods or arcs, rather than objects.}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Connecting Content to Graphs}
   \label{sect:geomcontent}
 
   ================
@@ -1494,9 +1633,83 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   order''
   (\url{http://userguide.icu-project.org/transforms/bidi#TOC-Logical-Order-versus-Visual-Order}).  Some people refer to ``logical dimensions'' and ``display dimension'' in HTML5.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{Notes}
+
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Notes}
-  \label{sect:notes}
+  \section{Algebra of Coordinate Spaces}
+  \label{sect:csalgebra}
+
+
+  In addition to origin and axes, coordinate systems always have an
+  algebra, which specifies operations on coordinate points.  This allows
+  us to distinguish between e.g. cartesian and complex cspaces.
+
+  Cartesian:
+
+  \begin{itemize}
+  \item +  =  scale unit of source arithmetically; e.g. cs:A[(0,0)]+(1,1)
+  \item *  =  scale unit of source geometrically: (x,y)*(a,b) = (ax,by) e.g. cs:A[(1,1)]*(2,2) 
+  \item ?  =  rotation
+  \item ?  =  skew (shear)
+  \item ?  =  reflection
+  \item ?  =  glide reflection (http://en.wikipedia.org/wiki/Transformation\_(function))
+  \end{itemize}
+
+  NB: "scale" usually means scale multiplicatively, but it applies
+  equally to arithmetic transformation.  We can talk of arithmetic,
+  geometric, harmonic, etc. scaling.
+
+  Complex:
+
+  * = (x+yi)*(a+bi) = (xa - yb) + (xb + ya)i
+
+  (x,y)*(a,b)   = ((xa-yb), (xb+ya))
+
+  e.g. (1,0)(0,1) = ((0-0), (1+0)) = (0,1) = i
+  ================
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Primitive Coordinate Spaces}
+  \label{sect:primitives}
+
+  \begin{remark}
+    Only one truly primitive, axiomatic space: cartesian?  All the
+    others can be transformed into plain cartesian space.  But for
+    practical reasons we will include some predefined spaces that will
+    count as primitive in our language, even if they are not
+    mathematically primitive.  Primitive expressivity, as it were.
+  \end{remark}
+
+  Affine:  "In mathematics, an affine coordinate system is a coordinate system on an affine space where each coordinate is an affine map to the number line. In other words, it is an injective affine map from an affine space A to the coordinate space Kn, where K is the field of scalars, for example, the real numbers R.  The most important case of affine coordinates in Euclidean spaces is real-valued Cartesian coordinate system. Orthogonal affine coordinate systems are rectangular, and others are referred to as oblique." (http://en.wikipedia.org/wiki/Affine\_coordinates)
+
+  Homogenous:  "In mathematics, homogeneous coordinates or projective coordinates, introduced by August Ferdinand Mobius in his 1827 work Der barycentrische Calcul,[1][2] are a system of coordinates used in projective geometry, as Cartesian coordinates are used in Euclidean geometry. They have the advantage that the coordinates of points, including points at infinity, can be represented using finite coordinates. Formulas involving homogeneous coordinates are often simpler and more symmetric than their Cartesian counterpart." (http://en.wikipedia.org/wiki/Homogeneous\_coordinates)
+
+  \begin{itemize}
+  \item Cartesian  (logarithmic a special case?)
+  \item Polar
+  \item Complex
+  \item Cylindrical
+  \item Spherical
+  \item Log-polar
+  \end{itemize}
+
+  ================
+
+
+  Primitive cspaces always same, alterations come via transforms.
+  Untransformed, the default is just plain Cartesian space, unit=1,
+  scale is identity func, incidence 0 and 90, orientation standard.
+
+  But what about polar space?  We can transform a cartesian space into a
+  polar space, but we cannot draw directly into a polar space using
+  cartesian coordinates.  So we need polar space as a primitive space.
+  Two axes: angular (length along circumference) and radial (length of
+  vector).
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Misc}
+  \label{sect:misc}
 
   Drawing a figure always involves two specifications, one explicit, the
   other (usually) implicit.  The explicit specification describes the

@@ -1,6 +1,21 @@
-\documentclass{tufte-handout}
-
+\documentclass[reqno,12pt]{tufte-handout}
+%% \documentclass[reqno,12pt]{tufte-book}
+%% \usepackage{trace}
 %% \documentclass[reqno,12pt]{article}
+
+\usepackage{appendix}
+
+%% \usepackage{csquotes}
+
+\usepackage{amsmath}
+\usepackage{setspace}
+\numberwithin{equation}{subsection}
+\usepackage{amsfonts}
+
+%% broken (doesn't work with tufte-handout):
+\usepackage{zed-csp}
+%% broken:
+%% \usepackage{ltcadiz-fam}
 
 \usepackage{fontspec,xltxtra,xunicode}
 \usepackage{fontspec}
@@ -36,11 +51,7 @@
 
 \usepackage{mflogo}
 
-\usepackage{amsmath}
-\usepackage{setspace}
 \numberwithin{equation}{subsection}
-\usepackage{amsfonts}
-
 
 %% nice double-stroke fonts
 \usepackage{dsfont}
@@ -73,12 +84,12 @@
   pdfmenubar=true,        % show Acrobat’s menu?
   pdffitwindow=false,     % window fit to page when opened
   pdfstartview={FitH},    % fits the width of the page to the window
-  pdftitle={The Conduct of the Survey Interview: Models and Protocols},    % title
+  pdftitle={The Poetics of Coordinate Space},    % title
   pdfauthor={G. A. Reynolds},     % author
-  pdfsubject={Survey Interviews},   % subject of the document
+  pdfsubject={Coordinate Space},   % subject of the document
   pdfcreator={G. A. Reynolds},   % creator of the document
   pdfproducer={Producer}, % producer of the document
-  pdfkeywords={keyword1} {key2} {key3}, % list of keywords
+  pdfkeywords={Coordinate Space} {Graphics}
   pdfnewwindow=true,      % links in new window
   colorlinks=true,       % false: boxed links; true: colored links
   linkcolor=blue,          % color of internal links
@@ -86,6 +97,23 @@
   filecolor=magenta,      % color of file links
   urlcolor=cyan           % color of external links
 }
+
+%% \usepackage[
+%% bibstyle=numeric,
+%% citestyle=authoryear,
+%% hyperref,
+%% bibencoding=utf8,
+%% backref=true,
+%% backend=biber]{biblatex}
+
+%% http://tex.stackexchange.com/questions/66778/citation-alias-with-multibib-and-natbib
+%% \makeatletter
+%% \def\@mb@citenamelist{cite,citep,citet,citealp,citealt,citepalias,citetalias}
+%% \makeatother
+
+%% http://stackoverflow.com/questions/2496599/how-do-i-cite-the-title-of-an-article-in-latex
+\defcitealias{z-iso-13568}{ISO 13568:2002 Information technology -- Z formal specification notation --
+  Syntax, type system and semantics}
 
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric,decorations.text,decorations.pathreplacing}
@@ -100,6 +128,70 @@
 %\date{}                                           % Activate to display a given date or no date
 
 %%%%%%%%%%%%%%%%
+%% tufte-latex customizations
+
+\def\chpcolor{blue!45}
+\def\chpcolortxt{blue!60}
+%% \def\sectionfont{\sffamily\LARGE}
+
+\setcounter{secnumdepth}{2}
+
+\makeatletter
+%Section:
+\def\@sectionstrut{\vrule\@width\z@\@height12.5\p@}
+\def\@makesectionhead#1{%
+  {%\par\vspace{20pt}%
+   \parindent -10pt\raggedleft%% \sectionfont
+   %% \colorbox{\chpcolor}{%
+   %%   \parbox[t]{90pt}{\color{white}\@sectionstrut\@depth4.5\p@\hfill
+   %%     \ifnum\c@secnumdepth>\z@\thesection\fi}%
+   %% }%
+   \vspace{10pt}%
+   \begin{minipage}[t]{\textwidth}%{\dimexpr\textwidth-90pt-2\fboxsep\relax}
+     \@sectionstrut\hspace{-15pt}\textbf{\textit{\Large #1}}
+   \end{minipage}\par
+   \vspace{5pt}%
+  }
+}
+%% \def\@makesectionhead#1{%
+%%   {\par\vspace{20pt}%
+%%    \parindent 0pt\raggedleft\sectionfont
+%%    \colorbox{\chpcolor}{%
+%%      \parbox[t]{90pt}{\color{white}\@sectionstrut\@depth4.5\p@\hfill
+%%        \ifnum\c@secnumdepth>\z@\thesection\fi}%
+%%    }%
+%%    \begin{minipage}[t]{\dimexpr\textwidth-90pt-2\fboxsep\relax}
+%%    \color{\chpcolortxt}\@sectionstrut\hspace{5pt}\textbf{#1}
+%%    \end{minipage}\par
+%%    \vspace{10pt}%
+%%   }
+%% }
+\def\section{\@afterindentfalse\secdef\@section\@ssection}
+\def\@section[#1]#2{%
+  \ifnum\c@secnumdepth>\m@ne
+    \refstepcounter{section}%
+    \addcontentsline{toc}{section}{\protect\numberline{\thesection}#1}%
+  \else
+    \phantomsection
+    \addcontentsline{toc}{section}{#1}%
+  \fi
+  \sectionmark{#1}%
+  \if@twocolumn
+    \@topnewpage[\@makesectionhead{#2}]%
+  \else
+    \@makesectionhead{#2}\@afterheading
+  \fi
+}
+\def\@ssection#1{%
+  \if@twocolumn
+    \@topnewpage[\@makesectionhead{#1}]%
+  \else
+    \@makesectionhead{#1}\@afterheading
+  \fi
+}
+\makeatother
+
+%%%%%%%%%%%%%%%%
 %% macros
 
 \newtheorem{theorem}{Theorem}
@@ -110,6 +202,11 @@
 
 \newcommand\cspace{coordinate space}
 \newcommand\Cspace{Coordinate space}
+\newcommand\CSpace{Coordinate Space}
+
+\newcommand\dspace{design space}
+\newcommand\Dspace{Design space}
+\newcommand\DSpace{Design Space}
 
 \newcommand\Omg{\(\Omega\)}
 \newcommand\sccs{standard cartesian coordinate space}
@@ -117,8 +214,16 @@
 \newcommand\ab{\((a,b)\)}
 \newcommand\xy{\((x,y)\)}
 
+\newcommand\N{\(\mathds{N}\)}
+\newcommand\R{\(\mathds{R}\)}
+\newcommand\RR{\(\mathds{R}\times\mathds{R}\)}
+\newcommand\Rtwo{\(\mathds{R}^2\)}
+\newcommand\Z{\(\mathds{Z}\)}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
+%% \ifx\traceon\undefined \tracingall \else \traceon \fi
+
 \maketitle
 
 \tableofcontents
@@ -131,9 +236,19 @@
   Expressivity:  transform functions v. expressions
 \end{remark}
 
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Requirements for a Vector Graphics Language}
-\label{sec:drawing}
+\section{Introduction}
+\label{sect:intro}
+
+%%%%%%%%
+\subsection{Requirements for a Vector Graphics Language}
+\label{subs:reqts}
+
+\begin{remark}
+  Expressivity is what counts.  Just about everybody does cs and
+  device independece - a conspicous exception being HTML5 Canvas.
+\end{remark}
 
 
 Conditions of adequacy for a graphics language:
@@ -161,339 +276,462 @@ designs the language, what sort of expressiveness it has.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Previous Work}
-\label{sec:prevwork}
-
-\epigraph{Immature poets imitate; mature poets steal}{TS Eliot}
-
-
-%%%%%%%%
-\subsection{\TeX, \MF, and \MP}
-
-%%%%%%%%
-\subsection{TikZ/PGF}
-\label{subsec:tikz}
-
-TikZ has by far the most sophisticated concept of coordinate space.
-
-Canvas =  x,y with explicit "dimension" (empirical UOM)
-
-XYZ    =  x,y,z as "factors" multiplying unit vectors of length 1cm)
-
-Canvas Polar = radius expressed in canvas system, i.e. with UOM
-
-XYZ Polar  = radius and angle interpreted in as in xy csystem, i.e. factors (of unit vectors of 1cm) not dimensions
-
-XY Polar (=XYZ Polar)
-
-Barycentric  -  "In geometry, the barycentric coordinate system is a coordinate system in which the location of a point of a simplex (a triangle, tetrahedron, etc.) is specified as the center of mass, or barycenter, of masses placed at its vertices. Coordinates also extend outside the simplex, where one or more coordinates become negative."   (http://en.wikipedia.org/wiki/Barycentric\_coordinate\_system)
-
-Node (=DOM?)  The cs:node is parasitic the more primitive empirical
-systems.  It allows you to refer to a previously specified point by
-specifying its name and an "anchor" or predefined location relative to
-the node's position.  The anchor name effectively denotes a function
-that computes a point, given the node' base point.
-
-Tangent Like cs:node, cs:tangent supports specification of points by
-refering to previously specified points.  A tangent function is
-implicitly applied to the points refered to - actually a point and a
-figure - and computes the tangent from the point to the figure.
-
-Custom -- the job of a custom cs is to compute x and y in the canvas
-coordinate system.  So defining a custom coordinate system boils down
-to specifying a transformation function.
-
-TikZ has no abstract Cartesian coordinate system (contrast Asymptote);
-systems that allow unitless coordinate specifications (e.g. XYZ) use
-an implicit empirical UOM (default: 1cm).
-
-Thus all TikZ cspaces are empirical; some seem to provide means of
-expressing coordinates rather than establishing a distinct system;
-e.g. node and tangent systems.  They don't (at least not all of them)
-establish a primitive interpretation of (x,y).  For example, the
-tangent cs does not provide a meaning for any (x,y); instead, it
-allows you to specify a (tangent) point by reference to an already
-specified pair of a shape and a point.
-
-In other words, cs:node and cs:tangent are derived systems, the others
-primitive.  They are essentially transform functions using for
-positioning.  They do not need units of measure since that is already
-implicit in the points they reference.  Dunno about barycentric, which
-I don't really grok yet.
-
-Basically all the cspaces amount to positioning functions, which is
-why they can be mixed in single path expressions.
-
-Correction: they are NOT transform functions, in that they do not
-transform the entire csystem; instead they are positioning functions,
-designed to transform subsets of the space.
-
-Furthermore, TikZ's system allows for use of multiple coord systems in
-one expression.  So you can write (0,0) -- (polar cs:
-cs:angle=90,radius=1cm), using first the xyz system then the polar
-system to draw a line from the origin to (0,1), unit=cm.
-
-Note that the xyz cs seems to be the default for (x,y) syntax, where x
-and y are dimensionless.
-
-%%%%%%%%
-\subsection{Postscript}
-
-User space, device space
-
-Units
-
-%%%%%%%%
-\subsection{PDF}
-
-Ref:  PDF32000-1:2008 (\url{http://www.adobe.com/devnet/pdf/pdf\_reference.html}
-
-``canvas''
-
-``[A] PDF content stream is not a program to be interpreted; rather, it is a static description of a sequence of graphics objects.'' p.110
-
-Five ``graphics objects'': path, text, external, inline image, shading
-
-Add: clipping path
-
-``A shading object describes a geometric shape whose colour is an arbitrary function of position within the shape. (A shading can also be treated as a colour when painting other graphics objects; it is not considered to be a separate graphics object in that case.)'' (p. 111)
-
-
-8.3 Coordinate Systems (p. 114)
-
-``Coordinate systems define the canvas on which all painting occurs.'' (p.114)
-
-``A coordinate space is determined by the following properties with respect to the current page:
-• The location of the origin
-• The orientation of the x and y axes
-• The lengths of the units along each axis'' p.114
-
-Device space
-
-User space
-``Coordinates in user space (as in any other coordinate space) may be specified as either integers or real numbers, and the unit size in default user space does not constrain positions to any arbitrary grid. The resolution of coordinates in user space is not related in any way to the resolution of pixels in device space.'' p.115
-
-Transforms: translation, scaling, rotation, skewing
-
-
-``The transformation from user space to device space is defined by the current transformation matrix (CTM), an element of the PDF graphics state...'' p.116
-
-Other coordinate spaces: text space (w/text matrix), glyph space
-(w/font matrix), image space (w/out transforms), form space (matrix),
-pattern space (matrix), 3D stuff
-
-See figure 12, p. 117
-
-%%%%%%%%
-\subsection{CSS}
-
-\url{http://www.w3.org/TR/CSS2/box.html}
-
-\href{http://www.w3.org/TR/CSS2/visuren.html}{Visual Formatting Model}
-
-\href{http://www.w3.org/TR/CSS2/visuren.html#containing-block}{Containing
-  Block} ``In CSS 2.1, many box positions and sizes are calculated
-with respect to the edges of a rectangular box called a containing
-block. In general, generated boxes act as containing blocks for
-descendant boxes; we say that a box "establishes" the containing block
-for its descendants. The phrase "a box's containing block" means "the
-containing block in which the box lives," not the one it
-generates....Each box is given a position with respect to its
-containing block, but it is not confined by this containing block; it
-may overflow.''
-
-So the ``containing block'' is both geometric and structure.  CSS
-generally maps geometric structure to content structure directly.
-
-\href{http://www.w3.org/TR/CSS2/visuren.html#normal-flow}{9.4 Normal Flow}
-
-
-%%%%%%%%
-\subsection{SVG}
-
-\url{http://www.w3.org/TR/SVG11/coords.html}
-
-Viewport space, user spaces
-
-%%%%%%%%
-\subsection{OpenGL}
-\label{subs:opengl}
-
-
-\href{http://www.matrix44.net/cms/notes/opengl-3d-graphics/coordinate-systems-in-opengl}{Coordinate Systems in OpenGL}
-
-``There are multiple coordinate Systems involved in 3D Graphics:
-
-Object Space
-World Space (aka Model Space)
-Camera Space (aka Eye Space or View Space)
-Screen Space (aka Clip Space)''
-
-\url{http://www.cse.ohio-state.edu/~parent/classes/581/Lectures/4.2DviewingHandout.pdf}
-
-%%%%%%%%
-\subsection{OS X/iOS Drawing}
-
-\href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html}{Quartz 2D}
-
-\href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html#//apple\_ref/doc/uid/TP30001066-CH202-CJBBAEEC}{Quartz 2D Coordinate Systems}
-
-Cocoa (OS X):  \url{https://developer.apple.com/library/mac/documentation/cocoa/conceptual/CocoaDrawingGuide/Transforms/Transforms.html#//apple\_ref/doc/uid/TP40003290-CH204-BCIDJJBI}
-
-iOS:  ??
-
-%%%%%%%%
-\subsection{Android Drawing}
-
-\href{http://developer.android.com/guide/topics/graphics/2d-graphics.html}{Canvas and Drawables}
-
-Transform operators are in the API ref, but the dev guides don't say much about it.
-
-%%%%%%%%
-\subsection{Direct3D, Direct2D}
-\label{subs:direct3d}
-
-
-\href{http://msdn.microsoft.com/en-us/library/dd370990%28VS.85%29.aspx}{Direct2D}
-
-\href{http://msdn.microsoft.com/en-us/library/dd756655(v=vs.85).aspx#the_direct2d_coordinate_space}{The Direct2D Coordinate Space}
-
-\href{http://msdn.microsoft.com/en-us/library/windows/desktop/ff476345(v=vs.85).aspx}{Programming Guide for Direct3D}
-
-\href{http://msdn.microsoft.com/en-us/library/windows/desktop/bb324489(v=vs.85).aspx}{3D coordinate systems and geometry}
-
-%%%%%%%%
-\subsection{R}
-\label{subs:r}
-
-Each ``plotting region'' has its own coordinate space.
-
-%%%%%%%%
-\subsection{Octave}
-\label{subs:octave}
-
-Graphic objects: figure, axes, line, text, patch, surface, text and image.
+\part{Technical Preliminaries}
+\label{sect:prelims}
+
+\begin{remark}
+  TODO: Some kind of overview here.
+\end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Figures in Spaces}
-\label{sec:draiwng}
+\section{The Lambda Calculus}
+\label{sect:lambda}
 
-Drawing a figure always involves two specifications, one explicit, the
-other (usually) implicit.  The explicit specification describes the
-figure: size, shape, style, location.  The implicit specification
-describes the coordinate space.  The explicit specification (of a
-figure) is always relative to a coordinate space.
+Terminology:
+\begin{description}
+\item [term]
+\item [abstraction]
+\item [application]
+\item [reduction]
+\item [redexe]
+\end{description}
 
-CS (Coordinate Space) specification:  origin (always 0) + axes
-
-
-Example: unit circle centered at the origin.  The usual way to specify
-this is something like
-
-(0,0 circle(1)  (using tikz syntax; any other would do as well)
-
-This is the explicit specification; implicit is the specification of the CS.
-
-But there are always two coordinate spaces: the one in which
-coordinates are directly expressed (as above), which we'll call the
-$\Omega$ space, and the "root" space to which the $\Omega$ space is mapped.
-In other words, specifying a figure and a space is not enough; the
-space itself must be located in a "parent" space, which in the
-simplest case is the "root" space.
-
-[Root space is axiomatic: x and y axes with unit = 1, incidence 0 and
-  90, the usual orientation.  Root space is also absolute; it cannot be
-  mapped to any other space (except device space?).]
-
-[NB this is all device independent.  Mapping root space to device
-  space is a separate issue.]
-
-[NB third kind of space, between device independent (abstract) root
-  space and device space: device-independent space with empirical units
-  of measure.  E.g. x and y axes with unit = 1cm (instead of just 1).]
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Coordinate Spaces}
-\label{sec:cspaces}
+``[A] \(\lambda\)-calculus term is either a variable, an application
+or an abstraction.  A redex is an application whose left term is an
+abstraction.  The result of contracting redex \((\lambda M) N\) is the
+term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
 %%%%%%%%
-\subsection{Axis Order}
-\label{subs:orientation}
-\newthought{The orientation of a \cspace{}} determines where points
-\((a,b)\) are positioned.  This depends on the \textit{polarity} of
-the axes--their directions of increasing value-- and their
-\textit{order} within the \cspace{}.  By convention, the standard
-cartesian \cspace{} has first quadrant, \((x,y)\) orientation: every point
-in the first quadrant is (+,+)\marginnote{(+,+) \(\rightarrow\)
-  positive in both coordinates} with first coordinates increasing to
-the right and second coordinates increasing upwards, and in
-positioning a point, the $x$-coordinate ``comes
-first''\marginnote{\(\leftarrow\)''Comes first'': the first element of
-  a coordinate pair \((a,b)\) maps to the \(x\) axis, the second to
-  the \(y\) axis.}
+\section{The Z Formal Specification Notation}
+\label{subs:z}
 
-Contrast this with the way cartesian space might be represented in
-cultures with right-to-left writing systems.  For such cultures, it
-would be more ``natural'' -- that is, more consistent with the way the
-writing system organizes space -- to use Q2 \((x,y)\) orientation,
-retaining \((x,y)\) axis order, but reversing the polarity of the
-\(x\) axis.  First coordinates would increase to the left rather than
-the right, placing (+,+) points in the second quadrant (counting
-counter-clockwise from the upper right quadrant).  The order of the
-axes would remain \((x,y)\) so that this system would be the mirror
-image of the standard cartesian space across the (vertical) y axis.
+The Z notation is clear, concise, precise, etc. and \textit{very}
+expressive.  It allows us to express formal definitions with a minimum
+form and maximal information.\marginnote{TDOD: why Z is so great}
 
-\newthought{Changing the axis order} from \((x,y)\) to \((y,x)\) may
-be unorthodox, but it has its uses.  In particular, in typesetting we
-may want to make our \cspace{}s agree with the way writing systems
-organize space.  This means that for some text objects we might want
-to use a \((y,x)\) order.
+\citet{spivey_z_1992}
 
-For example, both left-to-right and right-to-left writing systems use
-the lower quadrants to organize their writing systems.  Left to right
-systems like English use Q4 orientations: characters trudge along left
-to right, and lines slither from top to bottom.  Right to left systems
-like Arabic and Hebrew, by contrast, use Q3 orientation: as in Q4
-\((x,y)\) left-to-right systems, lines move top to bottom, but
-character progression (x axis polarity) is reversed, so characters
-move right to left.
+\citet{jacky_way_1997}
 
-In both cases, we might want to use a \cspace{} with \((x,y)\) order for
-character layout but one with \((y,x)\) order for line layout.
+\citet{woodcock_using_1996}
 
-A number of writing systems influenced by the Chinese literary
-tradition have historically organized their texts using a different Q3
-orientation: characters in a line descend top to bottom, and lines in
-a paragraph march from right to left.  For positioning characters, we
-might want to use \((y,x)\) order, so that increasing first
-coordinates track eye movement from top to bottom.  On the other hand,
-for positioning lines we might want to use \((x,y)\) order, so that
-increasing first coordinates track eye movement leftwards.
+\citet{potter_introduction_1996}
 
-\newthought{The upshot of all this} is that \cspace{}s are somewhat
-more than mere geometry.  They are not just there to make
-transformations of figures possible; they represent ways of organizing
-space.  Ways of organizing space is not a matter of mere geometry; it
-has genuine cultural significance.\sidenote{TODO: something about the
-  history of perspective drawing as a way of organizing space and how
-  it changed our ways of thinking.  Maybe something from Bachelard's
-  Poetics of Space?}
+\begin{remark}
+  Also: formal semantics
+\end{remark}
 
-Polarity is a property of axes, so it is properly included in their
-specification (see \ref{sec:axes}).  The order of axes, by contrast,
-is a property of the \cspace{} that contains (or uses) them; an axis has
-no way of knowing (so to speak) how it will be used by a \cspace.  So
-declaration of axis order forms part of the \cspace{} specification.
+\begin{description}
+\item [binding] finite function from names to values
+\item [carrier set] of a type: set of all values in the type
+\item [schema] set of bindings
+\item [signature] function from names to types; i.e. each schema has a signature
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Types \& Values}
+\label{sect:types}
+
+\begin{remark}
+  Informal explanations in main body, formal Z definitions in
+  sidenotes.
+\end{remark}
+
+\begin{remark}
+  We use the Z (Zed) Specification language for our formal definitions.
+\end{remark}
+
+\begin{remark}
+  Type symbols e.g. \R do not denote sets of values; that's the job of the carrier set of the type.
+\end{remark}
+
+Types we need to define for our topic:
+
+\begin{itemize}
+\item Coordinates
+\item Points
+\item Spaces
+\item Axes
+\item Paths
+\item Figures (?)
+\item other?
+\end{itemize}
+
+\begin{remark}
+  Types are not sets. An expression like ``\(a:A\)'' means that \(a\)
+  is a value of type \(A\); it does \textit{not} mean that \(a\) is a
+  \textit{member} of the set \(A\).  That's the job of the
+  \textit{carrier set} of the type.  So if \(a:A\), then we cannot
+  infer \(a\in A\), but we can infer \(a\in carrier(A)\).
+\end{remark}
+
+%%%%%%%%
+\subsection{Expressivity}
+\label{sect:expr}
+
+Having defined a collection of types, we need a means of expressing
+values of those types.  For this we need a language--a
+\textit{Domain-Specific Language} or DSL--and we can design our DSL in
+whatever way we please to suit our expressive purposes.\sidenote{As a
+  set of syntactic conventions, a language may be textual or visual.}
+
+Of course, we also needed a language in order to express our type
+definitions.  We used the language defined by the Z\marginnote{Z is
+  pronounced ``Zed''.} specification
+notation.\sidenote{\citetalias{z-iso-13568}} Since the definition of Z
+specifies a formal notation (language) with an explicit formal
+semantics, expressions written in that notation, like ``\((0,0)\)'' or
+``\RR'', have a precise and explicitly defined mathematical meaning.
+
+Definitions in Z describe the \textit{semantic domain} of our intended
+DSL.  Since Z is based on standard (ZF, Zermelo-Frankel) set theory, Z
+itself is sufficiently expressive to describe anything describeable in
+set-theoretic terms, which is all we need in order to
+describe \cspace{}s.
+
+This means that we can furnish our DSL -- whatever form it takes --
+with a formal semantics.  All we need to do is map expressions in our
+language to the Z expressions we used to define the elements of our
+semantic domain.  For example, we defined \(POINT\) in Z as a pair of
+real numbers; in our DSL we might prefer the symbol \(Pt\); all we
+need to do is specify a mapping from our DSL to our semantic
+language. Something like \(Pt\rightarrow POINT\), for
+example.\sidenote{In practice we would also need to indicate which
+  terms in such an expression come from our DSL and which from our
+  semantic language.  But such hairy details of actually specifying a
+  DSL are beyond the scope of this paper.}
+
+Expressiveness is a property of languages, not semantic domains.  The
+critical point here is that the formal definitions of our semantic
+language specification define \textit{types}.  They impose no
+constraint on \textit{expression} in our DSLs.
+
+This issue goes beyond mere renaming of constant symbols.
+\textit{Any} expression, no matter how complex, that evaluates to a
+value $x$ may be used to express that value in complex expressions in
+our DSL.
+
+%% In particular, recalling that a function application expression is a
+%% kind of name for the value it denotes, we see that our DSL may give us
+%% many different ways to refer to the same semantic value.
+
+Consider the Z expression ``\((1,2)\)''.  This expression denotes a
+mathematical object, the ordered pairing of the first two integers.
+Most DSL designs will, like Z, follow convention in adopting
+parenthetical notation ``(,)'' for such expressions.  But if our DSL
+includes standard arithmetic operators then we will have an unlimited
+number of ways of expressing this value: \((1,1+1), (2-1,\frac{6}{3}),
+(|\sqrt{1}|,|\sqrt{4}|)\) are distinct expressions all denoting the same
+value, namely \((1,2)\).
+
+Most important, our DSL can use function application expressions to
+denote values.  For example, the expression \(\lambda x.2x\) denotes
+the function that doubles its argument.  \textit{Applying} a function
+to a value--or rather, \textit{expressing} its application to a value
+by writing down the appropriate bit of notation--denotes the value of
+the function for that argument: \(\lambda x.2x(1) = 2\).  So we can
+express \((1,2)\) by writing \((1,\lambda x.2x(1))\).
+
+The significance of this will become clear when we discuss evaluation
+strategies in section \ref{sect:eval}.  The gist of the story is that
+compound expressions like \(1+1\) and \(\lambda x.2x(1)\) denote their
+values \textit{whether we actually compute those values or not}.  In
+the language of the Lambda Calculus, evaluation of such expressions is
+called \textit{reduction}, since it involves transforming them to the
+simplest possible expression; reduction is effectively a synonym for
+computation.  The critical point is that the meaning of such
+expressions is independent of their reduction.  This means that, as we
+go about evaluating expressions in our DSL, we are not compelled to
+immediately reduce (or fully evaluate, completely compute, etc.) each
+expression as we encounter it.  We can just keep track of the
+expressions themselves, rather than their (computed) values, knowing
+as we do that the meanings of expressions are immutable, and only
+reduce them when we must, in order to continue with the valuation.
+
+%%%%%%%%
+\subsection{Immutability}
+\label{subs:immutability}
+
+Virtually all vector graphics languages use mutable data structures.
+For example, path construction operators usually update a ``current
+point'' datum.
+
+\begin{remark}
+  Explain how immutable data structures do not sacrifice expressivity.
+  Maybe they improve it.
+
+  One way: paths/figures as sequences rather than sets of points; that
+  means they respond to a ``last'' function.  So path constructors
+  applied to a path/figure invokes ``last'' to obtain the analog of
+  ``current point''.  Except there's no temporal dimension to it, so
+  no notion of ``current'' point.
+\end{remark}
+
+\begin{remark}
+  the more general pt:  expressivity, with and without mutable data.
+\end{remark}
+
+%%%%%%%%
+\subsection{Functions}
+\label{subs:functions}
+
+Identity function: expression of the form \ab are interpreted in terms
+of functions: (Id,Id)
+
+\begin{remark}
+  Category theory on elements as arrows.  Or categorial logic.
+  Everything a function, even numerical constants.
+\end{remark}
+
+\begin{remark}
+  Continuous funcs applied to interval: use domain restriction op of
+  Z.  Express by giving lambda expression plus end points of range.
+\end{remark}
+
+\begin{remark}
+  Compare: \(f(x) = ax + b\) and TikZ's line op ``-\-''.  The domain
+  of the former is \R{}; the domain of the latter is
+  \((\real\cross\real)\cross(\real\cross\real)\).  So TikZ's func must
+  construct the func and the endpoints, which we can express in Z.
+\end{remark}
+
+Function polymorphism: accepts different arg types (and numbers?)
+
+Poylymorphic types
+
+%%%%%%%%
+\subsection{Positioning Functions}
+\label{subs:positioning}
+
+Any function whose range is \RR{} may serve as a positioning functon,
+and may occur in a path/figure expression wherever a point value is
+expected.
+
+%%%%%%%%
+\subsection{Coordinate Space Transforms}
+\label{subs:cstrans}
+
+Type: \(\mathds{R}\rightarrow\mathds{R}\)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Evaluation Strategies}
+\label{sect:eval}
+
+\begin{remark}
+  NB: apply cs1 to pt, then transform cs1 to cs2.  The usual
+  interpretation is: apply the scaling functions of cs1 to pt, then
+  apply the scaling functions of cs2 to the result.  But that's eager
+  eval; under lazy eval, instead of consecutive applications we have
+  function composition.
+\end{remark}
+
+%%%%%%%%
+\subsection{Eager Evaluation}
+\label{subs:eager}
+
+\begin{remark}
+  Save the results of immediate evaluation of expressions to the cs.
+\end{remark}
+
+%%%%%%%%
+\subsection{Just-in-Time Evaluation}
+\label{subs:lazy}
+
+a/k/a Lazy Evaluation
+
+\begin{remark}
+  Save the expressions to the cs, rather than their evaluations.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Notation}
+\label{sect:zsummary}
+
+%%%%%%%%
+\subsection{Abbreviation definition}
+\label{subs:abbrevs}
+
+``An abbreviation definition introduces a new global constant. The identifier on
+the left becomes a global constant; its value is given by the expression on the
+right, and its type is the same as the type of the expression.'' (Spivey, p.50)\marginnote{TODO: bib entry for Spivey}
+
+Examples:
+
+\[COORD == \real \\ POINT == COORD\cross COORD \]
+
+This says that a point is a pair of coordinates, and a coordinate is a
+real number.  Here ``\(\cross\)'' is the cartesian cross-product
+operator.
+
+%%%%%%%%
+\subsection{Axiomatic definition}
+\label{subs:ztypedefns}
+
+``An axiomatic description introduces one or more global variables, and optionally
+specifies a constraint on their values.'' (Spivey, p.48)
+
+For example, this defines a \(sq\) function that computes the square
+of its argument:
+
+\begin{axdef}
+  sq : \nat\fun\nat
+  \where
+  \forall n : \nat @ sq(n) = n\times n
+\end{axdef}
+
+%%%%%%%%
+\subsection{Schema definition}
+\label{subs:zschemadefn}
+
+A Z schema \textit{binds} names to values; it is analogous to a struct
+in C or a record in other languages.
+
+Generic vertical and horizontal forms:
+\begin{marginfigure}[1in]
+  \begin{schema}{S}
+    D_1;\ldots ;D_m
+    \where
+    P_1;\ldots ;P_n
+  \end{schema}
+\end{marginfigure}
+\begin{schema}{S}
+  D_1;\ldots ;D_m
+  \where
+  P_1;\ldots ;P_n
+\end{schema}
+
+\noindent Equivalently: \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
+\begin{marginfigure}
+  \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
+\end{marginfigure}
+
+Example:
+
+\begin{marginfigure}[24pt]
+  \begin{schema}{Axis}
+    origin : COORD \\
+    offset : COORD \\
+    incidence : RADIAN \\
+    scale : COORD\fun COORD
+    \where
+    origin = (0,0) \\
+    offset = scale(origin)
+  \end{schema}
+\end{marginfigure}
+\begin{schema}{Axis}
+  origin : \real\cross\real \\
+  offset : \real\cross\real \\
+  incidence : \real \\
+  scale : \real\fun\real
+  \where
+  origin = (0,0) \\
+  offset = scale(origin)
+\end{schema}
+
+Same thing in horizontal form:
+
+\[Axis \defs [origin:COORD;offset:COORD;incidence:RADIAN;scale:COORD\fun COORD \\
+  \quad\quad\quad | origin=(0,0); offset=scale(origin)]\]
+
+
+%%%%%%%%
+\subsection{Function definition}
+\label{subs:zfndefns}
+
+General form of
+
+\begin{description}
+\item [generic definition]
+\begin{gendef}[X,Y]
+  <type declarations>
+  \where
+  <definitions>
+\end{gendef}
+\end{description}
+
+Example:
+
+\begin{marginfigure}
+  \begin{gendef}[X,Y]
+    first : X \cross Y \rightarrow X \\
+    second : X \cross Y \rightarrow Y
+    \where
+    \forall p : X \cross Y @ first\ p = p.1 \\
+    \forall p : X \cross Y @ second\ p = p.2
+  \end{gendef}
+\end{marginfigure}
+\begin{gendef}[X,Y]
+  first : X \cross Y \rightarrow X \\
+  second : X \cross Y \rightarrow Y
+  \where
+  \forall p : X \cross Y @ first\ p = p.1 \\
+  \forall p : X \cross Y @ second\ p = p.2
+\end{gendef}
+
+This is a ``generic definition'' of the cartesian pair projection
+operators:
+\[first(a,b) = a,\quad second(a,b) = b\]
+\noindent The top part of the definition describes the types of these
+functions; each is of type ``function from set of ordered pairs of
+values to a single value.''  $X$ and $Y$ are used to denote generic
+types; in other words, these projection functions are polymorphic,
+they work on any pair of types.
+
+The second part of the definition (below the bar) states a predicate
+and a value expression.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{Structure of Coordinate Spaces}
+\label{sect:cspaces}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Basics}
+\label{sect:basic}
+
+%%%%%%%%
+\subsection{Coordinates}
+\label{subs:coordinates}
+
+Defn:  Coord == \(\mathds{R}\)
+
+%%%%%%%%
+\subsection{Points}
+\label{subs:points}
+
+POINT == \(\mathds{R}\times\mathds{R}\)
+
+A pair of real numbers \ab is just a pair of real numbers; it has no
+intrinsic connection to any space, Euclidean, real world, or other.
+To get points, you have to invent \cspace{}s, which M. Descartes has
+already taken care of.  But a \cspace{} is more than just a set of
+pairs of real numbers; it has additional structure, such as an origin
+and axes.  We will delve into the structure of \cspace{}s in section
+\ref{sect:csstruct}; here it suffices to say: no \cspace{}, no points.
+
+It follows that when we \textit{define} a POINT as a pair of reals
+(type \RR), we're cheating a little.  A pair of reals in isolation is
+not a point; but any expression denoting such a pair (e.g. \ab),
+occuring as a subexpression in a cs expression\marginnote{FIXME:
+  clarify}, does serve to denote a point in a \cspace{}.  Since our
+only (or at least main) use for pairs of reals is so we can use them
+to express coordinate points, we label the type of such pairs POINT,
+rather than, say REALPAIR.
+
+%%%%%%%%
+\subsection{Coordinate Space}
+\label{subs:cspace}
+
+Set of points; type: powerset of POINT.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Coordinate Axes}
-\label{sec:axes}
+\label{sect:axes}
 
 \begin{remark}
   Distinction between the coordinate space axes, and what gets printed
   as axes on a chart or plot, which may not have anything to do with
-  the coordinate space.  Specifying plot axes requires a specialized
-  set of functions or parameters.
+  the coordinate space.  Specifying a visual representation for plot
+  axes requires a specialized set of functions or parameters.
 \end{remark}
 
 ``Aspect ratio.  Octave has axis config options that set aspect ratio.
@@ -510,7 +748,7 @@ Properties:
 \item [name]
 \item [unit]
 \item [scaling function]
-\item [angle of incidence] relative to x axis in absolute space.
+\item [angle of incidence] (azimuth?) relative to x axis in absolute space.
   Should the cspace be responsible for specifying this in terms of
   angle between axes?  Maybe not, since more axes would mean
   specifying angles pairwise.  Easier to give an absolute angle.
@@ -606,7 +844,7 @@ r.r^2\circ\lambda r.2r = \lambda r.(2r)^2\).
   \node at (0,-4.5) {$y$-axis: $\lambda y.y^2$};
 \end{tikzpicture}
 \vspace{12pt}
-\caption{$\lambda x.2x$ with different y-axis scaling functions.}
+\caption{lambda x.2x with different y-axis scaling functions.}
 \label{fig:yscaling}
 \end{marginfigure}%
 
@@ -622,14 +860,187 @@ space.\sidenote{FIXME: elaborate this, or refer to a section that
   representations.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Axis Order}
+\label{subs:orientation}
+\newthought{The orientation of a \cspace{}} determines where points
+\((a,b)\) are positioned relative to the origin.  This depends on the
+\textit{polarity} of the axes--their directions of increasing value--
+and their \textit{order} within the \cspace{}.  By convention, the
+standard cartesian \cspace{} has Q1\sidenote{%
+Q1:  Quadrants are numered counter-clockwise, starting with the upper right quadrant:
+
+\centering
+\begin{tikzpicture}[scale=1]
+  \useasboundingbox (-1,-1) rectangle (1,1);
+  \draw[<->] (-1,0) -- (1,0);
+  \draw[<->] (0,-1) -- (0,1);
+  \draw (.4,.4) node {Q1};
+  \draw (-.4,.4) node {Q2};
+  \draw (-.4,-.4) node {Q3};
+  \draw (.4,-.4) node {Q4};
+\end{tikzpicture}
+}%
+, \((x,y)\)
+orientation: every point in the first quadrant is
+(+,+)\sidenote{(+,+) \(\rightarrow\) positive in both coordinates}
+with first coordinates increasing to the right and second coordinates
+increasing upwards, and in positioning a point, the $x$-coordinate
+``comes first''\sidenote{\''Comes first'': the first
+  element of a coordinate pair \((a,b)\) maps to the \(x\) axis, the
+  second to the \(y\) axis.}
+
+Contrast this with the way cartesian space might be represented in
+cultures with right-to-left writing systems.  For such cultures, it
+would be more ``natural'' -- that is, more consistent with the way the
+writing system organizes space -- to use Q2 \((x,y)\) orientation,
+retaining \((x,y)\) axis order, but reversing the polarity of the
+\(x\) axis.  In Q2, first coordinates%
+\sidenote{%
+\(first(a,b)=a,\ second(a,b)=b\)
+}% would increase to the left rather than the right, placing (+,+)
+points in the second quadrant.  Since the order of the axes remains
+\((x,y)\), that this system is the mirror image of the standard
+cartesian space across the (vertical) y axis.
+
+\newthought{Changing the axis order} from \((x,y)\) to \((y,x)\) may
+be unorthodox, but it has its uses.  In particular, in typesetting we
+may want to make our \cspace{}s agree with the way writing systems
+organize space.  This means that for some text objects we might want
+to use a \((y,x)\) order.
+
+For example, both left-to-right and right-to-left writing systems use
+the lower quadrants to organize their writing systems.  Left to right
+systems like English use Q4 orientations: characters flow left to
+right, and lines break, then stack from top to bottom.  Right to left
+systems like Arabic and Hebrew, by contrast, use Q3 orientation: as in
+Q4 left-to-right systems, lines stack top to bottom, but character
+flow (x axis polarity) is reversed, so characters move right to left.
+
+In both cases, we might want to use a \cspace{} with \((x,y)\) order
+for character layout but one with \((y,x)\) order for line
+layout.\marginnote{TODO: graphic illustration}
+
+A number of writing systems influenced by the Chinese literary
+tradition have historically organized their texts using a different Q3
+orientation: characters in a line descend top to bottom, and lines in
+a paragraph march from right to left.  For positioning characters, we
+might want to use \((y,x)\) order, so that increasing first
+coordinates track character flow (and thus eye movement) from top to
+bottom.  On the other hand, for positioning lines we might want to use
+\((x,y)\) order, so that increasing first coordinates track line
+stacking leftwards.
+
+\newthought{The upshot of all this} is that \cspace{}s are somewhat
+more than mere geometry.  They are not just there to make
+transformations of figures possible; they represent ways of organizing
+space.  Organizing space is not a matter of mere geometry; it has
+genuine cultural significance.\sidenote{TODO: something about the
+  history of perspective drawing as a way of organizing space and how
+  it changed our ways of thinking.  Maybe something from Bachelard's
+  Poetics of Space?}
+
+Polarity is a property of axes, so it is properly included in their
+specification (see \ref{sect:axes}).  The order of axes, by contrast,
+is a property of the \cspace{} that contains (or uses) them; an axis
+has no way of knowing (so to speak) how it will be used by a \cspace;
+it doesn't even ``know'' how many other axes might be involved.  So it
+would be counterproductive to attach order to axes - might render
+unusable in other spaces.
+
+
+\section{Lambda Points}
+\label{sect:}
+
+\begin{remark}
+  We use the term \textit{lambda point} to refer to points that have
+  been ``added'' to \cspace{}s, in order to distinguish between points
+  that are present in the \cspace{} by definition and points that are
+  added (inserted, projected, etc.) ``into'' the space.  So if we draw
+  a point at \origin{} into space \Omg{}, the result is a space that
+  contains the same \origin{} point it had to start with, plus the
+  lambda point we projected on to that ``native'' point.
+\end{remark}
+
+\begin{remark}
+  Lambda pt as func application - lambda expr, plus arg.
+\end{remark}
+
+Suppose we start with \cspace{} \Omg{}, and we define a point \ab ``in''
+\Omg{}; something like
+
+\begin{equation}
+  \label{eq:omgapplic}
+  Let\ C_1 = \Omega[(a,b)]
+\end{equation}
+
+Then we transform \Omg{} into some other \cspace{}--call it \(\Gamma\),
+by writing something like
+
+\begin{equation}
+  \label{eq:gammapplic}
+  Let\ C_2 = \Gamma[C_1]
+\end{equation}
+
+The question we want to address now is: what happens when we do this?
+What do statements like these (and their component expressions)
+denote?  What precisely do expressions like \(\Omega[(a,b)]\) and
+\(\Gamma[C_1]\) mean? What do \(C_1\) and \(C_2\) ``contain''?  What
+happened to \ab in formula \ref{eq:gammapplic}?
+
+Let's start by asking what \Omg{} denotes before we ``apply'' it to a
+\hyperref[subs:pointexprs]{point expression}.  According to our definitions, a \cspace{} denotes
+the combination of:
+
+\begin{itemize}
+\item \(\mathds{R}\times\mathds{R}\)\marginnote{\(\mathds{R}\times\mathds{R}\)
+  = the set of all ordered pairs of real numbers, i.e. Points.}
+\item A pair of axis definitions, each including a scaling function.
+\item A specification of axis order.
+\end{itemize}
+
+Specifically, let's assume that \Omg{} denotes the \sccs{}; then it
+has \(x\) and \(y\) axes, ordered \xy{}, that have
+
+\begin{itemize}
+\item Angles of incidence \(0\degree\) and \(90\degree\), respectively
+\item Default (positive) polarity
+\item Identity scaling functions (\(\lambda x.x\))
+\end{itemize}
+
+So far so good.  Now what does \(Let\ C_1=\Omega[(a,b)]\)
+mean?  Specifically, that is; what's the machinery?
+
+\begin{remark}
+  Long story short: applying a \cspace{} to a point yields a pair of
+  the original \cspace{} and a representation of the point.  Under
+  eager evaluation, that representation is of the form
+  \ab\marginnote{\ab: TODO explain why this should still be considered
+    a lambda expression.}; under lazy evaluation, it is the
+  (unevaluated) lamba form expressing applyication of the axis scaling
+  functions to the coordinates of the point.
+
+  In other words, \cspace{}s never change (immutability); they just
+  carry the points they contain along with them as a list of (lambda)
+  expressions; hence ``lambda points''.  Only on the last step of
+  transforming the design space to device space are all the forms
+  fully evaluated.
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Transforms}
-\label{sec:transforms}
+\label{sect:transforms}
 
 %%%%%%%%
 \subsection{Coordinate Point Transforms}
 
 %%%%%%%%
-\subsection{Coordinate Space Transforms}
+\subsection{\CSpace Transforms}
+
+%%%%%%%%
+\subsection{\DSpace Transforms}
+\label{subs:}
+
+\Cspace{} transform, plus transform of ``lambda points''.  If lambda points are stored as lambda expressions, this amounts to function composition.
 
 %%%%%%%%
 \subsection{Notes}
@@ -809,9 +1220,15 @@ anything, not just axes.  For example, color gradients, color maps
 (see pgfplots).  So cspaces and axes and ink (styles) are all
 distinct, but transform functions can apply across the board.
 
+
+%% ``In the Cartesian plane the point (x, y) can also be represented in polar coordinates as
+
+%% (x, y) = (r\cos\theta, r\sin\theta)\qquad(r, \theta) = \left(\sqrt{x^2+y^2}, \quad \arctan\frac{y}{x}\right).'' http://en.wikipedia.org/wiki/Complex_plane
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{An Algebra of Coordinate Spaces}
-\label{sec:csalgebra}
+\label{sect:csalgebra}
 
 
 In addition to origin and axes, coordinate systems always have an
@@ -844,7 +1261,7 @@ e.g. (1,0)(0,1) = ((0-0), (1+0)) = (0,1) = i
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Primitive Coordinate Spaces}
-\label{sec:primitives}
+\label{sect:primitives}
 
 \begin{remark}
   Only one truly primitive, axiomatic space: cartesian?  All the
@@ -881,122 +1298,47 @@ Two axes: angular (length along circumference) and radial (length of
 vector).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Expression}
-\label{sec:expr}
-
-%%%%%%%%
-\subsection{Point Expressions}
-\label{subs:pointexprs}
-
-%%%%%%%%
-\subsection{Space Expressions}
-\label{subs:spaceexprs}
-
-%%%%%%%%
-\subsection{Figure Expressions}
-\label{subs:figexprs}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Evaluation}
-\label{sec:eval}
+\section{Canvases}
+\label{sect:canvas}
 
 \begin{remark}
-  NB: apply cs1 to pt, then transform cs1 to cs2.  The usual
-  interpretation is: apply the scaling functions of cs1 to pt, then
-  apply the scaling functions of cs2 to the result.  But that's eager
-  eval; under lazy eval, instead of consecutive applications we have
-  function composition.
+  A canvas is a space together with an empirical unit of measure,
+  e.g. 1cm.  So unlike a \cspace{}, a canvas is not an abstract,
+  purely mathematical object.\marginnote{TODO: how does TikZ handle
+    the distinction?}
+
+  Another perspective: a \cspace{} has a mathematical but not an
+  empirical denotation;\sidenote{Except perhaps space itself} a canvas
+  has both.  A canvas represents some physical surface, albeit
+  abstractly, whereas a \cspace{} represents
+  nothing.\marginnote{Caveat: we're talking about mathematical enties,
+    not expressions in a languge.  Of course, a \cspace{}
+    \textit{expressions} represents something, namely a \cspace{}; but
+    the space itself, as a mathematical ``object'', does not
+    represent.}
 \end{remark}
 
-%%%%%%%%
-\subsection{Eager Evaluation}
-\label{subs:eager}
+In a \cspace{}, a point expression \ab{} denotes a \textit{position} in
+a structure; in a canvas, the same expression denotes a
+\textit{location} in (physical) space.\marginnote[-24pt]{Convention:
+  positions are structural, locations spatial.}
 
+Numbers ``in'' a \cspace{} just \textit{are} structural positions;
+``on'' a canvas, they represent spatial
+location.\marginnote[-12pt]{``Space'' and ``spatial'' are ambiguous
+  here. etc.  We should probably refer to coordinate structures rather
+  than \cspace{}s.}
 
-%%%%%%%%
-\subsection{Lazy Evaluation}
-\label{subs:lazy}
-
+Specifying a point on a canvas is analogous to dabbing a bit of paint
+on a literal canvas.  Specifying a point in a \cspace{} is better
+thought of as analogous to memorizing how to get to a place in a city
+- five blocks west and two blocks north of the
+Courthouse.\marginnote{Recall that numbers can be thought of as
+  methods or arcs, rather than objects.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Lambda Points}
-\label{sec:}
-
-\begin{abstract}
-  We use the term \textit{lambda point} to refer to points that have
-  been ``added'' to \cspace{}s, in order to distinguish between points
-  that are present in the \cspace{} by definition and points that are
-  added (inserted, projected, etc.) ``into'' the space.  So if we draw
-  a point at \origin{} into space \Omg{}, the result is a space that
-  contains the same \origin{} point it had to start with, plus the
-  lambda point we projected on to that ``native'' point.
-\end{abstract}
-
-Suppose we start with \cspace{} \Omg{}, and we define a point \ab ``in''
-\Omg{}; something like
-
-\begin{equation}
-  \label{eq:omgapplic}
-  Let\ C_1 = \Omega[(a,b)]
-\end{equation}
-
-Then we transform \Omg{} into some other \cspace{}--call it \(\Gamma\),
-by writing something like
-
-\begin{equation}
-  \label{eq:gammapplic}
-  Let\ C_2 = \Gamma[C_1]
-\end{equation}
-
-The question we want to address now is: what happens when we do this?
-What do statements like these (and their component expressions)
-denote?  What precisely do expressions like \(\Omega[(a,b)]\) and
-\(\Gamma[C_1]\) mean? What do \(C_1\) and \(C_2\) ``contain''?  What
-happened to \ab in formula \ref{eq:gammapplic}?
-
-Let's start by asking what \Omg{} denotes before we ``apply'' it to a
-\hyperref[subs:pointexprs]{point expression}.  According to our definitions, a \cspace{} denotes
-the combination of:
-
-\begin{itemize}
-\item \(\mathds{R}\times\mathds{R}\)\marginnote{\(\mathds{R}\times\mathds{R}\)
-  = the set of all ordered pairs of real numbers, i.e. Points.}
-\item A pair of axis definitions, each including a scaling function.
-\item A specification of axis order.
-\end{itemize}
-
-Specifically, let's assume that \Omg{} denotes the \sccs{}; then it
-has \(x\) and \(y\) axes, ordered \xy{}, that have
-
-\begin{itemize}
-\item Angles of incidence \(0\degree\) and \(90\degree\), respectively
-\item Default (positive) polarity
-\item Identity scaling functions (\(\lambda x.x\))
-\end{itemize}
-
-So far so good.  Now what does \(Let\ C_1=\Omega[(a,b)]\)
-mean?  Specifically, that is; what's the machinery?
-
-\begin{remark}
-  Long story short: applying a \cspace{} to a point yields a pair of
-  the original \cspace{} and a representation of the point.  Under
-  eager evaluation, that representation is of the form
-  \ab\marginnote{\ab: TODO explain why this should still be considered
-    a lambda expression.}; under lazy evaluation, it is the
-  (unevaluated) lamba form expressing applyication of the axis scaling
-  functions to the coordinates of the point.
-
-  In other words, \cspace{}s never change (immutability); they just
-  carry the points they contain along with them as a list of (lambda)
-  expressions; hence ``lambda points''.  Only on the last step of
-  transforming the design space to device space are all the forms
-  fully evaluated.
-\end{remark}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Representation}
+\part{Representation}
 \label{sect:representation}
 
 \begin{remark}
@@ -1008,9 +1350,37 @@ mean?  Specifically, that is; what's the machinery?
 \end{itemize}
 \end{remark}
 
+%%%%%%%%
+\subsection{Point Expressions}
+\label{subs:pointexprs}
+
+\ab as expression - denotes a pair of reals (type \RR), not a point in
+a \cspace{}.  Note: \RR is a type expression, not a cs.  If we want to
+think of \RR as \Rtwo space, then it must be a (or: the one and only)
+absolute space, with axiomatically defined axes, etc.  A \ab
+expression outside of an cs context does not denote a coordinate
+point.  Inside a cs context, it denotes a pair in \RR (\Rtwo) which
+the cs scaling functions map to a point in the \Rtwo associated with
+the cs.  (CS a combo of \Rtwo, axes, etc.)
+
+So it is incorrect to think of a cs only in terms of \Rtwo.  It's a
+different mathematical structure.
+
+A pair of reals \ab only becomes a ``point'' when interpreted ``by'' a
+cs, mapping from pure \Rtwo to a cs structure - which we can think of
+as a mapping from pure number ``location''.
+
+%%%%%%%%
+\subsection{Space Expressions}
+\label{subs:spaceexprs}
+
+%%%%%%%%
+\subsection{Figure Expressions}
+\label{subs:figexprs}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Geometry and Content}
-\label{sec:geomcontent}
+\label{sect:geomcontent}
 
 ================
 
@@ -1118,5 +1488,437 @@ is discarded.
 Or: the order of an XML tree is just abstract order, A precedes B,
 without any concrete definition of what "precedes" means (i.e. it does
 not mean greater than, less than, etc.)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Caveats}
+\label{sect:caveats}
+
+Beware of people who contrast ``logical'' and ... something else.  For
+example, the Unicode folks contrast ``logical order'' and ``visual
+order''
+(\url{http://userguide.icu-project.org/transforms/bidi#TOC-Logical-Order-versus-Visual-Order}).  Some people refer to ``logical dimensions'' and ``display dimension'' in HTML5.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Notes}
+\label{sect:notes}
+
+Drawing a figure always involves two specifications, one explicit, the
+other (usually) implicit.  The explicit specification describes the
+figure: size, shape, location\sidenote{Design space includes a style
+  element involving color, line thickness, etc. but we can ignore that
+  for present purposes.}.  The implicit specification describes the
+coordinate space.  The explicit specification (of a figure) is always
+relative to a coordinate space.
+
+CS (Coordinate Space) specification:  origin (always 0) + axes
+
+
+Example: unit circle centered at the origin.  The usual way to specify
+this is something like
+
+(0,0 circle(1)  (using tikz syntax; any other would do as well)
+
+This is the explicit specification; implicit is the specification of the CS.
+
+\begin{remark}
+  The idea is that expressions like \((a,b)\) find a first home in the
+  Root space, which is standard, absolute, Cartesian space.  You
+  cannot ``touch'' Root space; its fixed.  But you can ``insert''
+  things into Root design space, and you can apply transforms to it to
+  yield other spaces.
+\end{remark}
+
+But there are always two coordinate spaces: the one in which
+coordinates are directly expressed (as above), which we'll call the
+Root space, and the "\Omg" space to which the Root space is mapped.
+In other words, specifying a figure and a space is not enough; the
+space itself must be located in a "parent" space, which we're calling
+the \Omg space.  Maybe Alpha space would be better.\marginnote{Since
+  Alpha is beginning and Omega is end; we begin by specifying points
+  in absolute space, map spaces to spaces, and end up in device space
+  (=\Omg space).}
+
+[Root space is axiomatic: x and y axes with unit = 1, incidence 0 and
+  90, the usual orientation.  Root space is also absolute.]
+
+IOW, the minimal transform is the \(Ident\) transform, which maps the
+Root space directly to \Omg space with no changes.  Expressions in
+which a transform is not explicitly specified always implicitly use
+the \(Ident\) transform.
+
+\begin{remark}
+  All spaces are immutable; all we can do is express mappings between spaces.
+\end{remark}
+
+[NB this is all device independent.  Mapping root space to device
+  space is a separate issue.]
+
+[NB third kind of space, between device independent (abstract) root
+  space and device space: device-independent space with empirical units
+  of measure.  E.g. x and y axes with unit = 1cm (instead of just 1).]
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{Appendices}
+%% \appendix
+%% \appendixpage
+\begin{appendices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Formal Definitions}
+\label{sect:formadefs}
+
+%%%%%%%%
+\subsection{Coordinate}
+\label{subs:coorddefn}
+
+\[COORD == \real\]
+
+%%%%%%%%
+\subsection{Angle}
+\label{subs:angledefn}
+
+\[RADIAN == \real\]
+
+\[DEGREE == \real\]
+
+\begin{axdef}
+  degToRad : \real\fun\real \\
+  radToDeg : \real\fun\real
+  \where
+  \forall x : \real @ degToRad(x) = x\cdot\frac{\pi}{180} \\
+  {\small\strut} \\
+  \forall x : \real @ radToDeg(x) = x\cdot\frac{180}{\pi}
+\end{axdef}
+
+%%%%%%%%
+\subsection{Point}
+\label{subs:pointdefn}
+
+\[POINT == COORD\cross COORD \]
+
+%%%%%%%%
+\subsection{Identity Function}
+\label{subs:idfndefn}
+
+\begin{gendef}[X]
+  ident : X\fun X
+  \where
+  \forall x : X @ ident(x) = x
+\end{gendef}
+
+%%%%%%%%
+\subsection{Axis}
+\label{subs:axisdefn}
+
+An \textit{axis} is ...\marginnote{Do we need to explicitly list the carrier set (\R)?}
+
+\begin{schema}{Axis}
+  origin : COORD \\
+  offset : COORD \\
+  incidence : RADIAN \\
+  scale : COORD\fun COORD
+  \where
+  origin = (0,0) \\
+  offset = scale(origin)
+\end{schema}
+
+%%%%%%%%
+\subsection{\CSpace}
+\label{subs:csdefn}
+
+A \textit{\cspace} combines \RR{} and a sequence of axes.\marginnote{Do we need to explicitly list the carrier set (\Rtwo)?}
+
+%%%%%%%%
+\subsection{\DSpace}
+\label{subs:dspacedefn}
+
+A \textit{\dspace} is a \cspace{} plus a set of figures.
+
+%%%%%%%%
+\subsection{Curve}
+\label{subs:curvedefn}
+
+A curve is a set of points, that is, a graph.
+
+%%%%%%%%
+\subsection{Path}
+\label{subs:pathdefn}
+
+A path is a function; it denotes a curve.  Techically, a path denotes
+its graph.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Previous Work}
+\label{sect:prevwork}
+
+\epigraph{Immature poets imitate; mature poets steal}{TS Eliot}
+
+
+%%%%%%%%
+\subsection{\TeX, \MF, and \MP}
+
+%%%%%%%%
+\subsection{TikZ/PGF}
+\label{subsec:tikz}
+
+TikZ has by far the most sophisticated concept of coordinate space.
+
+Canvas =  x,y with explicit "dimension" (empirical UOM)
+
+XYZ    =  x,y,z as "factors" multiplying unit vectors of length 1cm)
+
+Canvas Polar = radius expressed in canvas system, i.e. with UOM
+
+XYZ Polar  = radius and angle interpreted in as in xy csystem, i.e. factors (of unit vectors of 1cm) not dimensions
+
+XY Polar (=XYZ Polar)
+
+Barycentric  -  "In geometry, the barycentric coordinate system is a coordinate system in which the location of a point of a simplex (a triangle, tetrahedron, etc.) is specified as the center of mass, or barycenter, of masses placed at its vertices. Coordinates also extend outside the simplex, where one or more coordinates become negative."   (http://en.wikipedia.org/wiki/Barycentric\_coordinate\_system)
+
+Node (=DOM?)  The cs:node is parasitic the more primitive empirical
+systems.  It allows you to refer to a previously specified point by
+specifying its name and an "anchor" or predefined location relative to
+the node's position.  The anchor name effectively denotes a function
+that computes a point, given the node' base point.
+
+Tangent Like cs:node, cs:tangent supports specification of points by
+refering to previously specified points.  A tangent function is
+implicitly applied to the points refered to - actually a point and a
+figure - and computes the tangent from the point to the figure.
+
+Custom -- the job of a custom cs is to compute x and y in the canvas
+coordinate system.  So defining a custom coordinate system boils down
+to specifying a transformation function.
+
+TikZ's XYZ system behaves like an abstract Euclidean system.  But it
+does have default unit vectors that map it to canvas space.
+
+\begin{remark}
+Compare Asymptote.  TikZ systems that allow unitless coordinate
+specifications (e.g. XYZ) use an implicit empirical UOM (default:
+1cm).  Any \cspace{} must eventually be mapped to a canvas.
+\end{remark}
+
+Thus all TikZ cspaces are empirical; some seem to provide means of
+expressing coordinates rather than establishing a distinct system;
+e.g. node and tangent systems.  They don't (at least not all of them)
+establish a primitive interpretation of (x,y).  For example, the
+tangent cs does not provide a meaning for any (x,y); instead, it
+allows you to specify a (tangent) point by reference to an already
+specified pair of a shape and a point.
+
+In other words, cs:node and cs:tangent are derived systems, the others
+primitive.  They are essentially transform functions using for
+positioning.  They do not need units of measure since that is already
+implicit in the points they reference.  Dunno about barycentric, which
+I don't really grok yet.
+
+Basically all the cspaces amount to positioning functions, which is
+why they can be mixed in single path expressions.
+
+Correction: they are NOT transform functions, in that they do not
+transform the entire csystem; instead they are positioning functions,
+designed to transform subsets of the space.
+
+Furthermore, TikZ's system allows for use of multiple coord systems in
+one expression.  So you can write (0,0) -- (polar cs:
+cs:angle=90,radius=1cm), using first the xyz (Id func) system then the
+polar system (a positioning function) to draw a line from the origin
+to (0,1), unit=cm.
+
+Note that the xyz cs seems to be the default for (x,y) syntax, where x
+and y are dimensionless.
+
+%%%%%%%%
+\subsection{Postscript}
+
+Figure specification as executable program.
+
+User space, device space
+
+Units
+
+%%%%%%%%
+\subsection{PDF}
+
+Ref:  PDF32000-1:2008 (\url{http://www.adobe.com/devnet/pdf/pdf\_reference.html}
+
+``canvas''
+
+``[A] PDF content stream is not a program to be interpreted; rather, it is a static description of a sequence of graphics objects.'' p.110
+
+Five ``graphics objects'': path, text, external, inline image, shading
+
+Add: clipping path
+
+``A shading object describes a geometric shape whose colour is an arbitrary function of position within the shape. (A shading can also be treated as a colour when painting other graphics objects; it is not considered to be a separate graphics object in that case.)'' (p. 111)
+
+
+8.3 Coordinate Systems (p. 114)
+
+``Coordinate systems define the canvas on which all painting occurs.'' (p.114)
+
+``A coordinate space is determined by the following properties with respect to the current page:
+• The location of the origin
+• The orientation of the x and y axes
+• The lengths of the units along each axis'' p.114
+
+Device space
+
+User space
+``Coordinates in user space (as in any other coordinate space) may be specified as either integers or real numbers, and the unit size in default user space does not constrain positions to any arbitrary grid. The resolution of coordinates in user space is not related in any way to the resolution of pixels in device space.'' p.115
+
+Transforms: translation, scaling, rotation, skewing
+
+
+``The transformation from user space to device space is defined by the current transformation matrix (CTM), an element of the PDF graphics state...'' p.116
+
+Other coordinate spaces: text space (w/text matrix), glyph space
+(w/font matrix), image space (w/out transforms), form space (matrix),
+pattern space (matrix), 3D stuff
+
+See figure 12, p. 117
+
+%%%%%%%%
+\subsection{CSS}
+
+\url{http://www.w3.org/TR/CSS2/box.html}
+
+\href{http://www.w3.org/TR/CSS2/visuren.html}{Visual Formatting Model}
+
+\href{http://www.w3.org/TR/CSS2/visuren.html#containing-block}{Containing
+  Block} ``In CSS 2.1, many box positions and sizes are calculated
+with respect to the edges of a rectangular box called a containing
+block. In general, generated boxes act as containing blocks for
+descendant boxes; we say that a box "establishes" the containing block
+for its descendants. The phrase "a box's containing block" means "the
+containing block in which the box lives," not the one it
+generates....Each box is given a position with respect to its
+containing block, but it is not confined by this containing block; it
+may overflow.''
+
+So the ``containing block'' is both geometric and structure.  CSS
+generally maps geometric structure to content structure directly.
+
+\href{http://www.w3.org/TR/CSS2/visuren.html#normal-flow}{9.4 Normal Flow}
+
+CSS \href{http://www.w3.org/TR/CSS2/media.html}{media types}; \href{http://www.w3.org/TR/css-print/}{CSS Print Profile}
+
+\href{http://www.w3.org/TR/css3-page/}{CSS Paged Media Module Level 3}
+
+\href{http://www.w3.org/TR/css3-page/#page-model}{The Page Model}
+
+%%%%%%%%
+\subsection{SVG}
+
+\url{http://www.w3.org/TR/SVG11/coords.html}
+
+Viewport space, user spaces
+
+%%%%%%%%
+\subsection{HTML5 Canvas}
+\label{subs:html5}
+
+``The canvas element provides scripts with a resolution-dependent bitmap canvas, which can be used for rendering graphs, game graphics, art, or other visual images on the fly.'' \url{http://www.w3.org/TR/html5/scripting-1.html#the-canvas-element}
+
+\url{http://diveintohtml5.info/canvas.html}
+
+\href{https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/HTML-canvas-guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010542-CH1-SW1}{Safari HTML5 Canvas Guide}
+
+``The canvas is a two-dimensional grid. The coordinate (0, 0) is at the upper-left corner of the canvas. Along the X-axis, values increase towards the right edge of the canvas. Along the Y-axis, values increase towards the bottom edge of the canvas.'' (\url{http://diveintohtml5.info/canvas.html})
+
+Each canvas element has a ``drawing context''.
+
+``One of the most exciting features of HTML5 is the <canvas> element that can be used to draw vector graphics...'' \url{http://www.1stwebdesigner.com/design/creative-ways-use-html5-canvas/}
+
+
+\href{http://msdn.microsoft.com/en-us/hh534406.aspx}{The Developer’s Guide to HTML5 Canvas}
+
+\href{http://msdn.microsoft.com/en-us/library/ff975057.aspx}{CanvasRenderingContext2D object} - methods and props
+
+``To draw on a canvas, you need to reference the context of the canvas.  The context gives you access to the 2D properties and methods that allow you to draw and manipulate images on a canvas element.'' \url{http://msdn.microsoft.com/en-us/hh534406.aspx}
+
+``everything in the canvas is a pixel.'' http://msdn.microsoft.com/en-us/hh534406.aspx
+
+``The canvas 2D API is an object that allows you to draw and
+manipulate images and graphics on a canvas element.  To reference the context of the canvas, you call getContext, which is a method on the canvas element.  It has one parameter, which currently is 2d.  Here’s the snippet of code for referencing the context.
+
+``Each canvas has its own context, so if you’re page contains multiple canvas elements; you must have a reference to each individual context that you want to work with.'' \url{Canvas 2D
+ API}  Correction: not an ``object'', a mathematical structure.
+
+\href{http://blogs.msdn.com/b/ie/archive/2011/04/22/thoughts-on-when-to-use-canvas-and-svg.aspx}{Thoughts on when to use Canvas and SVG}
+
+%%%%%%%%
+\subsection{OpenGL}
+\label{subs:opengl}
+
+
+\href{http://www.matrix44.net/cms/notes/opengl-3d-graphics/coordinate-systems-in-opengl}{Coordinate Systems in OpenGL}
+
+``There are multiple coordinate Systems involved in 3D Graphics:
+
+Object Space
+World Space (aka Model Space)
+Camera Space (aka Eye Space or View Space)
+Screen Space (aka Clip Space)''
+
+\url{http://www.cse.ohio-state.edu/~parent/classes/581/Lectures/4.2DviewingHandout.pdf}
+
+%%%%%%%%
+\subsection{OS X/iOS Drawing}
+
+\href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html}{Quartz 2D}
+
+\href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html#//apple\_ref/doc/uid/TP30001066-CH202-CJBBAEEC}{Quartz 2D Coordinate Systems}
+
+Cocoa (OS X):  \url{https://developer.apple.com/library/mac/documentation/cocoa/conceptual/CocoaDrawingGuide/Transforms/Transforms.html#//apple\_ref/doc/uid/TP40003290-CH204-BCIDJJBI}
+
+iOS:  ??
+
+%%%%%%%%
+\subsection{Android Drawing}
+
+\href{http://developer.android.com/guide/topics/graphics/2d-graphics.html}{Canvas and Drawables}
+
+Transform operators are in the API ref, but the dev guides don't say much about it.
+
+%%%%%%%%
+\subsection{Direct3D, Direct2D}
+\label{subs:direct3d}
+
+
+\href{http://msdn.microsoft.com/en-us/library/dd370990%28VS.85%29.aspx}{Direct2D}
+
+\href{http://msdn.microsoft.com/en-us/library/dd756655(v=vs.85).aspx#the_direct2d_coordinate_space}{The Direct2D Coordinate Space}
+
+\href{http://msdn.microsoft.com/en-us/library/windows/desktop/ff476345(v=vs.85).aspx}{Programming Guide for Direct3D}
+
+\href{http://msdn.microsoft.com/en-us/library/windows/desktop/bb324489(v=vs.85).aspx}{3D coordinate systems and geometry}
+
+%%%%%%%%
+\subsection{R}
+\label{subs:r}
+
+Each ``plotting region'' has its own coordinate space.
+
+%%%%%%%%
+\subsection{Octave}
+\label{subs:octave}
+
+Graphic objects: figure, axes, line, text, patch, surface, text and image.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bibliography}
+\label{sect:bib}
+
+%% \addcontentsline{toc}{chapter}{Bibliography}
+\bibliography{spaces.bib% don't omit the %!
+%% ../bib/logic.bib%
+%% ,../bib/math.bib%
+%% ,../bib/stats.bib%
+}
+\bibliographystyle{plainnat}
+%% \printbibliography[heading=none]
+\end{appendices}
 
 \end{document}

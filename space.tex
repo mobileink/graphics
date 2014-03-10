@@ -124,6 +124,10 @@
 \usepackage{tkz-euclide}
 \usetkzobj{all}
 
+%% prettier integral syms
+\usepackage{esint}
+
+
 \title{The Poetics of Coordinate Space}
 \author{G. A. Reynolds}
 %\date{}                                           % Activate to display a given date or no date
@@ -194,6 +198,20 @@
 
 %%%%%%%%%%%%%%%%
 %% macros
+
+%% reversed integral sign
+\makeatletter
+\providecommand*{\curv}{%
+  \mathrel{%
+    \mathpalette\@curv\int
+  }%
+}
+\newcommand*{\@curv}[2]{%
+  \reflectbox{$\m@th#1#2$}%
+}
+\makeatother
+
+
 
 \newtheorem{theorem}{Theorem}
 %\newtheorem{cor}{Corollary}
@@ -277,7 +295,9 @@ There are two basic kinds of \cspace: discrete and continuous.
 
 A language for continous space will be more expressive than a language
 for discrete space.  An expression like \((\pi,\pi)\) is meaningful
-for continuous spaces, but not for discrete spaces.
+for continuous spaces, but not for discrete spaces.  The reason is
+simple: they have distinct ``carrier sets''.  The carrier set for a
+discrete space is \(\nat\cross\nat\); for continuous spaces, \RR{}.
 
 There are also kinds of a different kind.  Rectilinear (cartesian)
 spaces are distinct from polar spaces, for example.  Points in both
@@ -295,6 +315,12 @@ different (spatial) locations.
   device independece - a conspicous exception being HTML5 Canvas.
 \end{remark}
 
+Two kinds:
+
+\begin{itemize}
+\item Vector
+\item Bitmap
+\end{itemize}
 
 Conditions of adequacy for a graphics language:
 
@@ -1864,7 +1890,40 @@ Every axis must have a name.
     \subsection{Curve}
     \label{subs:curvedefn}
 
-    A curve is a set of points, that is, a graph.
+    A curve is a set of points, that is, a graph.  We call it a curve
+    rather than a graph in order to stress the point that a curve
+    represents a spatial interpretation to the graph.
+
+    The symbol for the curve of a function over a range is \(Big|_a^b f\).
+
+    The advantage of having a specific curve operator is that it
+    allows us to concisely and clearly indicate the end points of a
+    curve.  Most function symbols do not provide such a convenience;
+    prominent exceptions are the summation sign \(\Sigma_a^b\) and the
+    integral sign \(\int_a^b\).  But to indicate the graph (curve) of
+    \(f\) from \(a\) to \(b\), some ad-hoc technique must be found,
+    e.g. \(f(x),\ x\in [0..1]\).  With \(Big|_a^b\) we can just write:
+
+      \[\bigg|_a^b \lambda x.2x \]
+
+      Why do we need this?  Aside from convenience and expressivity?
+      It allows us to specify figures (plotted functions)
+      in \dspace{}s.  For example, the line segment from the origin
+      to \((1,1)\):
+
+      \[\bigg|_0^1 \lambda x.x\]
+
+      This gives us a concise notation that we can use to provide a
+      concise formal definition of e.g. TikZ's path operators like
+      ``--'', rectangle, etc.
+
+      It will also help us express transform composition clearly; without
+      it that would be difficult.
+
+      \begin{remark}
+        TODO: write formal Z definition of this operator.
+      \end{remark}
+
 
     %%%%%%%%
     \subsection{Path}

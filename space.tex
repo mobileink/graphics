@@ -1,4 +1,4 @@
-\documentclass[reqno,12pt]{tufte-handout}
+\documentclass[12pt]{tufte-handout}
 %% \documentclass[reqno,12pt]{tufte-book}
 %% \usepackage{trace}
 %% \documentclass[reqno,12pt]{article}
@@ -10,7 +10,10 @@
 \usepackage{amsmath}
 \usepackage{setspace}
 \numberwithin{equation}{subsection}
+\usepackage{amsthm}
 \usepackage{amsfonts}
+
+\usepackage{stmaryrd}
 
 %% broken (doesn't work with tufte-handout):
 \usepackage{zed-csp}
@@ -70,10 +73,10 @@
 % for units.
 \usepackage{units}
 
-
+\usepackage{xcolor,mdframed}
 
 %\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
-%\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{letterpaper}                   % ... or a4paper or a5paper or ...
 
 \usepackage{xfrac}
 
@@ -118,7 +121,18 @@
   Syntax, type system and semantics}
 
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric,decorations.text,decorations.pathreplacing}
+\usetikzlibrary{%
+  arrows%
+  ,calc%
+  ,decorations.text%
+  ,decorations.pathreplacing%
+  ,fadings%
+  ,positioning
+  ,shapes.geometric%
+}
+
+\usepackage{tikz-3dplot}
+
 \usepackage{pgfplots}
 \pgfplotsset{height=7cm,compat=1.9}
 
@@ -143,16 +157,16 @@
 
 %% running headers
 \newcommand{\changefont}{%
-    \fontsize{7}{9.5}\selectfont
+  \fontsize{7}{9.5}\selectfont
 }
 \fancypagestyle{plain}{
-	\fancyhead[LO,LE]{\leftmark }
-	\fancyhead[RO,RE]{\rightmark}
-	\fancyfoot[CO,CE]{\thepage}
-	\fancyfoot[LE]{\textsc{\runtitle}}
-	\fancyfoot[RO]{\textsc{\runtitle}}
-	\renewcommand{\headrulewidth}{0pt}
-	\renewcommand{\footrulewidth}{0pt}
+  \fancyhead[LO,LE]{\leftmark }
+  \fancyhead[RO,RE]{\rightmark}
+  \fancyfoot[CO,CE]{\thepage}
+  \fancyfoot[LE]{\textsc{\runtitle}}
+  \fancyfoot[RO]{\textsc{\runtitle}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
 }
 \pagestyle{plain}
 
@@ -220,6 +234,22 @@
 %%%%%%%%%%%%%%%%
 %% macros
 
+\newenvironment{important}[1][]{%
+  \begin{mdframed}[%
+      backgroundcolor={red!15}, hidealllines=true,
+      skipabove=0.7\baselineskip, skipbelow=0.7\baselineskip,
+      splitbottomskip=2pt, splittopskip=4pt, #1]%
+    \makebox[0pt]{% ignore the withd of !
+      \smash{% ignor the height of !
+        \fontsize{32pt}{32pt}\selectfont% make the ! bigger
+        \hspace*{-19pt}% move ! to the left
+        \raisebox{-2pt}{% move ! up a little
+          {\color{red!70!black}\sffamily\bfseries !}% type the bold red !
+        }%
+      }%
+    }%
+}{\end{mdframed}}
+
 %% reversed integral sign
 \makeatletter
 \providecommand*{\curv}{%
@@ -237,8 +267,12 @@
 \newtheorem{theorem}{Theorem}
 %\newtheorem{cor}{Corollary}
 %\newtheorem{lem}{Lemma}
-%\theoremstyle{remark}
+\newtheorem*{defn}{Definition}
+%% \theoremstyle{remark}
 \newtheorem{remark}{Remark}
+\newtheorem*{commentary}{Commentary}
+\newtheorem*{todo}{TODO}
+\newtheorem{eg}{Example}
 
 \newcommand\cspace{coordinate space}
 \newcommand\Cspace{Coordinate space}
@@ -268,7 +302,7 @@
 
 \begin{abstract}
   \begin{center}
-  \textit{Abstract}
+    \textit{Abstract}
   \end{center}
   The foundation of any graphics language or system is
   its \cspace{}.  \Cspace{}s organize space.  Despite my title--a play
@@ -292,11 +326,38 @@
 \section{Introduction}
 \label{sect:intro}
 
-\begin{remark}
-  What this is about.  Two things: vector graphics, and language.  The
-  former motivates analysis and description of \cspace{}s; the latter
-  motivates use of formal notations (lambda calculus and Z) to do so.
-\end{remark}
+What this is about.  Two things: graphics and languages.  The former
+motivates analysis and description of \cspace{}s and graphical
+figures; the latter motivates use of formal notations (lambda
+calculus and Z) to do so.
+
+Our strategy is as follows.  We model \cspace{}s as a \textit{type}
+(symbol: \Omg).  Every type has a carrier set whose elements are
+values of that type, so the carrier set of \Omg{} includes all
+possible \cspace{}s.  When we combine a \cspace{} and a collection of
+geometric \textit{figures} (another type; symbol \(\Gamma\)), we get
+another type: \dspace{} (symbol: \(\Delta\)).  The carrier set of
+\(\Delta\) thus contains all possible combinations of every \cspace{}
+with all possible collections of figures.  It follows that the
+operation of ``adding'' a figure to a \dspace{} -- call it the
+\textit{inscribe} operation -- is nothing more than a function mapping
+a pair of values (one \(\Delta\) value and on \(\Gamma\) value) to
+another \(\Delta\) value.
+
+We express this model using the Z formal specification notation.  In
+effect, we specify a ``Z toolkit'' that extends the notation to cover
+the semantic domain of graphics.  At the moment we use Z because of
+its expressive power; it makes it relatively easy to write down
+formally correct definitions in an idiom that remains intuitive and
+easily understood.  Since Z has a formal semantics, various automated
+Z specification checkers are available; at some point in the future we
+might try to use one to verify our specification.  But for the moment
+our main concern is expressive.
+
+One test of the adequacy of this model is whether it is sufficient to
+fully specify the semantics of the TikZ/PGF language.  To our
+knowledge, TikZ is the most sophisticated and powerful graphics
+language available today.
 
 %%%%%%%%
 \subsection{Basic Concepts}
@@ -309,7 +370,7 @@ be used for one can be used for the other.  It's a question of how one
 designs the language, what sort of expressiveness it has.
 
 %%%%%%%%
-\subsection{Kinds of \CSpace}
+\subsection{\CSpace{}s}
 \label{subs:cskinds}
 
 There are two basic kinds of \cspace: discrete and continuous.
@@ -320,12 +381,290 @@ for continuous spaces, but not for discrete spaces.  The reason is
 simple: they have distinct ``carrier sets''.  The carrier set for a
 discrete space is \(\nat\cross\nat\); for continuous spaces, \RR{}.
 
-There are also kinds of a different kind.  Rectilinear (cartesian)
-spaces are distinct from polar spaces, for example.  Points in both
-have the same type (\RR), and both contain the same set of points of
-this type, but their meanings differ.  An expression like \((1,1)\)
-denotes the same pair of real numbers in each space, but maps to
-different (spatial) locations.
+There are also several types of continuous \cspace.  Rectilinear
+(cartesian) spaces are distinct from polar spaces, for example.
+Points in both have the same type (\RR), and both contain the same set
+of points of this type, but their meanings differ.  An expression like
+\((1,1)\) denotes the same pair of real numbers in each space, but
+maps to different (spatial) locations.
+
+\begin{description}
+\item [Linear]
+\item [Polar]
+\item [Cylindrical]  Blah blabla bla
+
+  %% see http://en.wikipedia.org/wiki/Cylindrical_coordinate_system
+  \begin{marginfigure}[-2in]%
+    %% tikz-3dplot manual p. 26-27
+    \tdplotsetmaincoords{60}{110}
+    %
+    \pgfmathsetmacro{\rvec}{1}
+    \pgfmathsetmacro{\thetavec}{30}
+    \pgfmathsetmacro{\phivec}{60}
+    %
+    \begin{tikzpicture}[scale=4,tdplot_main_coords]
+      \coordinate (O) at (0,0,0);
+      \draw[thick,->] (0,0,0) -- (.8,0,0) node[anchor=north east]{$x$};
+      \draw[thick,->] (0,0,0) -- (0,.8,0) node[anchor=north west]{$y$};
+      \draw[thick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z$};
+      \tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+      %% \draw[-stealth] (O) -- (P) node[left,pos=.7] {$r$}
+      \fill[red] (P) circle (.5pt)  node[right] {$(\rho,\phi,z)$};
+      \draw[dashed] (O) -- (Pxy);
+      \draw[dashed] (Pz) -- (P);
+      \draw[color=red] (P) -- (Pxy);
+      %% FIXME: get coords right
+      \draw[dashed,color=gray] (Pz) -- (.6,0,.9);
+      \draw[dashed,color=gray] (.6,0,.9) -- (.5,0,0);
+
+      \draw[color=red,thick] (O) -- (.5,0,0);
+      \tdplotdrawarc[dashed,color=gray]{(Pz)}{0.5}{0}{\phivec}{anchor=north}{}
+      \tdplotdrawarc[-latex,color=red,thick]{(O)}{0.5}{0}{\phivec}{anchor=north}{$\phi$}
+      \tdplotsetthetaplanecoords{\phivec}
+      %% \tdplotdrawarc[-latex,tdplot_rotated_coords]{(0,0,0)}{0.2}{0}%
+      %%               {\thetavec}{above left=0pt and -8pt}{$\phi$}
+      %% \tdplotsetrotatedcoords{\phivec}{\thetavec}{0}
+      %% \tdplotsetrotatedcoordsorigin{(P)}
+    \end{tikzpicture}
+    \caption{Point in cylindrical coordinate space.}
+  \end{marginfigure}
+
+\item [Spherical]
+
+  \begin{marginfigure}
+    %% tikz-3dplot manual p. 26-27
+    \tdplotsetmaincoords{60}{110}
+    %
+    \pgfmathsetmacro{\rvec}{.8}
+    \pgfmathsetmacro{\thetavec}{30}
+    \pgfmathsetmacro{\phivec}{60}
+    %
+    \begin{tikzpicture}[scale=4,tdplot_main_coords]
+      \coordinate (O) at (0,0,0);
+      \draw[thick,->] (0,0,0) -- (.5,0,0) node[anchor=north east]{$x$};
+      \draw[thick,->] (0,0,0) -- (0,.5,0) node[anchor=north west]{$y$};
+      \draw[thick,->] (0,0,0) -- (0,0,.8) node[anchor=south]{$z$};
+      \tdplotsetcoord{P}{\rvec}{\thetavec}{\phivec}
+      \draw (O) -- (P) node[left,pos=.7] {$r$} node[right] {$(r,\theta,\phi)$};
+      \fill[red] (P) circle (.5pt);
+      \draw[dashed] (O) -- (Pxy);
+      \draw[dashed] (P) -- (Pxy);
+      \tdplotdrawarc[-latex]{(O)}{0.2}{0}{\phivec}{anchor=north}{$\theta$}
+      \tdplotsetthetaplanecoords{\phivec}
+      \tdplotdrawarc[-latex,tdplot_rotated_coords]{(0,0,0)}{0.2}{0}%
+                    {\thetavec}{above left=0pt and -8pt}{$\phi$}
+                    \tdplotsetrotatedcoords{\phivec}{\thetavec}{0}
+                    \tdplotsetrotatedcoordsorigin{(P)}
+    \end{tikzpicture}
+    \caption{Point in spherical coordinate space.}
+  \end{marginfigure}
+
+  %% tikz-3dplot version - from manual
+  %% \tdplotsetmaincoords{70}{135}
+
+  %% \begin{tikzpicture}[scale=2,line join=bevel,tdplot_main_coords, fill opacity=.2]
+  %%   \pgfsetlinewidth{.4pt}
+
+  %%   %% syntax:
+  %%   %% \tdplotsphericalsurfaceplot[fill color style]{theta steps}{phi steps}{function}{line color}{fill color}{x axis}{y axis}{z axis}
+
+  %%   \tdplotsphericalsurfaceplot%
+  %%       {72}% theta steps
+  %%       {24}% phi steps
+  %%   	%% {0.5*cos(\tdplottheta)^2}% function to plot
+  %%       %% {\tdplotphi + 3*\tdplottheta}%
+  %%       {tdplottheta^2}
+  %%       {black}% line color
+  %%       {red!10!black}% fill color
+  %%       {\draw[color=black,thick,->] (0,0,0) -- (1,0,0) node[anchor=north east]{$x$};}% x axis
+  %%       {\draw[color=black,thick,->] (0,0,0) -- (0,1,0) node[anchor=north west]{$y$};}% y axis
+  %%       {\draw[color=black,thick,->] (0,0,0) -- (0,0,1) node[anchor=south]{$z$};}%      z axis
+  %%       %% \node[tdplot_screen_coords,fill opacity=.3] at (0,-1) {};
+  %% \end{tikzpicture}
+
+
+  %% %% plain tizk version from http://www.texample.net/tikz/examples/spherical-and-cartesian-grids/
+  %% % The 3D code is based on The drawing is based on Tomas M. Trzeciak's
+  %% % `Stereographic and cylindrical map projections example`:
+  %% % http://www.texample.net/tikz/examples/map-projections/
+  %% \newcommand\pgfmathsinandcos[3]{%
+  %%   \pgfmathsetmacro#1{sin(#3)}%
+  %%   \pgfmathsetmacro#2{cos(#3)}%
+  %% }
+  %% \newcommand\LongitudePlane[3][current plane]{%
+  %%   \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  %%   \pgfmathsinandcos\sint\cost{#3} % azimuth
+  %%   \tikzset{#1/.estyle={cm={\cost,\sint*\sinEl,0,\cosEl,(0,0)}}}
+  %% }
+  %% \newcommand\LatitudePlane[3][current plane]{%
+  %%   \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  %%   \pgfmathsinandcos\sint\cost{#3} % latitude
+  %%   \pgfmathsetmacro\yshift{\cosEl*\sint}
+  %%   \tikzset{#1/.estyle={cm={\cost,0,0,\cost*\sinEl,(0,\yshift)}}} %
+  %% }
+  %% \newcommand\DrawLongitudeCircle[2][1]{
+  %%   \LongitudePlane{\angEl}{#2}
+  %%   \tikzset{current plane/.prefix style={scale=#1}}
+  %%   % angle of "visibility"
+  %%   \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  %%   \draw[current plane,thin,black] (\angVis:1) arc (\angVis:\angVis+180:1);
+  %%   \draw[current plane,thin,dashed] (\angVis-180:1) arc (\angVis-180:\angVis:1);
+  %% }%this is fake: for drawing the grid
+  %% \newcommand\DrawLongitudeCirclered[2][1]{
+  %%   \LongitudePlane{\angEl}{#2}
+  %%   \tikzset{current plane/.prefix style={scale=#1}}
+  %%   % angle of "visibility"
+  %%   \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  %%   \draw[current plane,red,thick] (150:1) arc (150:180:1);
+  %%   %\draw[current plane,dashed] (-50:1) arc (-50:-35:1);
+  %% }%for drawing the grid
+  %% \newcommand\DLongredd[2][1]{
+  %%   \LongitudePlane{\angEl}{#2}
+  %%   \tikzset{current plane/.prefix style={scale=#1}}
+  %%   % angle of "visibility"
+  %%   \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  %%   \draw[current plane,black,dashed, ultra thick] (150:1) arc (150:180:1);
+  %% }
+  %% \newcommand\DLatred[2][1]{
+  %%   \LatitudePlane{\angEl}{#2}
+  %%   \tikzset{current plane/.prefix style={scale=#1}}
+  %%   \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  %%   % angle of "visibility"
+  %%   \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  %%   \draw[current plane,dashed,black,ultra thick] (-50:1) arc (-50:-35:1);
+
+  %% }
+  %% \newcommand\fillred[2][1]{
+  %%   \LongitudePlane{\angEl}{#2}
+  %%   \tikzset{current plane/.prefix style={scale=#1}}
+  %%   % angle of "visibility"
+  %%   \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  %%   \draw[current plane,red,thin] (\angVis:1) arc (\angVis:\angVis+180:1);
+
+  %% }
+  %% \newcommand\DrawLatitudeCircle[2][1]{
+  %%   \LatitudePlane{\angEl}{#2}
+  %%   \tikzset{current plane/.prefix style={scale=#1}}
+  %%   \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  %%   % angle of "visibility"
+  %%   \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  %%   \draw[current plane,thin,black] (\angVis:1) arc (\angVis:-\angVis-180:1);
+  %%   \draw[current plane,thin,dashed] (180-\angVis:1) arc (180-\angVis:\angVis:1);
+  %% }%Defining functions to draw limited latitude circles (for the red mesh)
+  %% \newcommand\DrawLatitudeCirclered[2][1]{
+  %%   \LatitudePlane{\angEl}{#2}
+  %%   \tikzset{current plane/.prefix style={scale=#1}}
+  %%   \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  %%   % angle of "visibility"
+  %%   \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  %%   %\draw[current plane,red,thick] (-\angVis-50:1) arc (-\angVis-50:-\angVis-20:1);
+  %%   \draw[current plane,red,thick] (-50:1) arc (-50:-35:1);
+
+  %% }
+
+  %% \tikzset{%
+  %%   >=latex,
+  %%   inner sep=0pt,%
+  %%   outer sep=2pt,%
+  %%   mark coordinate/.style={inner sep=0pt,outer sep=0pt,minimum size=3pt,
+  %%     fill=black,circle}%
+  %% }
+
+  %% %% TODO: make this look like http://en.wikipedia.org/wiki/Spherical_coordinate_system, only with the sphere
+  %% %% \begin{figure}[ht!]
+  %% \begin{tikzpicture}[scale=1,every node/.style={minimum size=1cm}]
+  %%   %% some definitions
+  %%   \def\R{4} % sphere radius
+  %%   \def\angEl{25} % elevation angle
+  %%   \def\angAz{-100} % azimuth angle
+  %%   \def\angPhiOne{-50} % longitude of point P
+  %%   \def\angPhiTwo{-35} % longitude of point Q
+  %%   \def\angBeta{30} % latitude of point P and Q
+
+  %%   %% working planes
+
+  %%   \pgfmathsetmacro\H{\R*cos(\angEl)} % distance to north pole
+  %%   \LongitudePlane[xzplane]{\angEl}{\angAz}
+  %%   \LongitudePlane[pzplane]{\angEl}{\angPhiOne}
+  %%   \LongitudePlane[qzplane]{\angEl}{\angPhiTwo}
+  %%   \LatitudePlane[equator]{\angEl}{0}
+  %%   \fill[ball color=white!10] (0,0) circle (\R); % 3D lighting effect
+  %%   \coordinate (O) at (0,0);
+  %%   \coordinate[mark coordinate] (N) at (0,\H);
+  %%   \coordinate[mark coordinate] (S) at (0,-\H);
+  %%   \path[xzplane] (\R,0) coordinate (XE);
+
+  %%   %defining points outsided the area bounded by the sphere
+  %%   \path[qzplane] (\angBeta:\R+5.2376) coordinate (XEd);
+  %%   \path[pzplane] (\angBeta:\R) coordinate (P);%fino alla sfera
+  %%   \path[pzplane] (\angBeta:\R+5.2376) coordinate (Pd);%sfora di una quantità pari a 10 dopo la sfera
+  %%   \path[pzplane] (\angBeta:\R+5.2376) coordinate (Td);%sfora di una quantità pari a 10 dopo la sfera
+  %%   \path[pzplane] (\R,0) coordinate (PE);
+  %%   \path[pzplane] (\R+4,0) coordinate (PEd);
+  %%   \path[qzplane] (\angBeta:\R) coordinate (Q);
+  %%   \path[qzplane] (\angBeta:\R) coordinate (Qd);%sfora di una quantità pari a 10 dopo la sfera
+
+  %%   \path[qzplane] (\R,0) coordinate (QE);
+  %%   \path[qzplane] (\R+4,0) coordinate (QEd);%sfora di una quantità 10 dalla sfera sul piano equat.
+
+
+  %%   \DrawLongitudeCircle[\R]{\angPhiOne} % pzplane
+  %%   \DrawLongitudeCircle[\R]{\angPhiTwo} % qzplane
+  %%   \DrawLatitudeCircle[\R]{\angBeta}
+  %%   \DrawLatitudeCircle[\R]{0} % equator
+  %%   %labelling north and south
+  %%   \node[above=8pt] at (N) {$\mathbf{N}$};
+  %%   \node[below=8pt] at (S) {$\mathbf{S}$};
+
+  %%   \draw[-,dashed, thick] (N) -- (S);
+  %%   \draw[->] (O) -- (P);
+  %%   \draw[dashed] (XE) -- (O) -- (PE);
+  %%   \draw[dashed] (O) -- (QE);
+  %%   %connecting Points outside the sphere
+  %%   %% \draw[-,dashed,black,very thick] (O) -- (Pd);
+  %%   %% \draw[-,dashed,black,very thick] (O) -- (PEd);
+  %%   %% \draw[-,dashed,black,very thick] (O) -- (QEd);
+  %%   %% \draw[-,dashed,black,very thick] (O) -- (XEd);
+  %%   %% \draw[dashed] (XE) -- (O) -- (PE);
+  %%   %draw black thick flat grid
+  %%   %% \draw[-,ultra thick,black] (Pd) -- (PEd) node[below, left] {$P_1$};%verticale sinistro
+  %%   %% \draw[-,ultra thick,black] (PEd) -- (QEd)node[below, right] {$P_3$};%orizzontale inferiore
+  %%   %% \draw[-,ultra thick,black] (Pd)-- (XEd)node[above, right] {$P_2$};%orizzontale superiore
+  %%   %% \draw[-,ultra thick,black] (XEd) -- (QEd);
+
+  %%   \draw[pzplane,->,thin] (0:0.5*\R) to[bend right=15]
+  %%   node[midway,right] {$\lambda$} (\angBeta:0.5*\R);
+
+  %%   \path[pzplane] (0.5*\angBeta:\R) node[right] {$$};
+  %%   \path[qzplane] (0.5*\angBeta:\R) node[right] {$$};
+  %%   \draw[equator,->,thin] (\angAz:0.5*\R) to[bend right=30]
+  %%   node[pos=0.4,above] {$\phi_1$} (\angPhiOne:0.5*\R);
+  %%   %% \draw[equator,->,thin] (\angAz:0.6*\R) to[bend right=35]
+  %%   %% node[midway,below] {$\phi_2$} (\angPhiTwo:0.6*\R);
+  %%   \path[xzplane] (0:\R) node[below] {$$};
+  %%   \path[xzplane] (\angBeta:\R) node[below left] {$$};
+  %%   \foreach \t in {0,2,...,30} { \DrawLatitudeCirclered[\R]{\t} }
+  %%   \foreach \t in {130,133,...,145} { \DrawLongitudeCirclered[\R]{\t} }
+
+  %%   %drawing grids on the spere invoking DLongredd and DrawLongitudeCirclered
+
+  %%   %% \foreach \t in {130,145,...,145} { \DLongredd[\R+3]{\t} }
+  %%   %% \foreach \t in {130,133,...,145} { \DrawLongitudeCirclered[\R+3]{\t} }
+
+  %%   %% \foreach \t in {0,30,...,30} { \DLatred[\R+3]{\t} }
+  %%   %% \foreach \t in {0,2,...,30} { \DrawLatitudeCirclered[\R+3]{\t} }
+
+  %%   %labelling
+  %%   %% \draw[-latex,thick](4,-5.5)node[left]{$\mathsf{Grid(s)\ in\ Fig. \ (\ref{fig:Grid})}$}
+  %%   %% to[out=0,in=270] (5.8,-2.3);
+  %%   %% \draw[thick](3.6,-6)node[left]{$[\mathsf{Rectilinear}]$};
+
+  %% \end{tikzpicture}
+
+\item [Barycentric]
+\end{description}
+
+
 
 %%%%%%%%
 \subsection{Graphics Languages}
@@ -405,6 +744,11 @@ of adequacy outlined above.
   language and their meanings - between mention and use.
 \end{remark}
 
+\begin{remark}
+  TODO: move the DSL stuff to Part IV (?) where use of the toolkit to
+  define DSLs is discussed.
+\end{remark}
+
 Having defined a collection of types, we need a means of expressing
 values of those types.  For this we need a language--a
 \textit{Domain-Specific Language} or DSL--and we can design our DSL in
@@ -437,9 +781,10 @@ critical point here is that the formal definitions of our semantic
 language specification define \textit{types}.  They impose no
 constraint on \textit{expression} in our DSLs.
 
-This issue goes beyond mere renaming of constant symbols.
-\textit{Any} expression, no matter how complex, that evaluates to a
-value $x$ may be used to express that value in complex expressions.
+This issue goes beyond mere definition of synonyns for constant
+symbols.  \textit{Any} expression whose value is \(x\), no matter how
+complex the expression, may be used to express that value in complex
+expressions.
 
 %% In particular, recalling that a function application expression is a
 %% kind of name for the value it denotes, we see that our DSL may give us
@@ -473,9 +818,9 @@ are distinct expressions all denoting the same value, namely
 
 }
 
-Most important, we can use function application expressions to denote
-values.  For example, the expression \(\lambda x.2x\) denotes the
-function that doubles its argument.  \textit{Applying} a function to a
+Most important, we can use \textit{function application} syntax to
+express values.  For example, \(\lambda x.2x\) expresses the function
+that doubles its argument.  \textit{Applying} a function to a
 value--or rather, \textit{expressing} its application to a value by
 writing down the appropriate bit of notation--denotes the value of the
 function for that argument: \(\lambda x.2x(1) = 2\).  So we can
@@ -489,7 +834,15 @@ In the language of the Lambda Calculus, evaluation of such expressions
 is called \textit{reduction}, since it involves transforming them to
 the simplest possible expression having the same
 meaning.\sidenote{``Reduction'' is effectively a synonym for
-  ``computation''.}  The critical point is that the meaning of such
+  ``computation''.}
+
+\begin{remark}
+  Add: sth about how lambda is a calculus, purely formal, so reduction
+  does not involve interpretation of the symbols, just looking up
+  transformation rules.
+\end{remark}
+
+The critical point is that the meaning of such
 expressions is independent of their reduction.  This means that, as we
 go about evaluating expressions in our DSL, we are not compelled to
 immediately reduce (or fully evaluate, completely compute, etc.) each
@@ -505,6 +858,15 @@ reduce them until we need them in order to continue with the computation.
 Virtually all vector graphics languages use mutable data structures.
 For example, path construction operators usually update a ``current
 point'' datum.
+
+\begin{remark}
+  No mutability in Z - its all set theory.
+
+  No motion, movement, or process metaphors.  They're fine for DSLs,
+  possibly for expository purposes, but are an unnecessary
+  complication for formal specification.  Dynamics are too
+  complicated.
+\end{remark}
 
 \begin{remark}
   Explain how immutable data structures do not sacrifice expressivity.
@@ -535,19 +897,18 @@ Z (pronounced ``Zed'') is a notation for formal
 specification.\sidenote{% The official definition of Z is
   \citetalias{z-iso-13568}.  It is available for free download.
 
-See also
-\citet{spivey_z_1992} (free download),
-\citet{jacky_way_1997},
-\citet{woodcock_using_1996},
-\citet{potter_introduction_1996}
-}%
-It is based on
-standard mathematical and logical notation, but unlike the informal
-conventions governing such notation in schools and among scholars
-and professionals, Z is a formal notation, designed to enable its
-users to express systems and languages in formal specifications with
-rigorously defined semantics.  The Z definition document formally
-defines the syntax, type system, and semantics of the notation.
+  See also \citet{spivey_z_1992} (free download),
+  \citet{jacky_way_1997}, \citet{woodcock_using_1996},
+  \citet{potter_introduction_1996} } It is based on standard
+mathematical and logical notation, but unlike the informal notation
+used in schools and among scholars and professionals, Z is
+\textit{formally} defined, with specific rules for forming expressions
+with explicitly defined semantics.  You cannot write nonsense in Z.
+
+Z is designed to enable its users to express systems and languages in
+formal specifications with rigorously defined semantics.  The Z
+definition document formally defines the syntax, type system, and
+semantics of the notation.
 
 The Z notation is clear, simple, concise, and expressive.  It allows
 us to express formal definitions with great precision and clarity,
@@ -576,8 +937,8 @@ of \cspace{}s and geometry figures (graphics).
   Types are not sets. An expression like ``\(a:A\)'' means that \(a\)
   is a value of type \(A\); it does \textit{not} mean that \(a\) is a
   \textit{member} of the set \(A\).  That's the job of the
-  \textit{carrier set} of the type.  So if \(a:A\), then we cannot
-  infer \(a\in A\), but we can infer \(a\in carrier(A)\).
+  \textit{carrier set} of the type.  So if \(a:A\), then \(a\in A\) is
+  meaningless, but we can infer \(a\in carrier(A)\).
 
   Type symbols e.g. \R do not denote sets of values; that's the job of
   the carrier set of the type.
@@ -595,126 +956,178 @@ Types we need to define for our topic:
 \item other?
 \end{itemize}
 
+We will worry about defining these later; for now, our task is to make
+the Z notation and techniques clear.
+
+%%%%%%%%
+\subsection{Functions in Z}
+\label{subs:zfuncs}
+
+Z's idea of function is thoroughly grounded in set theory: a function
+is a set of ordered pairs whose domain has no
+duplicates.\sidenote{We'll see later that this is just one of many
+  ways of looking at a function; for our purposes, we will also need
+  an explicit notion of computation (evaluation) of functions.}
+
+In more technical terms, this set of ordered pairs is called the
+``graph of the function'', and mathematicians sometimes find it useful
+to distinguish between a function and its graph.  Z makes no
+significant distinction between a function and its graph, however.
+
+Notice that the concept of evaluation or computation does not enter in
+to this picture of what functions are.  Once you know the graph of a
+function, on this view, you know all you need to know--there is no
+need to even consider ``how it works''.  This is often a very useful
+way to think about functions - we will rely heavily on it - but there
+are many other ways to think about functions as well, some of which
+will be critical to our purpose.  These will be discussed in more
+detail in section \ref{sect:funcs}.
+
+For now let's concentrate on the expressive resources of Z regarding
+functions.  Z provides many different ways to express functions.
+
+%%%%%%%%
+\subsection{Sequences}
+\label{sect:seqs}
+
+Sequences are almost as important as functions for our purposes.
+
+A sequence is just a particular kind of function.  So a Z expression
+like \(\langle x_1,\ldots,x_n\rangle\) is just another way of
+representing a function.  Sequences can thus be applied, just like
+any other function:
+
+\[\langle a,b,c\rangle(2) = b\]
+
+\begin{remark}
+  The relevance of this is that sequence operations are critical for dealing with figures in space. etc.
+\end{remark}
+
+%%%%%%%%
+\subsection{Z operators}
+\label{subs:zops}
+
+\begin{remark}
+  TODO: brief account of set comprehension, relations, functions,
+  sequences.  Domain, range, domain restriction op.
+\end{remark}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Definitions in Z}
+\subsection{Extending Z}
 \label{sect:zdefns}
+
+\begin{remark}
+  Z definition conventions; how to define new stuff.
+\end{remark}
 
 \begin{description}
 \item[Abbreviation definition]
-%%%%%%%%
-%% \subsection{Abbreviation definition}
-%% \label{subs:abbrevs}
+  %%%%%%%%
+  %% \subsection{Abbreviation definition}
+  %% \label{subs:abbrevs}
 
-``An abbreviation definition introduces a new global constant. The identifier on
-the left becomes a global constant; its value is given by the expression on the
-right, and its type is the same as the type of the expression.'' (Spivey, p.50)\marginnote{TODO: bib entry for Spivey}
+  ``An abbreviation definition introduces a new global constant. The identifier on
+  the left becomes a global constant; its value is given by the expression on the
+  right, and its type is the same as the type of the expression.'' (Spivey, p.50)\marginnote{TODO: bib entry for Spivey}
 
-Examples:
+  Examples:
 
-\[COORD == \real \\ POINT == COORD\cross COORD \]
+  \[COORD == \real \\ POINT == COORD\cross COORD \]
 
-This says that a point is a pair of coordinates, and a coordinate is a
-real number.  Here ``\(\cross\)'' is the cartesian cross-product
-operator.
+  This says that a point is a pair of coordinates, and a coordinate is a
+  real number.  Here ``\(\cross\)'' is the cartesian cross-product
+  operator.
 
 \item[Axiomatic definition]
-%%%%%%%%
-%% \subsection{Axiomatic definition}
-%% \label{subs:ztypedefns}
+  %%%%%%%%
+  %% \subsection{Axiomatic definition}
+  %% \label{subs:ztypedefns}
 
-``An axiomatic description introduces one or more global variables, and optionally
-specifies a constraint on their values.'' (Spivey, p.48)
+  ``An axiomatic description introduces one or more global variables, and optionally
+  specifies a constraint on their values.'' (Spivey, p.48)
 
-For example, this defines a \(sq\) function that computes the square
-of its argument:
+  For example, this defines a \(sq\) function that computes the square
+  of its argument:
 
-\begin{axdef}
-  sq : \nat\fun\nat
-  \where
-  \forall n : \nat @ sq(n) = n\times n
-\end{axdef}
+  \begin{axdef}
+    sq : \nat\fun\nat
+    \where
+    \forall n : \nat @ sq(n) = n\times n
+  \end{axdef}
 
 \item[Schema definition]
-%%%%%%%%
-%% \subsection{Schema definition}
-%% \label{subs:zschemadefn}
+  %%%%%%%%
+  %% \subsection{Schema definition}
+  %% \label{subs:zschemadefn}
 
-A Z schema \textit{binds} names to values; it is analogous to a struct
-in C or a record in other languages.
+  A Z schema \textit{binds} names to values; it is analogous to a struct
+  in C or a record in other languages.
 
-Generic vertical and horizontal forms:
-\begin{marginfigure}[1in]
+  Generic vertical and horizontal forms:
+  \begin{marginfigure}[1in]
+    \begin{schema}{S}
+      D_1;\ldots ;D_m
+      \where
+      P_1;\ldots ;P_n
+    \end{schema}
+  \end{marginfigure}
   \begin{schema}{S}
     D_1;\ldots ;D_m
     \where
     P_1;\ldots ;P_n
   \end{schema}
-\end{marginfigure}
-\begin{schema}{S}
-  D_1;\ldots ;D_m
-  \where
-  P_1;\ldots ;P_n
-\end{schema}
 
-\noindent Equivalently: \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
-\begin{marginfigure}
-  \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
-\end{marginfigure}
+  \noindent Equivalently: \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
+  \begin{marginfigure}
+    \(S\defs [D_1;\ldots ;D_m | P_1;\ldots ;P_n]\)
+  \end{marginfigure}
 
-Example:
+  Example:
 
-\begin{marginfigure}[24pt]
+  \begin{marginfigure}[24pt]
+    \begin{schema}{Axis}
+      origin : COORD \\
+      offset : COORD \\
+      incidence : RADIAN \\
+      scale : COORD\fun COORD
+      \where
+      origin = (0,0) \\
+      offset = scale(origin)
+    \end{schema}
+  \end{marginfigure}
   \begin{schema}{Axis}
-    origin : COORD \\
-    offset : COORD \\
-    incidence : RADIAN \\
-    scale : COORD\fun COORD
+    origin : \real\cross\real \\
+    offset : \real\cross\real \\
+    incidence : \real \\
+    scale : \real\fun\real
     \where
     origin = (0,0) \\
     offset = scale(origin)
   \end{schema}
-\end{marginfigure}
-\begin{schema}{Axis}
-  origin : \real\cross\real \\
-  offset : \real\cross\real \\
-  incidence : \real \\
-  scale : \real\fun\real
-  \where
-  origin = (0,0) \\
-  offset = scale(origin)
-\end{schema}
 
-Same thing in horizontal form:
+  Same thing in horizontal form:
 
-\[Axis \defs [origin:COORD;offset:COORD;incidence:RADIAN;scale:COORD\fun COORD \\
-  \quad\quad\quad | origin=(0,0); offset=scale(origin)]\]
+  \[Axis \defs [origin:COORD;offset:COORD;incidence:RADIAN;scale:COORD\fun COORD \\
+    \quad\quad\quad | origin=(0,0); offset=scale(origin)]\]
 
 \item[Generic definition]
-%% %%%%%%%%
-%% \subsection{Generic definition}
-%% \label{subs:zfndefns}
+  %% %%%%%%%%
+  %% \subsection{Generic definition}
+  %% \label{subs:zfndefns}
 
-General form of
+  General form of
 
-\begin{description}
-\item [generic definition]
-  \begin{gendef}[X,Y]
-    <type declarations>
-    \where
-    <definitions>
-  \end{gendef}
-\end{description}
+  \begin{description}
+  \item [generic definition]
+    \begin{gendef}[X,Y]
+      <type declarations>
+      \where
+      <definitions>
+    \end{gendef}
+  \end{description}
 
-Example:
+  Example:
 
-\begin{gendef}[X,Y]
-  first : X \cross Y \rightarrow X \\
-  second : X \cross Y \rightarrow Y
-  \where
-  \forall p : X \cross Y @ first\ p = p.1 \\
-  \forall p : X \cross Y @ second\ p = p.2
-\end{gendef}
-\begin{marginfigure}[-12pt]
   \begin{gendef}[X,Y]
     first : X \cross Y \rightarrow X \\
     second : X \cross Y \rightarrow Y
@@ -722,19 +1135,27 @@ Example:
     \forall p : X \cross Y @ first\ p = p.1 \\
     \forall p : X \cross Y @ second\ p = p.2
   \end{gendef}
-\end{marginfigure}
+  \begin{marginfigure}[-12pt]
+    \begin{gendef}[X,Y]
+      first : X \cross Y \rightarrow X \\
+      second : X \cross Y \rightarrow Y
+      \where
+      \forall p : X \cross Y @ first\ p = p.1 \\
+      \forall p : X \cross Y @ second\ p = p.2
+    \end{gendef}
+  \end{marginfigure}
 
-This is a ``generic definition'' of the cartesian pair projection
-operators:
-\[first(a,b) = a,\quad second(a,b) = b\]
-\noindent The top part of the definition describes the types of these
-functions; each is of type ``function from set of ordered pairs of
-values to a single value.''  $X$ and $Y$ are used to denote generic
-types; in other words, these projection functions are polymorphic,
-they work on any pair of types.
+  This is a ``generic definition'' of the cartesian pair projection
+  operators:
+  \[first(a,b) = a,\quad second(a,b) = b\]
+  \noindent The top part of the definition describes the types of these
+  functions; each is of type ``function from set of ordered pairs of
+  values to a single value.''  $X$ and $Y$ are used to denote generic
+  types; in other words, these projection functions are polymorphic,
+  they work on any pair of types.
 
-The second part of the definition (below the bar) states a predicate
-and a value expression.
+  The second part of the definition (below the bar) states a predicate
+  and a value expression.
 
 
 \end{description}
@@ -742,6 +1163,13 @@ and a value expression.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Lambda Calculus}
 \label{sect:lambda}
+
+\begin{remark}
+  Z has a lambda operator; why do we need a section on the lambda
+  calculus?  Different perspectives on function.  What else?  Z
+  doesn't have anything to say about computation, just (set-theoretic)
+  denotation.
+\end{remark}
 
 Terminology:
 \begin{description}
@@ -783,93 +1211,231 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   Redex, etc.
 
   %%%%%%%%
-  \subsection{Evaluation Strategy}
+  \subsection{Evaluation}
   \label{subs:evalstrat}
+
+  \begin{remark}
+    Memory: reduced vals have no ``memory'' of where they came from or
+    what form they started out as.
+  \end{remark}
 
   \begin{description}
   \item [Eager]  save the results of immediate evaluation of expressions to the cs.
   \item [Lazy] a/k/a lazy evaluation; save the expressions to the cs, rather than their evaluations.
   \end{description}
 
-%%%%%%%%
-\section{Thirty-six Views of a Function}
-\label{subs:functions}
+  \vspace{1in}
 
-\begin{remark}
-  Overview.  Motivate use of lambda calculus \& Z.
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{(In)Finity}
+  \label{sect:}
 
-  Two ways of thinking.  Elements v. relations, things v. structures,
-  set theory v. category theory.
-\end{remark}
+  \begin{todo}
+    TODO: We need to say something about uncountably infinite sets and
+    limits, since we will want to plot graphs of functions over open
+    intervals.  For example, \(\lambda x.\frac{1}{x}\) over \((0\ldots
+    1]\).  Unfortunately I don't recall how Z handles this.
+  \end{todo}
 
-Identity function: expression of the form \ab are interpreted in terms
-of functions: (Id,Id)
+  TikZ supports ``chains'' of path construction expressions.  It
+  manages this by maintaining a ``current point'' datum, which it
+  updates with the last point used in the path construction
+  expression.  This works just fine for line-like operators like
+  ``line-to'' (\-\-) and ``curve-to'' (.. controls ... etc.); in such
+  expressions the first and last points are explicitly specified so
+  they are easily tracked.  But TikZ does not allow this sort of
+  chaining for e.g. ``plot'', which samples a specified domain of a
+  function and plots its graph.  Presumably finding the ``last point''
+  is a problem; maybe it is too expensive computationally.
 
-\begin{remark}
-  Functional thinking - from set theory (elements) to category theory
-  (arrows).  Or categorial logic.  Everything a function, even
-  numerical constants; functions as relations.
-\end{remark}
+  Since our purpose is not to design a concrete ``Domain Specific
+  Language'' (DSL), we need not worry about efficiency.  We only care
+  about completeness and correctness (and simplicity and parsimony and
+  elegance etc.), so one of our requirements must be to handle such
+  cases.  ``Handle'' meaning provide the expressive resources needed
+  to explicitly specify their form and function.
 
-Expressivity and function application.  A lambda abstraction like
-``\(\lambda x.x)\)'', or a more tradition expression like \(f(x) = x\)
-\textit{expresses} a function, but its \textit{denotation} is
-undefined by the Lambda Calculus.
+  The basic problem seems to boil down to the handling of closed and
+  open intervals.  Since the real numbers are ordered, any interval on
+  the real line is ordered; if it is also bounded, then we should be
+  able to find -- that is, express -- its extrema.  For closed
+  intervals, this is easy, since they are explicitly written down.
+  Open intervals are only slightly more complicated, since the end
+  points \textit{of} an open interval are not \textit{in} the
+  interval.  But by definition, the end points of an open interval on
+  the reals bound the interval, so we can treat them as limits, and
+  then use them as extrema - first and last points, or at least points
+  that will allow us to chain path construction expressions.
 
-By the same token, an application expression like \(\lambda x.2x(1)\)
-expresses and denotes a value.
+  %%%%%%%%
+  \section{Thirty-six Views of a Function}
+  \label{subs:functions}
 
-A function can be viewed in many ways.  From a strictly set-theoretic
-perspective, a function can be viewed as a set of ordered pairs.  From
-computational perspective, a function can be viewed as a computation
-(or potential computation).  It can also be viewed as a relation or
-set of relations between source and target values.
+  Hokusai's famous ``Thirty-six Views of Mt. Fuju'' demonstrated 36
+  (actually 46, in the end) different ways of seeing the great
+  mountain.  In this section, I try to do something of the sort for
+  the concept of a \textit{function}, which both theoretically and
+  practically is almost as rich and majestic as Fuji.
 
-\begin{remark}
-  Evaluation strategies and expressivity of lambda calc.
-\end{remark}
+  \begin{marginfigure}%
+    \centering
+    \includegraphics[width=60mm]{Great_Wave_off_Kanagawa2.jpg}
+    \caption{The Great Wave off Kanagawa}
+  \end{marginfigure}
 
-Function application is most easily presented as the application of a
-function to a single value; but often we want to work with the value
-of a function over a range of values from its domain.  For this a
-special notation is available, analogous to notation for the integral:
+  \begin{remark}
+    Overview.  Motivate use of lambda calculus \& Z.
 
-\[\bigg|_a^b f(x) \quad\textnormal{or}\quad\bigg|_a^b \lambda x.(\ldots x\ldots)\]
-\noindent expresses (denotes) the value of the function for every \(x\) between \(a\) and \(b\).
+    Two ways of thinking.  Elements v. relations, things v. structures,
+    set theory v. category theory.
+  \end{remark}
 
-\begin{remark}
-  Operators?  An op is just a well-known function, so well-known that
-  convention has settled on a special symbol for it, e.g. \(\_+\_\)
-  instead of \(add(\_,\_)\).
-\end{remark}
+  Identity function: expression of the form \ab are interpreted in terms
+  of functions: (Id,Id)
 
-\begin{remark}
-  Continuous funcs applied to interval: use domain restriction op of
-  Z.  Express by giving lambda expression plus end points of range.
-\end{remark}
+  \begin{remark}
+    Functional thinking - from set theory (elements) to category theory
+    (arrows).  Or categorial logic.  Everything a function, even
+    numerical constants; functions as relations.
+  \end{remark}
 
-\begin{remark}
-  Compare: \(f(x) = ax + b\) and TikZ's line op ``-\-''.  The domain
-  of the former is \R{}; the domain of the latter is
-  \((\real\cross\real)\cross(\real\cross\real)\).  So TikZ's func must
-  construct the func and the endpoints, which we can express in Z.
-\end{remark}
+  Expressivity and function application.  A lambda abstraction like
+  ``\(\lambda x.x)\)'', or a more tradition expression like \(f(x) = x\)
+  \textit{expresses} a function, but its \textit{denotation} is
+  undefined by the Lambda Calculus.
 
-Function polymorphism: accepts different arg types (and numbers?)
+  By the same token, an application expression like \(\lambda x.2x(1)\)
+  expresses and denotes a value.
 
-Poylymorphic types
+  A function can be viewed in many ways.  From a strictly set-theoretic
+  perspective, a function can be viewed as a set of ordered pairs.  From
+  computational perspective, a function can be viewed as a computation
+  (or potential computation).  It can also be viewed as a relation or
+  set of relations between source and target values.
 
-\subsection{Graph of a function}
-\subsection{Curve of a function}
-\subsection{Computation of a function}
-\subsection{Function Composition}
-Contract sequential evaluation
-\subsection{Partial Evaluation}
-\subsection{Currying}
+  \begin{remark}
+    Evaluation strategies and expressivity of lambda calc.
+  \end{remark}
+
+  Function application is most easily presented as the application of a
+  function to a single value; but often we want to work with the value
+  of a function over a range of values from its domain.  For this a
+  special notation is available, analogous to notation for the integral:
+
+  \[\bigg|_a^b f(x) \quad\textnormal{or}\quad\bigg|_a^b \lambda x.(\ldots x\ldots)\]
+  \noindent expresses (denotes) the value of the function for every \(x\) between \(a\) and \(b\).
+
+  \begin{remark}
+    Operators?  An op is just a well-known function, so well-known that
+    convention has settled on a special symbol for it, e.g. \(\_+\_\)
+    instead of \(add(\_,\_)\).
+  \end{remark}
+
+  \begin{remark}
+    Continuous funcs applied to interval: use domain restriction op of
+    Z.  Express by giving lambda expression plus end points of range.
+  \end{remark}
+
+  \begin{remark}
+    Compare: \(f(x) = ax + b\) and TikZ's line op ``-\-''.  The domain
+    of the former is \R{}; the domain of the latter is
+    \((\real\cross\real)\cross(\real\cross\real)\).  So TikZ's func must
+    construct the func and the endpoints, which we can express in Z.
+  \end{remark}
+
+  Function polymorphism: accepts different arg types (and numbers?)
+
+  Poylymorphic types
+
+  \subsection{Abstraction}
+  same func can be expressed in many different forms
+
+  \subsection{Application}
+
+  \begin{remark}
+    What does a func applic expression express?  Different views:
+    maybe a range value, maybe a relation bewteen dom and ran, maybe a
+    computation, etc.
+  \end{remark}
+
+  \begin{remark}
+    Distinction between ``simple'' application--one function, one
+    argument--and the value of a function over an interval.  The
+    latter is not technically function application, more like
+    quantification over application.  But it's critically important to
+    have a rigorous semantics and clear notation for this, because it
+    plays a major role later, in expressing collections of figures in
+    a space.
+  \end{remark}
+
+  %%%%%%%%
+  \subsection{Higher-order functions}
+  \label{subs:hiordfunc}
+
+
+  %%%%%%%%
+  \subsection{Function families}
+  \label{subs:funcfamilies}
+
+  Functions come in families.  All linear functions are members of the
+  same family, for example.  What this means technically is that all
+  functions in a family have formulae of the same general form.
+
+  %%%%%%%%
+  \subsection{Formula of a function}
+  \label{subs:funcform}
+
+  Sometimes we may know the family of a function but not its formula.
+  For example, we might be given two points and asked to draw the
+  straight line between them.  Since we know curve of the desired
+  function is a straight line, we know it must have the general form
+  of a linear equation: \(y=ax+b\).  The task is to find the
+  parameters \(a,b\), given the end points.  That will yield the (or
+  at least a) form of the function.
+
+  \subsection{Parametric representions}
+
+  \subsection{Computation of a function}
+
+
+  \subsection{Function Composition}
+  Contract sequential evaluation
+  \subsection{Partial Evaluation}
+  \subsection{Currying}
+
+  \subsection{Graph of a function}
+
+  For area under a function's curve over an interval we have
+  \(\displaystyle\int_a^b f\); for the range of a function over an interval we have
+  \(\bigg|_a^b f\); but for the graph of a function over an interval
+  we have no notational convention that I know of.  Of course we can
+  always write something lie \(x,f(x) for\ x\in [a..b]\), but we would
+  prefer something more concise, like the integral and range symbols.
+
+  We will use a simple variant on \(\bigg|\); we just loosely treat
+  the left side of the bar as domain, and the right side as range, so
+  that \(\bigg|_a^b\) means ``values from the range'',
+  \(\sideset{_a^b}{}{\bigg|}\) means ``values from the domain''
+  (i.e. \(\sideset{_a^b}{}{\bigg|} = \ [a..b]\)), and
+  \(\sideset{_a}{^b}{\bigg|}\) means ``one value from the domain, one
+  from the range''.  Then \(\sideset{_a}{^b}{\bigg|} f\) means ``graph
+  of \(f\) over interval''.
+
+  \[\displaystyle\sideset{_a}{^b}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ (z, f(z))\}\]
+
+  \begin{important}
+    The graph of a function (symbol: \(\sideset{_a}{^b}{\bigg|} f\))
+    is a \textit{\textbf{set}}, so its elements are unordered.
+  \end{important}
+
+  \subsection{Curve of a function}
+
+  If the graph of a function is a set of ordered pairs, then the curve
+  of a function is its graph ``inked'' into a \cspace{}.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \part{Structure of Spaces}
+  \part{The Mathematical Organization of Space}
   \label{sect:cspaces}
 
   \begin{abstract}
@@ -972,101 +1538,134 @@ Contract sequential evaluation
   %%%%%%%%
   \subsection{Kinds of Axis}
 
+  Let's go with the simplest: linear and circular axes.  Both mete
+  out distance, the former in linear units of length, the later in
+  circular units of length (radians).\marginnote{We should have a
+    term for linear unit of length analogous to ``radian'' for
+    angular (really circular) unit of length.  If a unit of length
+    on the unit circle is one radian, then why isn't a unit of
+    length on the unit square one \textit{something}?  One lineoid?
+    One euclidean?  I vote for euclidean.  Euclideans and radians
+    are not really units of length, they just indicate which system
+    is relevant, unit circle or unit square.}
+
+  A linear axis is just a line; a circular axis is just a circle.  A
+  line does not have a geometric center; if you want one, you have
+  to stipulate it.  A circle, obviously, does have a geometric
+  center.
+
+  \begin{remark}
+    Continuing along these lines, can we not treat any conic figure
+    as an axis, at least in principle?  So our distinction should
+    perhaps be between linear and conic axes, rather than linear and
+    polar.
+  \end{remark}
+
+
   \begin{description}
-    \item [Linear]
-    \item [Polar] ``The fixed point (analogous to the origin of a
-      Cartesian system) is called the pole, and the ray from the pole
-      in the fixed direction is the polar axis. The distance from the
-      pole is called the radial coordinate or radius, and the angle is
-      the angular coordinate, polar angle, or azimuth.[1]...The radial
-      coordinate is often denoted by r, and the angular coordinate by
-      φ, θ, or t. The angular coordinate is specified as φ by ISO
-      standard 31-11.''
-      \url{http://en.wikipedia.org/wiki/Polar_coordinate_system}
+  \item [Linear]
+  \item [Polar]
 
-      In other words, what corresponds to the unit ray in a unit
-      circle is called the polar axis.  By extension, the angle is the
-      radial axis.  To avoid confusion it might be better to rename
-      these, since ``radial'' could easily be taken to refer to
-      radius, and ``polar'' to angle.  Call the polar axis something
-      else, maybe the distance axis, and the radial axis the
-      rotational or azimuth or angular axis.
+    The critical point to realize about polar axes is that they deal
+    in lengths, just like linear axes, rather than ``angles'' around
+    the center.  So the zero point is not the center of the circle,
+    but \((1,0)\).
 
-      \begin{remark}
-        This would imply that the polar axis cannot take negative
-        values, although I don't see why we should not treat it as a
-        line so that we can have negative lengths, just as in
-        cartesian space.
-      \end{remark}
 
-      \begin{remark}
-        By analogy with linear spaces, we would like to think of the
-        angle (type \R) as being located along an axis.  But you
-        cannot have an angle without a length.  So it isn't clear how
-        to think about the ``radial axis'' as independent from the
-        polar axis.  Scaling an angle maps it to another angle, but
-        there is no place to ``locate'' angles without a length, which
-        comes from the other axis.  So ``point on the angular axis''
-        doesn't mean anything.
+    ``The fixed point (analogous to the origin of a
+    Cartesian system) is called the pole, and the ray from the pole
+    in the fixed direction is the polar axis. The distance from the
+    pole is called the radial coordinate or radius, and the angle is
+    the angular coordinate, polar angle, or azimuth.[1]...The radial
+    coordinate is often denoted by r, and the angular coordinate by
+    φ, θ, or t. The angular coordinate is specified as φ by ISO
+    standard 31-11.''
+    \url{http://en.wikipedia.org/wiki/Polar_coordinate_system}
 
-        For example, in a linear space we can get parallel axes by
-        offsetting the center of the y axis and setting its angle of
-        incidence to zero.  What is the analog for polar spaces?  But:
-        offsetting center of y axis - assumption is that offset occurs
-        relative to absolute y axis, that is, moves the axis up or
-        down.  What's the analog?  Offsetting rotational axis relative
-        to absolute rotational axis?  But does the ``absolute
-        rotational axis'' even have a center?  It has an origin, which
-        normally corresponds to the origin (center) of the distance
-        axis, but that's not the same as a center.  Or is it - we can
-        do negative rotations, after all.  But is there a center
-        ``between'' positive and negative rotations?
+    In other words, what corresponds to the unit ray in a unit
+    circle is called the polar axis.  By extension, the angle is the
+    radial axis.  To avoid confusion it might be better to rename
+    these, since ``radial'' could easily be taken to refer to
+    radius, and ``polar'' to angle.  Call the polar axis something
+    else, maybe the distance axis, and the radial axis the
+    rotational or azimuth or angular axis.
 
-        One possible approach is to stipulate something involving the
-        unit circle and unit ray.  For example, we might just define
-        ``location (angle) on the rotational axis'' as the point on
-        the unit circle at that angle.  Then the center of the
-        rotational axis - the ``point'' between positive and negative
-        rotations - would be the unit ray of the unit circle.  
+    \begin{remark}
+      This would imply that the polar axis cannot take negative
+      values, although I don't see why we should not treat it as a
+      line so that we can have negative lengths, just as in
+      cartesian space.
+    \end{remark}
 
-        Better, define angle on rotational axis as the corresponding
-        arc on the unit circle.  This makes sense if we treat the unit
-        of the axis as 1, meaning 1 radian (rotational unit); this
-        corresponds exactly to making the unit of a linear axis 1,
-        meaning one linear unit.  In fact, we must have the unit
-        circle, since that is how we define angle: length of arc on
-        the unit circle.  So to find a point in polar space, we have
-        to find the angle on the unit circle, then multiply the unit
-        ray to the end point of the angle by the other coordinate of
-        the point.
 
-        Displacing the center of a linear axis means moving it some
-        number of units away from the absolute center.  The ``center''
-        of the rotational axis would be the arc of length zero,
-        i.e. the point at (1,0); moving the center without changing
-        the incidence would rotate the system, just as moving the
-        center of a linear axis without changing the incidence
-        translates linearly.  Moving the center of the rotational axis
-        and also changing its incidence would do what?  I'm not sure
-        angle of incidence makes sense for rotational axes.
+    \begin{remark}
+      By analogy with linear spaces, we would like to think of the
+      angle (type \R) as being located along an axis.  But you
+      cannot have an angle without a length.  So it isn't clear how
+      to think about the ``radial axis'' as independent from the
+      polar axis.  Scaling an angle maps it to another angle, but
+      there is no place to ``locate'' angles without a length, which
+      comes from the other axis.  So ``point on the angular axis''
+      doesn't mean anything.
 
-        But think abstractly.  Angle of incidence just means change
-        relative to an absolute base - in the case of linear axes, a
-        rotational change.  What is the analog for rotational axes?
-        Change (in what units) relative to unit circle?  Since the
-        axis is already rotational, maybe the unit should be linear.
+      For example, in a linear space we can get parallel axes by
+      offsetting the center of the y axis and setting its angle of
+      incidence to zero.  What is the analog for polar spaces?  But:
+      offsetting center of y axis - assumption is that offset occurs
+      relative to absolute y axis, that is, moves the axis up or
+      down.  What's the analog?  Offsetting rotational axis relative
+      to absolute rotational axis?  But does the ``absolute
+      rotational axis'' even have a center?  It has an origin, which
+      normally corresponds to the origin (center) of the distance
+      axis, but that's not the same as a center.  Or is it - we can
+      do negative rotations, after all.  But is there a center
+      ``between'' positive and negative rotations?
 
-        We also might do something with hyperbolic space.  A location
-        on the rotational access might map to a point on the
-        hyperbola.  Then ``parallel axis'' in a polar space would
-        involve a unit circle and a unit hyperbola instead of two
-        lines.
+      One possible approach is to stipulate something involving the
+      unit circle and unit ray.  For example, we might just define
+      ``location (angle) on the rotational axis'' as the point on
+      the unit circle at that angle.  Then the center of the
+      rotational axis - the ``point'' between positive and negative
+      rotations - would be the unit ray of the unit circle.
 
-        Of course this is all very theoretical and may be of no use to
-        anybody, but it does force us to clarify our intuitions.
-      \end{remark}
+      Better, define angle on rotational axis as the corresponding
+      arc on the unit circle.  This makes sense if we treat the unit
+      of the axis as 1, meaning 1 radian (rotational unit); this
+      corresponds exactly to making the unit of a linear axis 1,
+      meaning one linear unit.  In fact, we must have the unit
+      circle, since that is how we define angle: length of arc on
+      the unit circle.  So to find a point in polar space, we have
+      to find the angle on the unit circle, then multiply the unit
+      ray to the end point of the angle by the other coordinate of
+      the point.
 
-      \item[Hyperbolic]
+      Displacing the center of a linear axis means moving it some
+      number of units away from the absolute center.  The ``center''
+      of the rotational axis would be the arc of length zero,
+      i.e. the point at (1,0); moving the center without changing
+      the incidence would rotate the system, just as moving the
+      center of a linear axis without changing the incidence
+      translates linearly.  Moving the center of the rotational axis
+      and also changing its incidence would do what?  I'm not sure
+      angle of incidence makes sense for rotational axes.
+
+      But think abstractly.  Angle of incidence just means change
+      relative to an absolute base - in the case of linear axes, a
+      rotational change.  What is the analog for rotational axes?
+      Change (in what units) relative to unit circle?  Since the
+      axis is already rotational, maybe the unit should be linear.
+
+      We also might do something with hyperbolic space.  A location
+      on the rotational access might map to a point on the
+      hyperbola.  Then ``parallel axis'' in a polar space would
+      involve a unit circle and a unit hyperbola instead of two
+      lines.
+
+      Of course this is all very theoretical and may be of no use to
+      anybody, but it does force us to clarify our intuitions.
+    \end{remark}
+
+  \item[Hyperbolic]
 
   \end{description}
 
@@ -1074,7 +1673,7 @@ Contract sequential evaluation
   \subsection{Name}
   \label{subs:axisname}
 
-Every axis must have a name.
+  Every axis must have a name.
 
   %%%%%%%%
   \subsection{Origin}
@@ -1122,9 +1721,9 @@ Every axis must have a name.
   \subsection{Scale}
   \label{subs:axisscale}
 
-\begin{remark}
-  An axis scale is just a function of type \(\real\fun\real\).
-\end{remark}
+  \begin{remark}
+    An axis scale is just a function of type \(\real\fun\real\).
+  \end{remark}
 
   Suppose we scale our x axis by \(\lambda r.2r\).  This maps each \(x\)
   value to \(2x\), so e.g. \(2\) ends up at \(4\).
@@ -1223,16 +1822,14 @@ Every axis must have a name.
   \end{remark}
 
   %%%%%%%%
-  \subsection{Carrier Set}
-  \label{subs:cscarrier}
+  \subsection{Root Set}
+  \label{subs:csrootset}
 
   A \cspace{} is a structure, of which its set of points is just one
-  component.  Hence the need to specify the \textit{carrier set} of
+  component.  Hence the need to specify the \textit{root set} of
   a \cspace{}.\sidenote{Compare Z, where each type has a carrier set.
-    We're abusing terminology here a bit: since a \cspace{} is a type,
-    it has a (Z) carrier set, but that is not what we mean by carrier
-    set here.  Maybe we should call it the root set or something
-    similar.}
+    Since a \cspace{} is a type, it has a (Z) carrier set, but that is
+    not what the same as its root set.}
 
   %%%%%%%%
   \subsection{Axes}
@@ -1323,11 +1920,32 @@ Every axis must have a name.
     Poetics of Space?}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Figures}
+  \label{sect:figs}
+
+  \begin{remark}
+    Figure as sequence v. figure as set.  This parallels function as
+    operation v. function as set of ordered pairs.  Or lambda
+    expressions v. their reductions.  Sort of.
+
+    Every sequence can be ``reduced'' (projected?) to a set.  So we
+    can model any figure as a set of points in a space.  But if we
+    want to support e.g. path operations that depend on a ``current
+    point'', then we need to model figures as sequences, which will
+    give us operators like ``first'' and ``last''.
+
+  \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{\DSpace{}s}
   \label{sect:dspaces}
 
   \begin{remark}
-    Structure, then functions
+    Do we really need a distinct type?  Can't we just augment \Omg?
+  \end{remark}
+
+  \begin{remark}
+    Structure, then functions.
   \end{remark}
 
   %%%%%%%%
@@ -1431,7 +2049,7 @@ Every axis must have a name.
     \_[\_] : \Delta\cross\Delta\fun\Delta \\
     \_[\_] : \Gamma\cross\Gamma\fun\Gamma \\
     \where
-    
+
   \end{gendef}
 
   A \textit{\dspace{} application} maps one \dspace to another \dspace{}.
@@ -1604,7 +2222,7 @@ Every axis must have a name.
   With lambda we don't need predefined functions like "translate",
   "scale", etc.  (Same is true of vector/matrix notation.)
 
-  With lambda we also get non-linear transformations, e.g. 
+  With lambda we also get non-linear transformations, e.g.
   \(f = \lambda x.x^2\)
 
   So a key design decision: how to express transformation functions.
@@ -1728,6 +2346,11 @@ Every axis must have a name.
     methods or arcs, rather than objects.}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Ink}
+  \label{sect:ink}
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Connecting Content to Graphs}
   \label{sect:geomcontent}
 
@@ -1782,7 +2405,7 @@ Every axis must have a name.
   ================
 
   Kinds of "content coordinate spaces".  Sequence, Relation, Tree, Graph
-  (net).  
+  (net).
 
   Plaintext is a sequential structure, so display of plaintext editor
   maps sequence to one cspace.
@@ -1847,8 +2470,8 @@ Every axis must have a name.
   order''
   (\url{http://userguide.icu-project.org/transforms/bidi#TOC-Logical-Order-versus-Visual-Order}).  Some people refer to ``logical dimensions'' and ``display dimension'' in HTML5.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\part{Notes}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \part{Notes}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Algebra of Coordinate Spaces}
@@ -1863,7 +2486,7 @@ Every axis must have a name.
 
   \begin{itemize}
   \item +  =  scale unit of source arithmetically; e.g. cs:A[(0,0)]+(1,1)
-  \item *  =  scale unit of source geometrically: (x,y)*(a,b) = (ax,by) e.g. cs:A[(1,1)]*(2,2) 
+  \item *  =  scale unit of source geometrically: (x,y)*(a,b) = (ax,by) e.g. cs:A[(1,1)]*(2,2)
   \item ?  =  rotation
   \item ?  =  skew (shear)
   \item ?  =  reflection
@@ -1991,6 +2614,133 @@ Every axis must have a name.
     \label{sect:formadefs}
 
     %%%%%%%%
+    \subsection{Generalized Application Operators}
+    \label{subs:genappop}
+
+    \marginnote{\textbf{Caveat:} We cheat a little bit here and there.
+      For example, Z does not allow operator overloading (to my
+      knowledge, anyway).  These definitions would fail if run through
+      an automated Z specification checker; however, our main purpose
+      here is expressive, so we don't care.  At the moment, we just
+      want our definitions to be clear, complete, and unambiguous for
+      the human reader.}
+
+    These operators generalize function application to the case of
+    applying a function across a bounded domain.  It is critically
+    important to understand that these are just functions with special
+    notation.\sidenote{We could have used standard notation, something
+      like ``\(graphproj(a,b,f)\)'' instead of
+      \(\displaystyle\sideset{_a}{^b}{\bigg|}f\), but the latter seems
+      much clearer; its form conveys information.  The former might be
+      a good email syntax, but where reasonably good typesetting
+      facilities are available the latter notation seems clearly
+      preferable.} In fact, like the famous ``map, filter, reduce''
+    troika, these are second-order functions -- functions that operate
+    on other functions.
+
+    {\todo  Explain higher-order functions.  In the Function section of the first part.}
+
+    \begin{todo}
+      Deal with open v. closed intervals.  One possibility is to
+      include [ ] or ( ) with the \(a,b\) arguments.  But that's
+      relatively clumsy and adds a lot of clutter to the definitions.
+      For the latter, we can default to closed intervals and just
+      advise to reader to read the definitions appropriately for the
+      other cases (i.e. replace [] in your imagination).  Maybe the
+      thing to do is provide examples but only provide formal
+      definition for the default.
+
+      Possibilities:  \(\sideset{_{[a}}{^{b]}}{\bigg|}f \) \quad \(\sideset{_{(a}}{^{b)}}{\bigg|}f\) \ etc.
+    \end{todo}
+
+    \vspace{6pt}
+    \noindent
+    %%%%%%%%%%%%%%%%
+    {\defn Domain Projection}
+
+    \begin{gendef}[X,Y]
+      \sideset{_{\strut\_}^{\strut\_}}{}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power X \\
+      \where
+      \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{x\}
+    \end{gendef}
+
+    Domain projection of a function over an interval just returns the
+    set of elements of the domain of application for which \(f\) is
+    defined.  Less formally:
+    \[\displaystyle\sideset{_a^b}{}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ z\}\]
+
+    \vspace{6pt}
+    %%%%%%%%%%%%%%%%
+    \noindent
+    {\defn Range Projection}
+
+    \begin{gendef}[X,Y]
+      \sideset{}{_{\strut\_}^{\strut\_}}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power Y \\
+      \where
+      \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{f(x)\}
+      %% \forall f : X\fun Y, \forall x : X | x\in [a\ldots b], \exists y | f(x)=y @ \{f(x)\}
+    \end{gendef}
+
+    Range projection of a function over an interval applies the
+    function to every element \(x\) of the domain of application for
+    which it is defined and returns the union of the results \(f(x)\)
+    as a set.  Less formally:
+
+    \[\displaystyle\sideset{}{_a^b}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ f(z)\}\]
+
+    \vspace{6pt}
+    \noindent
+    {\defn Graph Projection}
+
+    \begin{gendef}[X,Y]
+      \sideset{_{\strut\_}}{^{\strut\_}}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power (X\cross Y)
+      \where
+      \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{(x,f(x))\}
+      %% \forall f : X\fun Y, \forall x : X | x\in [a\ldots b],\exists y|f(x)=y @ \{(x,f(x))\}
+    \end{gendef}
+
+    Graph projection of a function over an interval applies the
+    function to every element \(x\) of the domain of application for
+    which it is defined, forms the ordered pair \((x,f(x))\), and
+    returns the union of the results as a set of ordered pairs.  Less
+    formally:
+
+    \[\displaystyle\sideset{_a}{^b}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ (z, f(z))\}\]
+
+    \begin{commentary}
+      We could have defined these operators to work only for functions
+      defined on the entire interval.  However, our main concern is
+      with graphics languages, not mathematics per se, so we will
+      sometimes want to graph functions over intervals that may
+      contain ``bad'' elements.  For example, \(\lambda x.1/x\) is
+      undefined at \(0\), but we may want to graph it over the
+      interval \([-1\ldots 1]\).  So a better solution is to restrict
+      the domain to those values for which the function is defined;
+      that is what the clause ``(\(\exists y|f(x)=y\))'' does.  So in
+      this example, the result will effectively omit \(0\) from the
+      domain before applying the function.  This is good enough for
+      generating a visual representation of the function.
+
+      \emph{Reminder:} these definitions are not intended as
+      programming models.  In real-world graphics DSLs, plotting of
+      functions involves sampling the specified domain, usually at a
+      user-specified frequency.  In addition, many function values may
+      be far outside the range that can be shown on a piece of paper
+      or a screen; for example, values of \(\frac{1}{x}\) close to
+      zero.  Implementations may handle this situation in a variety of
+      ways.  But for the purpose of formally defining the logic and
+      mathematics of graphics languages we don't need to worry about
+      such stuff - we can and must leave such implementation details
+      to language designers and programmers.  (NB: we're not designing
+      a programming language here, we're extending a specification
+      notation.)
+    \end{commentary}
+
+    \begin{eg} Graph of \(\frac{1}{x}\) over the half-open interval
+      \((0\ldots 1]\): \(\sideset{_{(0}}{^{1]}}{\bigg|}\lambda x.\frac{1}{x} \)
+    \end{eg}
+
+    %%%%%%%%
     \subsection{Coordinate}
     \label{subs:coorddefn}
 
@@ -2073,27 +2823,27 @@ Every axis must have a name.
     prominent exceptions are the summation sign \(\Sigma_a^b\) and the
     integral sign \(\int_a^b\).  But to indicate the graph (curve) of
     \(f\) from \(a\) to \(b\), some ad-hoc technique must be found,
-    e.g. \(f(x),\ x\in [0..1]\).  With \(Big|_a^b\) we can just write:
+    e.g. \(f(x),\ x\in [0..1]\).  With \(\Big|_a^b\) we can just write:
 
-      \[\bigg|_a^b \lambda x.2x \]
+    \[\bigg|_a^b \lambda x.2x \]
 
-      Why do we need this?  Aside from convenience and expressivity?
-      It allows us to specify figures (plotted functions)
-      in \dspace{}s.  For example, the line segment from the origin
-      to \((1,1)\):
+    Why do we need this?  Aside from convenience and expressivity?
+    It allows us to specify figures (plotted functions)
+    in \dspace{}s.  For example, the line segment from the origin
+    to \((1,1)\):
 
-      \[\bigg|_0^1 \lambda x.x\]
+    \[\bigg|_0^1 \lambda x.x\]
 
-      This gives us a concise notation that we can use to provide a
-      concise formal definition of e.g. TikZ's path operators like
-      ``--'', rectangle, etc.
+    This gives us a concise notation that we can use to provide a
+    concise formal definition of e.g. TikZ's path operators like
+    ``--'', rectangle, etc.
 
-      It will also help us express transform composition clearly; without
-      it that would be difficult.
+    It will also help us express transform composition clearly; without
+    it that would be difficult.
 
-      \begin{remark}
-        TODO: write formal Z definition of this operator.
-      \end{remark}
+    \begin{remark}
+      TODO: write formal Z definition of this operator.
+    \end{remark}
 
 
     %%%%%%%%
@@ -2275,13 +3025,13 @@ Every axis must have a name.
     \subsection{HTML5 Canvas}
     \label{subs:html5}
 
-\url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
+    \url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
 
     ``The canvas element provides scripts with a resolution-dependent bitmap canvas, which can be used for rendering graphs, game graphics, art, or other visual images on the fly.'' \url{http://www.w3.org/TR/html5/scripting-1.html#the-canvas-element}
 
-``The CanvasRenderingContext2D 2D rendering context represents a flat linear Cartesian surface whose origin (0,0) is at the top left corner, with the coordinate space having x values increasing when going right, and y values increasing when going down. The x-coordinate of the right-most edge is equal to the width of the rendering context's scratch bitmap in CSS pixels; similarly, the y-coordinate of the bottom-most edge is equal to the height of the rendering context's scratch bitmap in CSS pixels.
+    ``The CanvasRenderingContext2D 2D rendering context represents a flat linear Cartesian surface whose origin (0,0) is at the top left corner, with the coordinate space having x values increasing when going right, and y values increasing when going down. The x-coordinate of the right-most edge is equal to the width of the rendering context's scratch bitmap in CSS pixels; similarly, the y-coordinate of the bottom-most edge is equal to the height of the rendering context's scratch bitmap in CSS pixels.
 
-The size of the coordinate space does not necessarily represent the size of the actual bitmaps that the user agent will use internally or during rendering. On high-definition displays, for instance, the user agent may internally use bitmaps with two device pixels per unit in the coordinate space, so that the rendering remains at high quality throughout. Anti-aliasing can similarly be implemented using over-sampling with bitmaps of a higher resolution than the final image on the display.''\url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
+    The size of the coordinate space does not necessarily represent the size of the actual bitmaps that the user agent will use internally or during rendering. On high-definition displays, for instance, the user agent may internally use bitmaps with two device pixels per unit in the coordinate space, so that the rendering remains at high quality throughout. Anti-aliasing can similarly be implemented using over-sampling with bitmaps of a higher resolution than the final image on the display.''\url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
 
     \url{http://diveintohtml5.info/canvas.html}
 
@@ -2306,7 +3056,7 @@ The size of the coordinate space does not necessarily represent the size of the 
     manipulate images and graphics on a canvas element.  To reference the context of the canvas, you call getContext, which is a method on the canvas element.  It has one parameter, which currently is 2d.  Here’s the snippet of code for referencing the context.
 
     ``Each canvas has its own context, so if you’re page contains multiple canvas elements; you must have a reference to each individual context that you want to work with.'' \url{Canvas 2D
- API}  Correction: not an ``object'', a mathematical structure.
+      API}  Correction: not an ``object'', a mathematical structure.
 
     \href{http://blogs.msdn.com/b/ie/archive/2011/04/22/thoughts-on-when-to-use-canvas-and-svg.aspx}{Thoughts on when to use Canvas and SVG}
 

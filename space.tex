@@ -737,6 +737,15 @@ In other terms, Z provides a denotational semantics, lambda a
 computational semantics.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sets \& Types}
+\label{sect:setstypes}
+
+\begin{remark}
+  Member in a set v. witness to a type.  Extensional v. intensional
+  set definition.  How are types defined?
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Denotation}
 \label{sect:denotation}
 
@@ -1278,8 +1287,28 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \end{remark}
 
   %%%%%%%%
-  \subsection{Lambda Abstraction}
+  \subsection{Abstraction}
   \label{subs:lambda}
+
+\begin{remark}
+  Start with concept of schema with vars.  Then substitute const syms
+  for vars to ``realize'' or ``instantiate'' scheme.  Thus
+  abstraction.
+
+  Two key ideas: one: open formula does not denote a function, you
+  have to add lambda op \textit{and variables} to get that.  Two: the
+  formula part of a lambda abstraction serves as schema pattern,
+  allowing application via substitution.
+
+  Lambda abstraction notation -- substitution notation \(M[x:=c]\)
+
+  Schema and substitution are the concepts that give us abstraction.
+
+  If we add domain restrictions on substitution we get a typed lambda
+  calculus.
+
+
+\end{remark}
 
   %%%%%%%%
   \subsection{Application}
@@ -1323,6 +1352,13 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   mountain.  In this section, I try to do something of the sort for
   the concept of a \textit{function}, which both theoretically and
   practically is almost as rich and majestic as Fuji.
+
+  ``Function'' is arguably the master concept of modern mathematics.
+  It has towered over much of the mathematical landscape since the
+  early or mid 19th century.  Even the most innovative concept of the
+  modern era, computation, was born of the desire to get clear about
+  the nature of specific kinds of function.
+
 
   \begin{marginfigure}%
     \centering
@@ -1403,8 +1439,29 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   Poylymorphic types
 
   %%%%%%%%
-  \subsection{Function types and Lambda Abstractions}
+  \subsection{Domains: Discrete \& Continuous}
+  \label{subs:}
+
+    \begin{todo}
+      Deal with open v. closed intervals.  One possibility is to
+      include [ ] or ( ) with the \(a,b\) arguments.  But that's
+      relatively clumsy and adds a lot of clutter to the definitions.
+      For the latter, we can default to closed intervals and just
+      advise to reader to read the definitions appropriately for the
+      other cases (i.e. replace [] in your imagination).  Maybe the
+      thing to do is provide examples but only provide formal
+      definition for the default.
+
+      Possibilities:  \(\sideset{_{[a}}{^{b]}}{\bigg|}f \) \quad \(\sideset{_{(a}}{^{b)}}{\bigg|}f\) \ etc.
+    \end{todo}
+
+  %%%%%%%%
+  \subsection{Function definition}
   \label{subs:functypes}
+
+  \begin{remark}
+    This isn't really types v. abstractions, but classical v. constructive
+  \end{remark}
 
   Z defines functions in terms of types.  A specific function is a
   ``witness'' to (or ``proof'' of) the type.  Formulae are included as
@@ -1446,6 +1503,16 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   substitution to derive an expression denoting the value.  So the
   concept of substitution is just as important as that of abstraction.
   Both of which are absent in the Z perspective.
+
+  \begin{remark}
+    Z and typed lambda calculus and Type Theory: ``witness'' to type,
+    proof of type.  The usual way: propositions as types, programs as
+    proofs.  What about the other way: types as propositions, programs
+    as proofs.  It doesn't make much sense to treat a type like
+    \(\num\) as a proposition; it doesn't state anything.
+    Construction a ``member'' of a type proves the type.  So
+    constructing ``2'' proves ``1+1''.
+  \end{remark}
 
   In Z function definitions are not really abstractions; just the
   opposite, really: the formula serves as a kind of constraint on
@@ -1591,9 +1658,10 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   Principle of parsimony in language design.  Only what you need, no redundancies, etc.
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \part{Mathematical Organization of Space}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \part{Spaces}
+  %% \part{Mathematical Organization of Space}
   \label{sect:cspaces}
 
   \begin{abstract}
@@ -1603,6 +1671,10 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     the various ways we can \textit{express} the thing in the Z
     notation (and/or lambda notation).
   \end{abstract}
+
+  {\todo Move the stuff about curves, figures, etc. - stuff inscribed
+    IN a \cspace{} - to a different major division?}
+
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Basics}
@@ -1620,23 +1692,26 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \end{remark}
 
   %%%%%%%%
-  \subsection{Compositional Pathways}
-  \label{subs:compospath}
-
-
-  \begin{remark}
-    A/K/A ``graphics pipeline''
-  \end{remark}
-
-
-  \[Function \fun Graph \fun Curve \fun Figure \fun Bitmap \fun Ink \]
+  \subsection{Spaces \& Canvasses}
+  \label{subs:spacecanvas}
 
   \begin{remark}
-    This is best viewed in terms of composition of functions, rather
-    than sequencing of operations.  So maybe ``pipleline'' is not the
-    best metaphor, insofar as it suggests the latter.  ``Stack''?
-    ``Journey''?  ``Path''?
+    Abstract v. concrete, space v. canvas, mathematical v. empirical
   \end{remark}
+
+  %%%%%%%%
+  \subsection{Discrete \& Continuous}
+  \label{subs:discretecont}
+
+
+  %%%%%%%%
+  \subsection{Device Spaces}
+  \label{subs:devicespace}
+
+  A device space is a discrete space that models the physical
+  properties of some medium.  The real world (ink on paper) is
+  continuous; device spaces model this continuous reality as a
+  discrete space with empirical units.
 
   %%%%%%%%
   \section{Coordinates}
@@ -2132,238 +2207,13 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     it changed our ways of thinking.  Maybe something from Bachelard's
     Poetics of Space?}
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Graphs}
-  \label{sect:graphs}
-
-  \begin{remark}
-    Move the math bits (definitions) of this to
-    \hyperref[sect:thirtysix]{Thirty-six Views}.  Leave only what is
-    directly connected with \cspace{} stuff.
-  \end{remark}
-
-  A graph is a set of points.  Informally, we might make a distinction
-  between the graph of a function and the sort of graph we might
-  specify by enumerating its points.  This corresponds to the
-  difference between intensional and extensional definitions of sets:
-  an intensional definition states a function that serves as a
-  membership test to determine which points are members of the set; an
-  extensional definition just lists each point explicitly.
-
-  For example, consider the even integers from \(1\) to \(10\).  We
-  can express this set extensionally by enumerating its elements: \(E
-  = \{2,4,6,8,10\}\).  To express the same set intensionally, we use
-  \hyperref[subs:setcomp]{set comprehension notation}: \(\{\forall
-  i:\nat | i\in [1\upto 10] \land \exists n | i = 2n @ i \}\)
-
-  But the difference is only apparent; an extensional definition of a
-  set of points whose first elements contain no repetitions is by
-  definition the definition of a function.  So we can always think of
-  any graph as the graph of some function.
-
-  \begin{remark}
-    Is this true?  Important?  What do we gain (or lose) by thinking
-    of every graph as the graph of some function?  Does having two
-    kinds of graph - those produced by functions and those not,
-    intensional and extensional - cause any problems?
-  \end{remark}
-
-  \begin{remark}
-    What about circles, rectangles, and other figures whose graphs are
-    not in fact functions?  We can express them parametrically.
-  \end{remark}
-
-  {\todo In any case, the purpose of this section is not just to
-    define ``graph'' but to examine the various ways available for
-    expressing graphs using Z.}
-
-  A graph is not yet a curve or figure; as a mere set of ordered pairs
-  of numbers, a graph has no intrinsic connection with a
-  particular \cspace{} and thus no antecedently determined visual
-  representation.  It all depends on the \cspace{} and its transforms:
-  the same graph can take on a very different appearance in different
-  spaces.  The graph of a straight line, for example, doesn't look
-  very straight when plotted in a polar \cspace{}.  To get from graph
-  to image, we have to bind the graph to a definite \cspace{}.  When
-  we do this, we end up with a \textit{curve}, which is the
-  \textit{image of the graph under the \cspace{}}.  Curves are
-  discussed in the next section.
-
-  \begin{remark}
-    Can we always rewrite an extensional definition of a set
-    intensionally?  At a minimum, we can use the identity function
-    together with an enumeration of its domain.  For example, instead
-    of writing \[S=\{ (0,0), (3,7), (28,195)\}\] we can write ...
-  \end{remark}
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Curves}
-  \label{sect:figs}
-
-  A curve is the image of a graph under a \cspace{}.  Informally, this
-  means we obtain a curve by applying the axial transformation
-  functions of the \cspace{} to each point of a graph, yielding the
-  image of the graph (i.e. a set of points) ``in'' the \cspace{}.
-
-  \begin{remark}
-    Critical point: conceptually the pipeline from function to graph
-    to curve to figure can be thought of as just transformations of
-    sets of points, and thus a sequence of sets; this is the Z
-    perspective.  But that might not be very helpful for implementors;
-    you can't store an infinite set of points in a computer.  So it is
-    better to take a more lambda-oriented perspective, and think in
-    terms of a composition of functions.  You cannot store the graph
-    of a function in a computer, but you can store (a representation
-    of) the lambda term expressing the function, which you can later
-    use to find a subset of its graph.
-  \end{remark}
-
-  \begin{remark}
-    Figure as sequence v. figure as set.  This parallels function as
-    operation v. function as set of ordered pairs.  Or lambda
-    expressions v. their reductions.  Sort of.
-
-    Every sequence can be ``reduced'' (projected?) to a set.  So we
-    can model any figure as a set of points in a space.  But if we
-    want to support e.g. path operations that depend on a ``current
-    point'', then we need to model figures as sequences, which will
-    give us operators like ``first'' and ``last''.
-
-  \end{remark}
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{\DSpace{}s}
-  \label{sect:dspaces}
-
-  \begin{remark}
-    Do we really need a distinct type?  Can't we just augment \Omg?
-  \end{remark}
-
-  \begin{remark}
-    Structure, then functions.
-  \end{remark}
-
-  %%%%%%%%
-  \subsection{Design Points}
-  \label{sect:dpts}
-
-  \begin{remark}
-    What to call points ``inscribed'' into a \cspace{}?  Addresses?
-    Locations?  Pixels?  Such points ``look like'' coordinate points,
-    but they are not literall ``in'' the \cspace{}; rather they are
-    ``stored'' in a separate structure, so the \cspace{} and the list
-    of ``design points'' together make up a compound structure.  It is
-    only when the time comes to actually ink a surface - a page or
-    screen - that they get mapped to some location ``in'' (rather,
-    ``on'') something.  Locatives denote locations?  Mention v. use;
-    ``\((a,b)\)'' v. \((a,b)\)
-  \end{remark}
-
-  \begin{remark}
-    We use the term \textit{lambda point} to refer to points that have
-    been ``added'' to \cspace{}s, in order to distinguish between points
-    that are present in the \cspace{} by definition and points that are
-    added (inserted, projected, etc.) ``into'' the space.  So if we draw
-    a point at \origin{} into space \Omg{}, the result is a space that
-    contains the same \origin{} point it had to start with, plus the
-    lambda point we projected on to that ``native'' point.
-  \end{remark}
-
-  \begin{remark}
-    Lambda pt as func application - lambda expr, plus arg.
-  \end{remark}
-
-  Suppose we start with \cspace{} \Omg{}, and we define a point \ab ``in''
-  \Omg{}; something like
-
-  \begin{equation}
-    \label{eq:omgapplic}
-    Let\ C_1 = \Omega[(a,b)]
-  \end{equation}
-
-  Then we transform \Omg{} into some other \cspace{}--call it \(\Gamma\),
-  by writing something like
-
-  \begin{equation}
-    \label{eq:gammapplic}
-    Let\ C_2 = \Gamma[C_1]
-  \end{equation}
-
-  The question we want to address now is: what happens when we do this?
-  What do statements like these (and their component expressions)
-  denote?  What precisely do expressions like \(\Omega[(a,b)]\) and
-  \(\Gamma[C_1]\) mean? What do \(C_1\) and \(C_2\) ``contain''?  What
-  happened to \ab in formula \ref{eq:gammapplic}?
-
-  Let's start by asking what \Omg{} denotes before we ``apply'' it to a
-  \hyperref[subs:pointexprs]{point expression}.  According to our definitions, a \cspace{} denotes
-  the combination of:
-
-  \begin{itemize}
-  \item \(\mathds{R}\times\mathds{R}\)\marginnote{\(\mathds{R}\times\mathds{R}\)
-    = the set of all ordered pairs of real numbers, i.e. Points.}
-  \item A pair of axis definitions, each including a scaling function.
-  \item A specification of axis order.
-  \end{itemize}
-
-  Specifically, let's assume that \Omg{} denotes the \sccs{}; then it
-  has \(x\) and \(y\) axes, ordered \xy{}, that have
-
-  \begin{itemize}
-  \item Angles of incidence \(0\degree\) and \(90\degree\), respectively
-  \item Default (positive) polarity
-  \item Identity scaling functions (\(\lambda x.x\))
-  \end{itemize}
-
-  So far so good.  Now what does \(Let\ C_1=\Omega[(a,b)]\)
-  mean?  Specifically, that is; what's the machinery?
-
-  \begin{remark}
-    Long story short: applying a \cspace{} to a point yields a pair of
-    the original \cspace{} and a representation of the point.  Under
-    eager evaluation, that representation is of the form
-    \ab\marginnote{\ab: TODO explain why this should still be considered
-      a lambda expression.}; under lazy evaluation, it is the
-    (unevaluated) lamba form expressing applyication of the axis scaling
-    functions to the coordinates of the point.
-
-    In other words, \cspace{}s never change (immutability); they just
-    carry the points they contain along with them as a list of (lambda)
-    expressions; hence ``lambda points''.  Only on the last step of
-    transforming the design space to device space are all the forms
-    fully evaluated.
-  \end{remark}
-
-  %%%%%%%%
-  \subsection{Ink}
-  \label{subs:ink}
-
-  a/k/a style or graphics state
-
-  %%%%%%%%
-  \subsection{\DSpace{} Application}
-  \label{subs:dsapplic}
-
-  A \dspace{} is formally defined as a function.  This allows us to
-  express what traditional languages usually call
-  \textit{transformations} as function applications.
-
-  \begin{gendef}[X,Y]
-    \_[\_] : \Delta\cross\Delta\fun\Delta \\
-    \_[\_] : \Gamma\cross\Gamma\fun\Gamma \\
-    \where
-
-  \end{gendef}
-
-  A \textit{\dspace{} application} maps one \dspace to another \dspace{}.
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \part{Operations on \DSpace{}s}
-
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%
   \section{Transforms}
   \label{sect:transforms}
+
+  \begin{remark}
+    \cspace{} transforms are really just the axes as functions.  We should probably eliminate the term.
+  \end{remark}
 
   \begin{remark}
     The interpretation of function application as expressing a
@@ -2567,10 +2417,191 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   %% (x, y) = (r\cos\theta, r\sin\theta)\qquad(r, \theta) = \left(\sqrt{x^2+y^2}, \quad \arctan\frac{y}{x}\right).'' http://en.wikipedia.org/wiki/Complex_plane
 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Canvases}
+  \label{sect:canvas}
+
+  \begin{remark}
+    A canvas is a space together with an empirical unit of measure,
+    e.g. 1cm.  So unlike a \cspace{}, a canvas is not an abstract,
+    purely mathematical object.\marginnote{TODO: how does TikZ handle
+      the distinction?}
+
+    Another perspective: a \cspace{} has a mathematical but not an
+    empirical denotation;\sidenote{Except perhaps space itself} a canvas
+    has both.  A canvas represents some physical surface, albeit
+    abstractly, whereas a \cspace{} represents
+    nothing.\marginnote{Caveat: we're talking about mathematical enties,
+      not expressions in a languge.  Of course, a \cspace{}
+      \textit{expressions} represents something, namely a \cspace{}; but
+      the space itself, as a mathematical ``object'', does not
+      represent.}
+  \end{remark}
+
+  In a \cspace{}, a point expression \ab{} denotes a \textit{position} in
+  a structure; in a canvas, the same expression denotes a
+  \textit{location} in (physical) space.\marginnote[-24pt]{Convention:
+    positions are structural, locations spatial.}
+
+  Numbers ``in'' a \cspace{} just \textit{are} structural positions;
+  ``on'' a canvas, they represent spatial
+  location.\marginnote[-12pt]{``Space'' and ``spatial'' are ambiguous
+    here. etc.  We should probably refer to coordinate structures rather
+    than \cspace{}s.}
+
+  Specifying a point on a canvas is analogous to dabbing a bit of paint
+  on a literal canvas.  Specifying a point in a \cspace{} is better
+  thought of as analogous to memorizing how to get to a place in a city
+  - five blocks west and two blocks north of the
+  Courthouse.\marginnote{Recall that numbers can be thought of as
+    methods or arcs, rather than objects.}
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \part{Designs}
+  \label{part:designs}
+
+  %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% \part{Curves}
+  %% %% \part{Operations on \DSpace{}s}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \part{Figures and Ink}
-  \label{sect:representation}
+  \section{Overview}
+  \label{sect:designoverview}
+
+
+  %%%%%%%%
+  \subsection{Compositional Pathways}
+  \label{subs:compospath}
+
+  Terminology:
+  \begin{description}
+  \item [inscription] of a function in a \cspace{}
+  \item [image] of a function under another function (syn: graph?)
+  \end{description}
+
+
+  \begin{remark}
+    A/K/A ``graphics pipeline''
+  \end{remark}
+
+
+  \[Function \fun Graph \fun Curve \fun Figure \fun Bitmap \fun Ink \]
+
+  \begin{remark}
+    This is best viewed in terms of composition of functions, rather
+    than sequencing of operations.  So maybe ``pipleline'' is not the
+    best metaphor, insofar as it suggests the latter.  ``Stack''?
+    ``Journey''?  ``Path''?
+  \end{remark}
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Graphs}
+  \label{sect:graphs}
+
+  \begin{remark}
+    Move the math bits (definitions) of this to
+    \hyperref[sect:thirtysix]{Thirty-six Views}.  Leave only what is
+    directly connected with \cspace{} stuff.
+  \end{remark}
+
+  A graph is a set of points.  Informally, we might make a distinction
+  between the graph of a function and the sort of graph we might
+  specify by enumerating its points.  This corresponds to the
+  difference between intensional and extensional definitions of sets:
+  an intensional definition states a function that serves as a
+  membership test to determine which points are members of the set; an
+  extensional definition just lists each point explicitly.
+
+  For example, consider the even integers from \(1\) to \(10\).  We
+  can express this set extensionally by enumerating its elements: \(E
+  = \{2,4,6,8,10\}\).  To express the same set intensionally, we use
+  \hyperref[subs:setcomp]{set comprehension notation}: \(\{\forall
+  i:\nat | i\in [1\upto 10] \land \exists n | i = 2n @ i \}\)
+
+  But the difference is only apparent; an extensional definition of a
+  set of points whose first elements contain no repetitions is by
+  definition the definition of a function.  So we can always think of
+  any graph as the graph of some function.
+
+  \begin{remark}
+    Is this true?  Important?  What do we gain (or lose) by thinking
+    of every graph as the graph of some function?  Does having two
+    kinds of graph - those produced by functions and those not,
+    intensional and extensional - cause any problems?
+  \end{remark}
+
+  \begin{remark}
+    What about circles, rectangles, and other figures whose graphs are
+    not in fact functions?  We can express them parametrically.
+  \end{remark}
+
+  {\todo In any case, the purpose of this section is not just to
+    define ``graph'' but to examine the various ways available for
+    expressing graphs using Z.}
+
+  A graph is not yet a curve or figure; as a mere set of ordered pairs
+  of numbers, a graph has no intrinsic connection with a
+  particular \cspace{} and thus no antecedently determined visual
+  representation.  It all depends on the \cspace{} and its transforms:
+  the same graph can take on a very different appearance in different
+  spaces.  The graph of a straight line, for example, doesn't look
+  very straight when plotted in a polar \cspace{}.  To get from graph
+  to image, we have to bind the graph to a definite \cspace{}.  When
+  we do this, we end up with a \textit{curve}, which is the
+  \textit{image of the graph under the \cspace{}}.  Curves are
+  discussed in the next section.
+
+  \begin{remark}
+    Can we always rewrite an extensional definition of a set
+    intensionally?  At a minimum, we can use the identity function
+    together with an enumeration of its domain.  For example, instead
+    of writing \[S=\{ (0,0), (3,7), (28,195)\}\] we can write ...
+  \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Curves}
+  \label{sect:figs}
+
+  A curve is the image of a graph under a \cspace{}.  Informally, this
+  means we obtain a curve by applying the axial transformation
+  functions of the \cspace{} to each point of a graph, yielding the
+  image of the graph (i.e. a set of points) ``in'' the \cspace{}.
+
+  \begin{remark}
+    Critical point: conceptually the pipeline from function to graph
+    to curve to figure can be thought of as just transformations of
+    sets of points, and thus a sequence of sets; this is the Z
+    perspective.  But that might not be very helpful for implementors;
+    you can't store an infinite set of points in a computer.  So it is
+    better to take a more lambda-oriented perspective, and think in
+    terms of a composition of functions.  You cannot store the graph
+    of a function in a computer, but you can store (a representation
+    of) the lambda term expressing the function, which you can later
+    use to find a subset of its graph.
+  \end{remark}
+
+  \begin{remark}
+    Figure as sequence v. figure as set.  This parallels function as
+    operation v. function as set of ordered pairs.  Or lambda
+    expressions v. their reductions.  Sort of.
+
+    Every sequence can be ``reduced'' (projected?) to a set.  So we
+    can model any figure as a set of points in a space.  But if we
+    want to support e.g. path operations that depend on a ``current
+    point'', then we need to model figures as sequences, which will
+    give us operators like ``first'' and ``last''.
+
+  \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Figures}
+  \label{sect:figures}
+
+  %% \part{Figures}
+  %% \label{sect:representation}
 
   \begin{remark}
     Two topics:
@@ -2624,49 +2655,174 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \subsection{Figure Expressions}
   \label{subs:figexprs}
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Canvases}
-  \label{sect:canvas}
-
-  \begin{remark}
-    A canvas is a space together with an empirical unit of measure,
-    e.g. 1cm.  So unlike a \cspace{}, a canvas is not an abstract,
-    purely mathematical object.\marginnote{TODO: how does TikZ handle
-      the distinction?}
-
-    Another perspective: a \cspace{} has a mathematical but not an
-    empirical denotation;\sidenote{Except perhaps space itself} a canvas
-    has both.  A canvas represents some physical surface, albeit
-    abstractly, whereas a \cspace{} represents
-    nothing.\marginnote{Caveat: we're talking about mathematical enties,
-      not expressions in a languge.  Of course, a \cspace{}
-      \textit{expressions} represents something, namely a \cspace{}; but
-      the space itself, as a mathematical ``object'', does not
-      represent.}
-  \end{remark}
-
-  In a \cspace{}, a point expression \ab{} denotes a \textit{position} in
-  a structure; in a canvas, the same expression denotes a
-  \textit{location} in (physical) space.\marginnote[-24pt]{Convention:
-    positions are structural, locations spatial.}
-
-  Numbers ``in'' a \cspace{} just \textit{are} structural positions;
-  ``on'' a canvas, they represent spatial
-  location.\marginnote[-12pt]{``Space'' and ``spatial'' are ambiguous
-    here. etc.  We should probably refer to coordinate structures rather
-    than \cspace{}s.}
-
-  Specifying a point on a canvas is analogous to dabbing a bit of paint
-  on a literal canvas.  Specifying a point in a \cspace{} is better
-  thought of as analogous to memorizing how to get to a place in a city
-  - five blocks west and two blocks north of the
-  Courthouse.\marginnote{Recall that numbers can be thought of as
-    methods or arcs, rather than objects.}
+  %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% \part{Ink}
+  %% \label{part:ink}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Ink}
-  \label{sect:ink}
+  \label{sect:}
 
+  \begin{remark}
+    This should be in another paper, it isn't really about \cspace{}s.
+  \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Color}
+  \label{sect:color}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Pattern}
+  \label{sect:pattern}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \subsection{Gradient}
+  \label{sect:gradient}
+
+  %%%%%%%%
+  \subsection{Transparency}
+  \label{subs:transparency}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Misc}
+  \label{sect:}
+
+  %%%%%%%%
+  \subsection{\DSpace{}s}
+  \label{sect:dspaces}
+
+  \begin{remark}
+    Do we really need a distinct type?  Can't we just augment \Omg?
+  \end{remark}
+
+  \begin{remark}
+    Structure, then functions.
+  \end{remark}
+
+  %%%%%%%%
+  \subsection{Design Points}
+  \label{sect:dpts}
+
+  \begin{remark}
+    What to call points ``inscribed'' into a \cspace{}?  Addresses?
+    Locations?  Pixels?  Such points ``look like'' coordinate points,
+    but they are not literall ``in'' the \cspace{}; rather they are
+    ``stored'' in a separate structure, so the \cspace{} and the list
+    of ``design points'' together make up a compound structure.  It is
+    only when the time comes to actually ink a surface - a page or
+    screen - that they get mapped to some location ``in'' (rather,
+    ``on'') something.  Locatives denote locations?  Mention v. use;
+    ``\((a,b)\)'' v. \((a,b)\)
+  \end{remark}
+
+  \begin{remark}
+    We use the term \textit{lambda point} to refer to points that have
+    been ``added'' to \cspace{}s, in order to distinguish between points
+    that are present in the \cspace{} by definition and points that are
+    added (inserted, projected, etc.) ``into'' the space.  So if we draw
+    a point at \origin{} into space \Omg{}, the result is a space that
+    contains the same \origin{} point it had to start with, plus the
+    lambda point we projected on to that ``native'' point.
+  \end{remark}
+
+  \begin{remark}
+    Lambda pt as func application - lambda expr, plus arg.
+  \end{remark}
+
+  Suppose we start with \cspace{} \Omg{}, and we define a point \ab ``in''
+  \Omg{}; something like
+
+  \begin{equation}
+    \label{eq:omgapplic}
+    Let\ C_1 = \Omega[(a,b)]
+  \end{equation}
+
+  Then we transform \Omg{} into some other \cspace{}--call it \(\Gamma\),
+  by writing something like
+
+  \begin{equation}
+    \label{eq:gammapplic}
+    Let\ C_2 = \Gamma[C_1]
+  \end{equation}
+
+  The question we want to address now is: what happens when we do this?
+  What do statements like these (and their component expressions)
+  denote?  What precisely do expressions like \(\Omega[(a,b)]\) and
+  \(\Gamma[C_1]\) mean? What do \(C_1\) and \(C_2\) ``contain''?  What
+  happened to \ab in formula \ref{eq:gammapplic}?
+
+  Let's start by asking what \Omg{} denotes before we ``apply'' it to a
+  \hyperref[subs:pointexprs]{point expression}.  According to our definitions, a \cspace{} denotes
+  the combination of:
+
+  \begin{itemize}
+  \item \(\mathds{R}\times\mathds{R}\)\marginnote{\(\mathds{R}\times\mathds{R}\)
+    = the set of all ordered pairs of real numbers, i.e. Points.}
+  \item A pair of axis definitions, each including a scaling function.
+  \item A specification of axis order.
+  \end{itemize}
+
+  Specifically, let's assume that \Omg{} denotes the \sccs{}; then it
+  has \(x\) and \(y\) axes, ordered \xy{}, that have
+
+  \begin{itemize}
+  \item Angles of incidence \(0\degree\) and \(90\degree\), respectively
+  \item Default (positive) polarity
+  \item Identity scaling functions (\(\lambda x.x\))
+  \end{itemize}
+
+  So far so good.  Now what does \(Let\ C_1=\Omega[(a,b)]\)
+  mean?  Specifically, that is; what's the machinery?
+
+  \begin{remark}
+    Long story short: applying a \cspace{} to a point yields a pair of
+    the original \cspace{} and a representation of the point.  Under
+    eager evaluation, that representation is of the form
+    \ab\marginnote{\ab: TODO explain why this should still be considered
+      a lambda expression.}; under lazy evaluation, it is the
+    (unevaluated) lamba form expressing applyication of the axis scaling
+    functions to the coordinates of the point.
+
+    In other words, \cspace{}s never change (immutability); they just
+    carry the points they contain along with them as a list of (lambda)
+    expressions; hence ``lambda points''.  Only on the last step of
+    transforming the design space to device space are all the forms
+    fully evaluated.
+  \end{remark}
+
+  %%%%%%%%
+  \subsection{Ink}
+  \label{subs:ink}
+
+  a/k/a style or graphics state
+
+  %%%%%%%%
+  \subsection{\DSpace{} Application}
+  \label{subs:dsapplic}
+
+  A \dspace{} is formally defined as a function.  This allows us to
+  express what traditional languages usually call
+  \textit{transformations} as function applications.
+
+  \begin{gendef}[X,Y]
+    \_[\_] : \Delta\cross\Delta\fun\Delta \\
+    \_[\_] : \Gamma\cross\Gamma\fun\Gamma \\
+    \where
+
+  \end{gendef}
+
+  A \textit{\dspace{} application} maps one \dspace to another \dspace{}.
+
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \part{Content}
+  \label{part:content}
+
+  \begin{remark}
+    This goes in a separate paper, not directly relevant to \cspace{}s.
+  \end{remark}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Connecting Content to Graphs}
@@ -2956,20 +3112,13 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     troika, these are second-order functions -- functions that operate
     on other functions.
 
-    {\todo  Explain higher-order functions.  In the Function section of the first part.}
-
-    \begin{todo}
-      Deal with open v. closed intervals.  One possibility is to
-      include [ ] or ( ) with the \(a,b\) arguments.  But that's
-      relatively clumsy and adds a lot of clutter to the definitions.
-      For the latter, we can default to closed intervals and just
-      advise to reader to read the definitions appropriately for the
-      other cases (i.e. replace [] in your imagination).  Maybe the
-      thing to do is provide examples but only provide formal
-      definition for the default.
-
-      Possibilities:  \(\sideset{_{[a}}{^{b]}}{\bigg|}f \) \quad \(\sideset{_{(a}}{^{b)}}{\bigg|}f\) \ etc.
-    \end{todo}
+    \begin{remark}
+      Realized belatedly that Z is already equipped with an operator
+      that makes this trivial: domain restriction.  \([a\upto b]\dres
+      f\) denotes precisely what we want: the graph of a function over
+      an interval.  But still the vertical bar notation is useful to
+      have.
+    \end{remark}
 
     \vspace{6pt}
     \noindent

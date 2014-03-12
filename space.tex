@@ -304,10 +304,10 @@
   \begin{center}
     \textit{Abstract}
   \end{center}
-  The foundation of any graphics language or system is
-  its \cspace{}.  \Cspace{}s organize space.  Despite my title--a play
-  on G. Bachelard's famous \textit{The Poetics of Space}--this is a
-  paper on the design and specification of a technical language
+  The foundation of any graphics language or system is its coordinate
+  system.  Coordinate systems organize space.  Despite my title--a
+  play on G. Bachelard's famous \textit{The Poetics of Space}--this is
+  a paper on the design and specification of a technical language
   of \cspace{}s.
 \end{abstract}
 
@@ -987,6 +987,15 @@ For now let's concentrate on the expressive resources of Z regarding
 functions.  Z provides many different ways to express functions.
 
 %%%%%%%%
+\subsection{Set Comprehension}
+\label{subs:setcomp}
+
+\begin{remark}
+  Intensional set definitions are expressed using set comprehension
+  notation. A/K/A set construction notation.  Etc.
+\end{remark}
+
+%%%%%%%%
 \subsection{Sequences}
 \label{sect:seqs}
 
@@ -1164,6 +1173,21 @@ any other function:
 \section{Lambda Calculus}
 \label{sect:lambda}
 
+
+``The λ-calculus is, at heart, a simple notation for functions and
+application. The main ideas are applying a function to an argument and
+forming functions by abstraction. The syntax of basic λ-calculus is
+quite sparse, making it an elegant, focused notation for representing
+functions. Functions and arguments are on a par with one another. The
+result is an intensional theory of functions as rules of computation,
+contrasting with an extensional theory of functions as sets of ordered
+pairs. Despite its sparse syntax, the expressiveness and flexibility
+of the λ-calculus make it a cornucopia of logic and mathematics. This
+entry develops some of the central highlights of the field and
+prepares the reader for further study of the subject and its
+applications in philosophy, linguistics, computer science, and
+logic.'' \url{http://plato.stanford.edu/entries/lambda-calculus/}
+
 \begin{remark}
   Z has a lambda operator; why do we need a section on the lambda
   calculus?  Different perspectives on function.  What else?  Z
@@ -1299,6 +1323,14 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     numerical constants; functions as relations.
   \end{remark}
 
+  \begin{remark}
+    Lambda abstractions v. Z func defns.  Are the latter abstractions?
+    More like restrictions; they declare constraints on the pairs that
+    are allowed to be ``in'' the function.
+
+    Type witness (proof) v. set member (element)
+  \end{remark}
+
   Expressivity and function application.  A lambda abstraction like
   ``\(\lambda x.x)\)'', or a more tradition expression like \(f(x) = x\)
   \textit{expresses} a function, but its \textit{denotation} is
@@ -1347,10 +1379,58 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   Poylymorphic types
 
-  \subsection{Abstraction}
-  same func can be expressed in many different forms
+  %%%%%%%%
+  \subsection{Function types and Lambda Abstractions}
+  \label{subs:functypes}
 
+  Z defines functions in terms of types.  A specific function is a
+  ``witness'' to (or ``proof'' of) the type.  Formulae are included as
+  components in a defining \textit{equation}.  The formula used to
+  define a function (of a type) in this way effectively serves as an
+  inclusion test that determines which ordered pairs are elements of
+  the function.  This is a non-constructive approach to function
+  definition.  It does not say what must be done to produce an output
+  from a given input; it just says what conditions must be met by the
+  output, no matter how it is constructed.  The defining equation of a
+  Z function is a predicate to be satisfied, not an expression to be
+  reduced (computation to be performed).
+
+  \begin{remark}
+    One (possible) consequence: lambda abstractions are always
+    computable, but Z can be used to define uncomputable functions.
+    (I'm not entirely certain this is true.)
+  \end{remark}
+
+  This way of looking at functions is a very different from the lambda
+  way.  In the lambda calculus, function expressions are called
+  abstractions.  This seems to be because\sidenote{FIXME: why exactly
+    are they called abstractions?  Does the formula part of a lambda
+    abstraction play the role of a schema, so it becomes like the
+    ``axiom schema'' of logic?  A schema is an abstraction since it
+    represents the class of all substitutions.  And substitution plays
+    a major role in lambda.  What role does the concept of
+    quantification play in this?} the formula part of a lambda
+  abstraction plays the role of a schema with variables, which
+  abstracts over all permissible substititions of values for
+  variables.  Furthermore, equations play no role in lambda
+  abstraction; the formula part of a lambda abstraction does not play
+  the role of a test determining membership in a set.  In fact, the
+  lambda calculus does not even need the concept of a
+  set.\sidenote{FIXME: verify.  Is lambda really set-free? I'm not
+    sure.}  Instead lambda abstractions are constructive; the formula
+  defines the computation that is to be used to construct the value
+  associated with the input.  Or rather, the formula is used with
+  substitution to derive an expression denoting the value.  So the
+  concept of substitution is just as important as that of abstraction.
+  Both of which are absent in the Z perspective.
+
+  In Z function definitions are not really abstractions; just the
+  opposite, really: the formula serves as a kind of constraint on
+  function (that is, set) membership.
+
+  %%%%%%%%
   \subsection{Application}
+  \label{subs:}
 
   \begin{remark}
     What does a func applic expression express?  Different views:
@@ -1367,6 +1447,22 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     plays a major role later, in expressing collections of figures in
     a space.
   \end{remark}
+
+  %%%%%%%%
+  \subsection{Domain-restricted functions}
+  \label{subs:domrestrfunc}
+
+  ``Function over an interval'' as generalization of function application?
+
+  At one extreme we have just the function, and so its graph.  At the
+  other extreme we have function application, its value at one point
+  in the domain.  Call this ``point application''.  In between we have
+  ``interval application'' - application to each point of a subset of
+  the domain.
+
+  {\todo Terminology: ``function over an interval'' = (domain)
+    restricted function?  narrow function?  path function?
+
 
   %%%%%%%%
   \subsection{Higher-order functions}
@@ -1435,11 +1531,15 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \part{The Mathematical Organization of Space}
+  \part{Mathematical Organization of Space}
   \label{sect:cspaces}
 
   \begin{abstract}
-    Abstract:
+    Abstract: We examine the mathematical objects involved in the
+    construction of \cspace{}s.  Each section discusses the semantics
+    - what \textit{is} the thing, mathematically -- and then goes over
+    the various ways we can \textit{express} the thing in the Z
+    notation (and/or lambda notation).
   \end{abstract}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1447,18 +1547,44 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \label{sect:basic}
 
   \begin{remark}
-    A tour of commonly used and obscure systems
+    A tour of commonly used and obscure coordinate systems: cartesian,
+    polar, cylindrical, etc.  Barycentric.  Homogenous.
+  \end{remark}
+
+  \begin{remark}
+    Also provide brief overview of the structure we describe in this
+    part.  E.g. the ``pipeline'' from function to graph to curve to
+    figure.
   \end{remark}
 
   %%%%%%%%
-  \subsection{Coordinates}
-  \label{subs:coordinates}
+  \subsection{Compositional Pathways}
+  \label{subs:compospath}
+
+
+  \begin{remark}
+    A/K/A ``graphics pipeline''
+  \end{remark}
+
+
+  \[Function \fun Graph \fun Curve \fun Figure \fun Bitmap \fun Ink \]
+
+  \begin{remark}
+    This is best viewed in terms of composition of functions, rather
+    than sequencing of operations.  So maybe ``pipleline'' is not the
+    best metaphor, insofar as it suggests the latter.  ``Stack''?
+    ``Journey''?  ``Path''?
+  \end{remark}
+
+  %%%%%%%%
+  \section{Coordinates}
+  \label{sect:coordinates}
 
   Defn:  Coord == \(\mathds{R}\)
 
   %%%%%%%%
-  \subsection{Points}
-  \label{subs:points}
+  \section{Points}
+  \label{sect:points}
 
   POINT == \(\mathds{R}\times\mathds{R}\)
 
@@ -1479,23 +1605,20 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   to express coordinate points, we label the type of such pairs POINT,
   rather than, say REALPAIR.
 
-  %%%%%%%%
-  \subsection{Coordinate Space}
-  \label{subs:cspace}
-
-  Set of points; type: powerset of POINT.
-
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Axes}
   \label{sect:axes}
 
   \begin{remark}
     An axis is really just a function.  Apply it to ``incoming'' data.
-    To get a graph, apply both axes and find the intersection.  Etc.
+    To get the curve of a graph, apply both axes and find the
+    intersection.  Etc.
 
     It follows that an axis is not a line in the \cspace{}.  Not
-    directly, anyway.  To draw axis lines in a representation, apply
-    the axis function to the appropriate set of values in the space.
+    directly, anyway.  To draw an axis line in a representation (that
+    is, to find the figure of the curve of the graph of the axis) ,
+    apply the axis function to the appropriate set of values in the
+    space.
   \end{remark}
 
   \begin{remark}
@@ -1679,8 +1802,13 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \subsection{Origin}
   \label{subs:axisorigin}
 
-  Only axes have origins; \cspace{}s have points at \((0,0)\), but such
-  points only count as \textit{origin} points if an axis says so.
+  Only axes have origins; \Rtwo{} has a point at \((0,0)\), but it only
+  counts as an \textit{origin} if an axis says so.  Since
+  different \cspace{}s have different axis definitions, there is no
+  way to treat any coordinate point as the ``natural'' origin, not
+  even for standard cartesian space.  Wherever \((0,0)\) serves as
+  origin, it does so by stipulation, because the axes of the space
+  defined it that way.
 
   %%%%%%%%
   \subsection{Unit}
@@ -1822,6 +1950,23 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \end{remark}
 
   %%%%%%%%
+  \subsection{Discrete and Continuous}
+  \label{subs:discrcont}
+
+  \begin{remark}
+    Discrete spaces = bitmaps.  What to do about functions in a
+    discrete \cspace{}?  This is where the concept of ``formula of a
+    function'' pays off: we want to use the same formula in both
+    cases, but different domains.  Strictly speaking this gives us two
+    different functions that happen to share a single formula.  In the
+    discrete case we will have to add a domain restriction that
+    eliminates all but the integers; fortunately this is easy to
+    express in Z: \(\num\dres\real\).
+
+  When we get to curves and figures we will have the task of mapping
+  \end{remark}
+
+  %%%%%%%%
   \subsection{Root Set}
   \label{subs:csrootset}
 
@@ -1831,8 +1976,14 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     Since a \cspace{} is a type, it has a (Z) carrier set, but that is
     not what the same as its root set.}
 
+  \begin{remark}
+    Don't all \cspace{}s have the same root set, namely \Rtwo{}?  (Or
+    more generally \(\real ^n\).)  Well, no: the root set of a
+    discrete \cspace{} is \(\num ^n\).
+  \end{remark}
+
   %%%%%%%%
-  \subsection{Axes}
+  \subsection{Axis Sequence}
   \label{subs:orientation}
 
   Every \cspace{} is associated with an ordered set of one or more
@@ -1920,8 +2071,84 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     Poetics of Space?}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{Figures}
+  \section{Graphs}
+  \label{sect:graphs}
+
+  A graph is a set of points.  Informally, we might make a distinction
+  between the graph of a function and the sort of graph we might
+  specify by enumerating its points.  This corresponds to the
+  difference between intensional and extensional definitions of sets:
+  an intensional definition states a function that serves as a
+  membership test to determine which points are members of the set; an
+  extensional definition just lists each point explicitly.
+
+  For example, consider the even integers from \(1\) to \(10\).  We
+  can express this set extensionally by enumerating its elements: \(E
+  = \{2,4,6,8,10\}\).  To express the same set intensionally, we use
+  \hyperref[subs:setcomp]{set comprehension notation}: \(\{\forall
+  i:\nat | i\in [1\upto 10] \land \exists n | i = 2n @ i \}\)
+
+  But the difference is only apparent; an extensional definition of a
+  set of points whose first elements contain no repetitions is by
+  definition the definition of a function.  So we can always think of
+  any graph as the graph of some function.
+
+  \begin{remark}
+    Is this true?  Important?  What do we gain (or lose) by thinking
+    of every graph as the graph of some function?  Does having two
+    kinds of graph - those produced by functions and those not,
+    intensional and extensional - cause any problems?
+  \end{remark}
+
+  \begin{remark}
+    What about circles, rectangles, and other figures whose graphs are
+    not in fact functions?  We can express them parametrically.
+  \end{remark}
+
+  {\todo In any case, the purpose of this section is not just to
+    define ``graph'' but to examine the various ways available for
+    expressing graphs using Z.}
+
+  A graph is not yet a curve or figure; as a mere set of ordered pairs
+  of numbers, a graph has no intrinsic connection with a
+  particular \cspace{} and thus no antecedently determined visual
+  representation.  It all depends on the \cspace{} and its transforms:
+  the same graph can take on a very different appearance in different
+  spaces.  The graph of a straight line, for example, doesn't look
+  very straight when plotted in a polar \cspace{}.  To get from graph
+  to image, we have to bind the graph to a definite \cspace{}.  When
+  we do this, we end up with a \textit{curve}, which is the
+  \textit{image of the graph under the \cspace{}}.  Curves are
+  discussed in the next section.
+
+  \begin{remark}
+    Can we always rewrite an extensional definition of a set
+    intensionally?  At a minimum, we can use the identity function
+    together with an enumeration of its domain.  For example, instead
+    of writing \[S=\{ (0,0), (3,7), (28,195)\}\] we can write ...
+  \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Curves}
   \label{sect:figs}
+
+  A curve is the image of a graph under a \cspace{}.  Informally, this
+  means we obtain a curve by applying the axial transformation
+  functions of the \cspace{} to each point of a graph, yielding the
+  image of the graph (i.e. a set of points) ``in'' the \cspace{}.
+
+  \begin{remark}
+    Critical point: conceptually the pipeline from function to graph
+    to curve to figure can be thought of as just transformations of
+    sets of points, and thus a sequence of sets; this is the Z
+    perspective.  But that might not be very helpful for implementors;
+    you can't store an infinite set of points in a computer.  So it is
+    better to take a more lambda-oriented perspective, and think in
+    terms of a composition of functions.  You cannot store the graph
+    of a function in a computer, but you can store (a representation
+    of) the lambda term expressing the function, which you can later
+    use to find a subset of its graph.
+  \end{remark}
 
   \begin{remark}
     Figure as sequence v. figure as set.  This parallels function as
@@ -1953,7 +2180,15 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \label{sect:dpts}
 
   \begin{remark}
-    Locatives denote locations?  Mention v. use; ``\((a,b)\)'' v. \((a,b)\)
+    What to call points ``inscribed'' into a \cspace{}?  Addresses?
+    Locations?  Pixels?  Such points ``look like'' coordinate points,
+    but they are not literall ``in'' the \cspace{}; rather they are
+    ``stored'' in a separate structure, so the \cspace{} and the list
+    of ``design points'' together make up a compound structure.  It is
+    only when the time comes to actually ink a surface - a page or
+    screen - that they get mapped to some location ``in'' (rather,
+    ``on'') something.  Locatives denote locations?  Mention v. use;
+    ``\((a,b)\)'' v. \((a,b)\)
   \end{remark}
 
   \begin{remark}
@@ -2266,7 +2501,7 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \part{Representation}
+  \part{Figures and Ink}
   \label{sect:representation}
 
   \begin{remark}
@@ -2277,6 +2512,21 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
       represent the real world (or possible worlds) (as with e.g. OpenGL coord. spaces).
     \end{itemize}
   \end{remark}
+
+  A figure is the image of a curve under an \textit{inking} function.
+  Inking functions map points to sets of points representing geometric
+  figures and associate each point with a color (ink).
+
+  Informally, the way to make a curve visible is to map each of its
+  points to a ``micro-figure'' consisting of the points of a geometric
+  form such as a circle and associate a color with each point in the
+  result.  So a line can be made visible by ``drawing'' a black circle
+  around each of its points; this would result in the appearance of a
+  solid line whose height is equal to the diameter of the circles
+  around its points, and whose ends are rounded.  To get a line with
+  square ends, draw a square instead of a circle around each of its
+  points.
+
 
   %%%%%%%%
   \subsection{Point Expressions}

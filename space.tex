@@ -728,9 +728,21 @@ of adequacy outlined above.
   TODO: Some kind of overview here.
 \end{remark}
 
+Why both Z and the lambda calculus?  Z tells us what, lambda tells us
+how.  Z tells us what formulae mean but not what to do with them;
+lambda tells us how to get from one formula to another formula
+representing what it means: substitute, then reduce.
+
+In other terms, Z provides a denotational semantics, lambda a
+computational semantics.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Denotation}
 \label{sect:denotation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Computation}
+\label{sect:computation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Expression}
@@ -882,6 +894,51 @@ point'' datum.
 \begin{remark}
   the more general pt:  expressivity, with and without mutable data.
 \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{(In)Finity}
+  \label{sect:}
+
+  \begin{todo}
+    TODO: We need to say something about uncountably infinite sets and
+    limits, since we will want to plot graphs of functions over open
+    intervals.  For example, \(\lambda x.\frac{1}{x}\) over \((0\ldots
+    1]\).  Unfortunately I don't recall how Z handles this.
+  \end{todo}
+
+  TikZ supports ``chains'' of path construction expressions.  It
+  manages this by maintaining a ``current point'' datum, which it
+  updates with the last point used in the path construction
+  expression.  This works just fine for line-like operators like
+  ``line-to'' (\-\-) and ``curve-to'' (.. controls ... etc.); in such
+  expressions the first and last points are explicitly specified so
+  they are easily tracked.  But TikZ does not allow this sort of
+  chaining for e.g. ``plot'', which samples a specified domain of a
+  function and plots its graph.  Presumably finding the ``last point''
+  is a problem; maybe it is too expensive computationally.
+
+  Since our purpose is not to design a concrete ``Domain Specific
+  Language'' (DSL), we need not worry about efficiency.  We only care
+  about completeness and correctness (and simplicity and parsimony and
+  elegance etc.), so one of our requirements must be to handle such
+  cases.  ``Handle'' meaning provide the expressive resources needed
+  to explicitly specify their form and function.
+
+  The basic problem seems to boil down to the handling of closed and
+  open intervals.  Since the real numbers are ordered, any interval on
+  the real line is ordered; if it is also bounded, then we should be
+  able to find -- that is, express -- its extrema.  For closed
+  intervals, this is easy, since they are explicitly written down.
+  Open intervals are only slightly more complicated, since the end
+  points \textit{of} an open interval are not \textit{in} the
+  interval.  But by definition, the end points of an open interval on
+  the reals bound the interval, so we can treat them as limits, and
+  then use them as extrema - first and last points, or at least points
+  that will allow us to chain path construction expressions.
+
+  Again, how this translates into real-world languages is a separate
+  issue.  What matters is that we have the resources to express the
+  relevant ideas in the appropriate form (clear, simple, etc.).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Z Notation}
@@ -1250,50 +1307,16 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   \vspace{1in}
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{(In)Finity}
-  \label{sect:}
-
-  \begin{todo}
-    TODO: We need to say something about uncountably infinite sets and
-    limits, since we will want to plot graphs of functions over open
-    intervals.  For example, \(\lambda x.\frac{1}{x}\) over \((0\ldots
-    1]\).  Unfortunately I don't recall how Z handles this.
-  \end{todo}
-
-  TikZ supports ``chains'' of path construction expressions.  It
-  manages this by maintaining a ``current point'' datum, which it
-  updates with the last point used in the path construction
-  expression.  This works just fine for line-like operators like
-  ``line-to'' (\-\-) and ``curve-to'' (.. controls ... etc.); in such
-  expressions the first and last points are explicitly specified so
-  they are easily tracked.  But TikZ does not allow this sort of
-  chaining for e.g. ``plot'', which samples a specified domain of a
-  function and plots its graph.  Presumably finding the ``last point''
-  is a problem; maybe it is too expensive computationally.
-
-  Since our purpose is not to design a concrete ``Domain Specific
-  Language'' (DSL), we need not worry about efficiency.  We only care
-  about completeness and correctness (and simplicity and parsimony and
-  elegance etc.), so one of our requirements must be to handle such
-  cases.  ``Handle'' meaning provide the expressive resources needed
-  to explicitly specify their form and function.
-
-  The basic problem seems to boil down to the handling of closed and
-  open intervals.  Since the real numbers are ordered, any interval on
-  the real line is ordered; if it is also bounded, then we should be
-  able to find -- that is, express -- its extrema.  For closed
-  intervals, this is easy, since they are explicitly written down.
-  Open intervals are only slightly more complicated, since the end
-  points \textit{of} an open interval are not \textit{in} the
-  interval.  But by definition, the end points of an open interval on
-  the reals bound the interval, so we can treat them as limits, and
-  then use them as extrema - first and last points, or at least points
-  that will allow us to chain path construction expressions.
-
   %%%%%%%%
-  \section{Thirty-six Views of a Function}
-  \label{subs:functions}
+  \section{Thirty-six Views of Function}
+  \label{sect:thirtysix}
+
+  \begin{remark}
+    Why go on about functions?  Because we need the stuff discussed
+    here to make our account of the ``compositional pathways''
+    (i.e. graphics pipeline) clear and simple.
+  \end{remark}
+
 
   Hokusai's famous ``Thirty-six Views of Mt. Fuju'' demonstrated 36
   (actually 46, in the end) different ways of seeing the great
@@ -1429,13 +1452,23 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   function (that is, set) membership.
 
   %%%%%%%%
-  \subsection{Application}
+  \subsection{Application and Projection}
   \label{subs:}
 
   \begin{remark}
     What does a func applic expression express?  Different views:
     maybe a range value, maybe a relation bewteen dom and ran, maybe a
     computation, etc.
+  \end{remark}
+
+  \begin{remark}
+    Lambda: application involves substitution (alpha) and reduction
+    (beta).  Z: no substitution or reduction, just table lookup, so to
+    speak.  As a non-constructive logical op.  Application is very
+    basic in lambda, not so much in Z.  Actually strictly speaking
+    there is no such concept in Z; instead we have projection ops.  To
+    ``apply'' a function to an arg in Z is to project the second
+    member of the pair of which the arg is the first member.
   \end{remark}
 
   \begin{remark}
@@ -1460,8 +1493,25 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   ``interval application'' - application to each point of a subset of
   the domain.
 
+  A domain-restricted function is the same function intensionally, but
+  in Z, since a function is defined by its graph, it counts as a
+  different function.  Hence the need for a bit of terminology to
+  distinguish between functions with and without domain restriction.
+  This is really a matter of convenience.  It would be awkward to
+  always have to say ``the function f evaluated over the interval from
+  a to b, inclusive'' or ``f over interval a..b''.  When we just want
+  to refer to such narrowed functions we want something concise.
+
+  \begin{remark}
+    Relevance: a ``path'' in a graphic, e.g. a straight line from
+    (0,0) to (1,1), is (the image of) a function over an interval.  We
+    need a generic term for such critters.  It won't do to just say
+    ``function''; we need a term meaning ``function over a determinate
+    interval'' even where we don't need to know what that interval is.
+  \end{remark}
+
   {\todo Terminology: ``function over an interval'' = (domain)
-    restricted function?  narrow function?  path function?
+    restricted function?  narrow function?  path function?}
 
 
   %%%%%%%%
@@ -1528,6 +1578,18 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   If the graph of a function is a set of ordered pairs, then the curve
   of a function is its graph ``inked'' into a \cspace{}.
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Language}
+  \label{sect:lang}
+
+  Requirements for a graphics language: clear, concise, etc.
+  Simplicity, transparency, parsimony, elegance, etc.  Same
+  considerations apply to extension of a semantic metalanguage for
+  graphic languages, which is what we're doing here.  So our ``Z
+  Graphics Toolkit'' should have the same virtues.
+
+  Principle of parsimony in language design.  Only what you need, no redundancies, etc.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1963,7 +2025,7 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     eliminates all but the integers; fortunately this is easy to
     express in Z: \(\num\dres\real\).
 
-  When we get to curves and figures we will have the task of mapping
+    When we get to curves and figures we will have the task of mapping
   \end{remark}
 
   %%%%%%%%
@@ -2073,6 +2135,12 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Graphs}
   \label{sect:graphs}
+
+  \begin{remark}
+    Move the math bits (definitions) of this to
+    \hyperref[sect:thirtysix]{Thirty-six Views}.  Leave only what is
+    directly connected with \cspace{} stuff.
+  \end{remark}
 
   A graph is a set of points.  Informally, we might make a distinction
   between the graph of a function and the sort of graph we might
@@ -2906,481 +2974,481 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     \vspace{6pt}
     \noindent
     %%%%%%%%%%%%%%%%
-    {\defn Domain Projection}
-
-    \begin{gendef}[X,Y]
-      \sideset{_{\strut\_}^{\strut\_}}{}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power X \\
-      \where
-      \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{x\}
-    \end{gendef}
-
-    Domain projection of a function over an interval just returns the
-    set of elements of the domain of application for which \(f\) is
-    defined.  Less formally:
-    \[\displaystyle\sideset{_a^b}{}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ z\}\]
-
-    \vspace{6pt}
-    %%%%%%%%%%%%%%%%
-    \noindent
-    {\defn Range Projection}
-
-    \begin{gendef}[X,Y]
-      \sideset{}{_{\strut\_}^{\strut\_}}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power Y \\
-      \where
-      \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{f(x)\}
-      %% \forall f : X\fun Y, \forall x : X | x\in [a\ldots b], \exists y | f(x)=y @ \{f(x)\}
-    \end{gendef}
-
-    Range projection of a function over an interval applies the
-    function to every element \(x\) of the domain of application for
-    which it is defined and returns the union of the results \(f(x)\)
-    as a set.  Less formally:
-
-    \[\displaystyle\sideset{}{_a^b}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ f(z)\}\]
-
-    \vspace{6pt}
-    \noindent
-    {\defn Graph Projection}
-
-    \begin{gendef}[X,Y]
-      \sideset{_{\strut\_}}{^{\strut\_}}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power (X\cross Y)
-      \where
-      \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{(x,f(x))\}
-      %% \forall f : X\fun Y, \forall x : X | x\in [a\ldots b],\exists y|f(x)=y @ \{(x,f(x))\}
-    \end{gendef}
-
-    Graph projection of a function over an interval applies the
-    function to every element \(x\) of the domain of application for
-    which it is defined, forms the ordered pair \((x,f(x))\), and
-    returns the union of the results as a set of ordered pairs.  Less
-    formally:
-
-    \[\displaystyle\sideset{_a}{^b}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ (z, f(z))\}\]
-
-    \begin{commentary}
-      We could have defined these operators to work only for functions
-      defined on the entire interval.  However, our main concern is
-      with graphics languages, not mathematics per se, so we will
-      sometimes want to graph functions over intervals that may
-      contain ``bad'' elements.  For example, \(\lambda x.1/x\) is
-      undefined at \(0\), but we may want to graph it over the
-      interval \([-1\ldots 1]\).  So a better solution is to restrict
-      the domain to those values for which the function is defined;
-      that is what the clause ``(\(\exists y|f(x)=y\))'' does.  So in
-      this example, the result will effectively omit \(0\) from the
-      domain before applying the function.  This is good enough for
-      generating a visual representation of the function.
-
-      \emph{Reminder:} these definitions are not intended as
-      programming models.  In real-world graphics DSLs, plotting of
-      functions involves sampling the specified domain, usually at a
-      user-specified frequency.  In addition, many function values may
-      be far outside the range that can be shown on a piece of paper
-      or a screen; for example, values of \(\frac{1}{x}\) close to
-      zero.  Implementations may handle this situation in a variety of
-      ways.  But for the purpose of formally defining the logic and
-      mathematics of graphics languages we don't need to worry about
-      such stuff - we can and must leave such implementation details
-      to language designers and programmers.  (NB: we're not designing
-      a programming language here, we're extending a specification
-      notation.)
-    \end{commentary}
-
-    \begin{eg} Graph of \(\frac{1}{x}\) over the half-open interval
-      \((0\ldots 1]\): \(\sideset{_{(0}}{^{1]}}{\bigg|}\lambda x.\frac{1}{x} \)
-    \end{eg}
-
-    %%%%%%%%
-    \subsection{Coordinate}
-    \label{subs:coorddefn}
-
-    \[COORD == \real\]
-
-    %%%%%%%%
-    \subsection{Angle}
-    \label{subs:angledefn}
-
-    \[RADIAN == \real\]
-
-    \[DEGREE == \real\]
-
-    \begin{axdef}
-      degToRad : \real\fun\real \\
-      radToDeg : \real\fun\real
-      \where
-      \forall x : \real @ degToRad(x) = x\cdot\frac{\pi}{180} \\
-              {\small\strut} \\
-              \forall x : \real @ radToDeg(x) = x\cdot\frac{180}{\pi}
-    \end{axdef}
+        {\defn Domain Projection}
+
+        \begin{gendef}[X,Y]
+          \sideset{_{\strut\_}^{\strut\_}}{}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power X \\
+          \where
+          \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{x\}
+        \end{gendef}
+
+        Domain projection of a function over an interval just returns the
+        set of elements of the domain of application for which \(f\) is
+        defined.  Less formally:
+        \[\displaystyle\sideset{_a^b}{}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ z\}\]
+
+        \vspace{6pt}
+        %%%%%%%%%%%%%%%%
+        \noindent
+            {\defn Range Projection}
+
+            \begin{gendef}[X,Y]
+              \sideset{}{_{\strut\_}^{\strut\_}}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power Y \\
+              \where
+              \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{f(x)\}
+              %% \forall f : X\fun Y, \forall x : X | x\in [a\ldots b], \exists y | f(x)=y @ \{f(x)\}
+            \end{gendef}
+
+            Range projection of a function over an interval applies the
+            function to every element \(x\) of the domain of application for
+            which it is defined and returns the union of the results \(f(x)\)
+            as a set.  Less formally:
+
+            \[\displaystyle\sideset{}{_a^b}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ f(z)\}\]
+
+            \vspace{6pt}
+            \noindent
+                {\defn Graph Projection}
+
+                \begin{gendef}[X,Y]
+                  \sideset{_{\strut\_}}{^{\strut\_}}{\bigg|}\_ : X\cross X\cross(X\fun Y)\fun \power (X\cross Y)
+                  \where
+                  \forall a,b : X, f : X\fun Y| \forall x:X | x\in [a\ldots b]\ \exists y:Y|f(x)=y @ \{(x,f(x))\}
+                  %% \forall f : X\fun Y, \forall x : X | x\in [a\ldots b],\exists y|f(x)=y @ \{(x,f(x))\}
+                \end{gendef}
+
+                Graph projection of a function over an interval applies the
+                function to every element \(x\) of the domain of application for
+                which it is defined, forms the ordered pair \((x,f(x))\), and
+                returns the union of the results as a set of ordered pairs.  Less
+                formally:
+
+                \[\displaystyle\sideset{_a}{^b}{\bigg|} f(x) = \{\forall z:\real | z\in [a..b] @ (z, f(z))\}\]
+
+                \begin{commentary}
+                  We could have defined these operators to work only for functions
+                  defined on the entire interval.  However, our main concern is
+                  with graphics languages, not mathematics per se, so we will
+                  sometimes want to graph functions over intervals that may
+                  contain ``bad'' elements.  For example, \(\lambda x.1/x\) is
+                  undefined at \(0\), but we may want to graph it over the
+                  interval \([-1\ldots 1]\).  So a better solution is to restrict
+                  the domain to those values for which the function is defined;
+                  that is what the clause ``(\(\exists y|f(x)=y\))'' does.  So in
+                  this example, the result will effectively omit \(0\) from the
+                  domain before applying the function.  This is good enough for
+                  generating a visual representation of the function.
+
+                  \emph{Reminder:} these definitions are not intended as
+                  programming models.  In real-world graphics DSLs, plotting of
+                  functions involves sampling the specified domain, usually at a
+                  user-specified frequency.  In addition, many function values may
+                  be far outside the range that can be shown on a piece of paper
+                  or a screen; for example, values of \(\frac{1}{x}\) close to
+                  zero.  Implementations may handle this situation in a variety of
+                  ways.  But for the purpose of formally defining the logic and
+                  mathematics of graphics languages we don't need to worry about
+                  such stuff - we can and must leave such implementation details
+                  to language designers and programmers.  (NB: we're not designing
+                  a programming language here, we're extending a specification
+                  notation.)
+                \end{commentary}
+
+                \begin{eg} Graph of \(\frac{1}{x}\) over the half-open interval
+                  \((0\ldots 1]\): \(\sideset{_{(0}}{^{1]}}{\bigg|}\lambda x.\frac{1}{x} \)
+                \end{eg}
+
+                %%%%%%%%
+                \subsection{Coordinate}
+                \label{subs:coorddefn}
+
+                \[COORD == \real\]
+
+                %%%%%%%%
+                \subsection{Angle}
+                \label{subs:angledefn}
+
+                \[RADIAN == \real\]
+
+                \[DEGREE == \real\]
+
+                \begin{axdef}
+                  degToRad : \real\fun\real \\
+                  radToDeg : \real\fun\real
+                  \where
+                  \forall x : \real @ degToRad(x) = x\cdot\frac{\pi}{180} \\
+                          {\small\strut} \\
+                          \forall x : \real @ radToDeg(x) = x\cdot\frac{180}{\pi}
+                \end{axdef}
 
-    %%%%%%%%
-    \subsection{Point}
-    \label{subs:pointdefn}
+                %%%%%%%%
+                \subsection{Point}
+                \label{subs:pointdefn}
 
-    \[POINT == COORD\cross COORD \]
+                \[POINT == COORD\cross COORD \]
 
-    %%%%%%%%
-    \subsection{Identity Function}
-    \label{subs:idfndefn}
+                %%%%%%%%
+                \subsection{Identity Function}
+                \label{subs:idfndefn}
 
-    \begin{gendef}[X]
-      ident : X\fun X
-      \where
-      \forall x : X @ ident(x) = x
-    \end{gendef}
+                \begin{gendef}[X]
+                  ident : X\fun X
+                  \where
+                  \forall x : X @ ident(x) = x
+                \end{gendef}
 
-    %%%%%%%%
-    \subsection{Axis}
-    \label{subs:axisdefn}
+                %%%%%%%%
+                \subsection{Axis}
+                \label{subs:axisdefn}
 
-    An \textit{axis} is ...\marginnote{Do we need to explicitly list the carrier set (\R)?}
+                An \textit{axis} is ...\marginnote{Do we need to explicitly list the carrier set (\R)?}
 
-    \begin{schema}{Axis}
-      origin : COORD \\
-      offset : COORD \\
-      incidence : RADIAN \\
-      scale : COORD\fun COORD
-      \where
-      origin = (0,0) \\
-      offset = scale(origin)
-    \end{schema}
+                \begin{schema}{Axis}
+                  origin : COORD \\
+                  offset : COORD \\
+                  incidence : RADIAN \\
+                  scale : COORD\fun COORD
+                  \where
+                  origin = (0,0) \\
+                  offset = scale(origin)
+                \end{schema}
 
-    %%%%%%%%
-    \subsection{\CSpace}
-    \label{subs:csdefn}
+                %%%%%%%%
+                \subsection{\CSpace}
+                \label{subs:csdefn}
 
-    A \textit{\cspace} combines \RR{} and a sequence of axes.\marginnote{Do we need to explicitly list the carrier set (\Rtwo)?}
+                A \textit{\cspace} combines \RR{} and a sequence of axes.\marginnote{Do we need to explicitly list the carrier set (\Rtwo)?}
 
-    %%%%%%%%
-    \subsection{\DSpace}
-    \label{subs:dspacedefn}
+                %%%%%%%%
+                \subsection{\DSpace}
+                \label{subs:dspacedefn}
 
-    A \textit{\dspace} is a \cspace{} plus a set of figures.
+                A \textit{\dspace} is a \cspace{} plus a set of figures.
 
-    %%%%%%%%
-    \subsection{Curve}
-    \label{subs:curvedefn}
+                %%%%%%%%
+                \subsection{Curve}
+                \label{subs:curvedefn}
 
-    A curve is a set of points, that is, a graph.  We call it a curve
-    rather than a graph in order to stress the point that a curve
-    represents a spatial interpretation to the graph.
+                A curve is a set of points, that is, a graph.  We call it a curve
+                rather than a graph in order to stress the point that a curve
+                represents a spatial interpretation to the graph.
 
-    The symbol for the curve of a function over a range is \(Big|_a^b f\).
+                The symbol for the curve of a function over a range is \(Big|_a^b f\).
 
-    The advantage of having a specific curve operator is that it
-    allows us to concisely and clearly indicate the end points of a
-    curve.  Most function symbols do not provide such a convenience;
-    prominent exceptions are the summation sign \(\Sigma_a^b\) and the
-    integral sign \(\int_a^b\).  But to indicate the graph (curve) of
-    \(f\) from \(a\) to \(b\), some ad-hoc technique must be found,
-    e.g. \(f(x),\ x\in [0..1]\).  With \(\Big|_a^b\) we can just write:
+                The advantage of having a specific curve operator is that it
+                allows us to concisely and clearly indicate the end points of a
+                curve.  Most function symbols do not provide such a convenience;
+                prominent exceptions are the summation sign \(\Sigma_a^b\) and the
+                integral sign \(\int_a^b\).  But to indicate the graph (curve) of
+                \(f\) from \(a\) to \(b\), some ad-hoc technique must be found,
+                e.g. \(f(x),\ x\in [0..1]\).  With \(\Big|_a^b\) we can just write:
 
-    \[\bigg|_a^b \lambda x.2x \]
+                \[\bigg|_a^b \lambda x.2x \]
 
-    Why do we need this?  Aside from convenience and expressivity?
-    It allows us to specify figures (plotted functions)
-    in \dspace{}s.  For example, the line segment from the origin
-    to \((1,1)\):
+                Why do we need this?  Aside from convenience and expressivity?
+                It allows us to specify figures (plotted functions)
+                in \dspace{}s.  For example, the line segment from the origin
+                to \((1,1)\):
 
-    \[\bigg|_0^1 \lambda x.x\]
+                \[\bigg|_0^1 \lambda x.x\]
 
-    This gives us a concise notation that we can use to provide a
-    concise formal definition of e.g. TikZ's path operators like
-    ``--'', rectangle, etc.
+                This gives us a concise notation that we can use to provide a
+                concise formal definition of e.g. TikZ's path operators like
+                ``--'', rectangle, etc.
 
-    It will also help us express transform composition clearly; without
-    it that would be difficult.
+                It will also help us express transform composition clearly; without
+                it that would be difficult.
 
-    \begin{remark}
-      TODO: write formal Z definition of this operator.
-    \end{remark}
+                \begin{remark}
+                  TODO: write formal Z definition of this operator.
+                \end{remark}
 
 
-    %%%%%%%%
-    \subsection{Path}
-    \label{subs:pathdefn}
+                %%%%%%%%
+                \subsection{Path}
+                \label{subs:pathdefn}
 
-    A path is a function; it denotes a curve.  Techically, a path denotes
-    its graph.
+                A path is a function; it denotes a curve.  Techically, a path denotes
+                its graph.
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \section{Previous Work}
-    \label{sect:prevwork}
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                \section{Previous Work}
+                \label{sect:prevwork}
 
-    \epigraph{Immature poets imitate; mature poets steal}{TS Eliot}
+                \epigraph{Immature poets imitate; mature poets steal}{TS Eliot}
 
 
-    %%%%%%%%
-    \subsection{\TeX, \MF, and \MP}
+                %%%%%%%%
+                \subsection{\TeX, \MF, and \MP}
 
-    %%%%%%%%
-    \subsection{TikZ/PGF}
-    \label{subsec:tikz}
+                %%%%%%%%
+                \subsection{TikZ/PGF}
+                \label{subsec:tikz}
 
-    TikZ has by far the most sophisticated concept of coordinate space.
+                TikZ has by far the most sophisticated concept of coordinate space.
 
-    Canvas =  x,y with explicit "dimension" (empirical UOM)
+                Canvas =  x,y with explicit "dimension" (empirical UOM)
 
-    XYZ    =  x,y,z as "factors" multiplying unit vectors of length 1cm)
+                XYZ    =  x,y,z as "factors" multiplying unit vectors of length 1cm)
 
-    Canvas Polar = radius expressed in canvas system, i.e. with UOM
+                Canvas Polar = radius expressed in canvas system, i.e. with UOM
 
-    XYZ Polar  = radius and angle interpreted in as in xy csystem, i.e. factors (of unit vectors of 1cm) not dimensions
+                XYZ Polar  = radius and angle interpreted in as in xy csystem, i.e. factors (of unit vectors of 1cm) not dimensions
 
-    XY Polar (=XYZ Polar)
+                XY Polar (=XYZ Polar)
 
-    Barycentric  -  "In geometry, the barycentric coordinate system is a coordinate system in which the location of a point of a simplex (a triangle, tetrahedron, etc.) is specified as the center of mass, or barycenter, of masses placed at its vertices. Coordinates also extend outside the simplex, where one or more coordinates become negative."   (http://en.wikipedia.org/wiki/Barycentric\_coordinate\_system)
+                Barycentric  -  "In geometry, the barycentric coordinate system is a coordinate system in which the location of a point of a simplex (a triangle, tetrahedron, etc.) is specified as the center of mass, or barycenter, of masses placed at its vertices. Coordinates also extend outside the simplex, where one or more coordinates become negative."   (http://en.wikipedia.org/wiki/Barycentric\_coordinate\_system)
 
-    Node (=DOM?)  The cs:node is parasitic the more primitive empirical
-    systems.  It allows you to refer to a previously specified point by
-    specifying its name and an "anchor" or predefined location relative to
-    the node's position.  The anchor name effectively denotes a function
-    that computes a point, given the node' base point.
+                Node (=DOM?)  The cs:node is parasitic the more primitive empirical
+                systems.  It allows you to refer to a previously specified point by
+                specifying its name and an "anchor" or predefined location relative to
+                the node's position.  The anchor name effectively denotes a function
+                that computes a point, given the node' base point.
 
-    Tangent Like cs:node, cs:tangent supports specification of points by
-    refering to previously specified points.  A tangent function is
-    implicitly applied to the points refered to - actually a point and a
-    figure - and computes the tangent from the point to the figure.
+                Tangent Like cs:node, cs:tangent supports specification of points by
+                refering to previously specified points.  A tangent function is
+                implicitly applied to the points refered to - actually a point and a
+                figure - and computes the tangent from the point to the figure.
 
-    Custom -- the job of a custom cs is to compute x and y in the canvas
-    coordinate system.  So defining a custom coordinate system boils down
-    to specifying a transformation function.
+                Custom -- the job of a custom cs is to compute x and y in the canvas
+                coordinate system.  So defining a custom coordinate system boils down
+                to specifying a transformation function.
 
-    TikZ's XYZ system behaves like an abstract Euclidean system.  But it
-    does have default unit vectors that map it to canvas space.
+                TikZ's XYZ system behaves like an abstract Euclidean system.  But it
+                does have default unit vectors that map it to canvas space.
 
-    \begin{remark}
-      Compare Asymptote.  TikZ systems that allow unitless coordinate
-      specifications (e.g. XYZ) use an implicit empirical UOM (default:
-      1cm).  Any \cspace{} must eventually be mapped to a canvas.
-    \end{remark}
+                \begin{remark}
+                  Compare Asymptote.  TikZ systems that allow unitless coordinate
+                  specifications (e.g. XYZ) use an implicit empirical UOM (default:
+                  1cm).  Any \cspace{} must eventually be mapped to a canvas.
+                \end{remark}
 
-    Thus all TikZ cspaces are empirical; some seem to provide means of
-    expressing coordinates rather than establishing a distinct system;
-    e.g. node and tangent systems.  They don't (at least not all of them)
-    establish a primitive interpretation of (x,y).  For example, the
-    tangent cs does not provide a meaning for any (x,y); instead, it
-    allows you to specify a (tangent) point by reference to an already
-    specified pair of a shape and a point.
+                Thus all TikZ cspaces are empirical; some seem to provide means of
+                expressing coordinates rather than establishing a distinct system;
+                e.g. node and tangent systems.  They don't (at least not all of them)
+                establish a primitive interpretation of (x,y).  For example, the
+                tangent cs does not provide a meaning for any (x,y); instead, it
+                allows you to specify a (tangent) point by reference to an already
+                specified pair of a shape and a point.
 
-    In other words, cs:node and cs:tangent are derived systems, the others
-    primitive.  They are essentially transform functions using for
-    positioning.  They do not need units of measure since that is already
-    implicit in the points they reference.  Dunno about barycentric, which
-    I don't really grok yet.
+                In other words, cs:node and cs:tangent are derived systems, the others
+                primitive.  They are essentially transform functions using for
+                positioning.  They do not need units of measure since that is already
+                implicit in the points they reference.  Dunno about barycentric, which
+                I don't really grok yet.
 
-    Basically all the cspaces amount to positioning functions, which is
-    why they can be mixed in single path expressions.
+                Basically all the cspaces amount to positioning functions, which is
+                why they can be mixed in single path expressions.
 
-    Correction: they are NOT transform functions, in that they do not
-    transform the entire csystem; instead they are positioning functions,
-    designed to transform subsets of the space.
+                Correction: they are NOT transform functions, in that they do not
+                transform the entire csystem; instead they are positioning functions,
+                designed to transform subsets of the space.
 
-    Furthermore, TikZ's system allows for use of multiple coord systems in
-    one expression.  So you can write (0,0) -- (polar cs:
-    cs:angle=90,radius=1cm), using first the xyz (Id func) system then the
-    polar system (a positioning function) to draw a line from the origin
-    to (0,1), unit=cm.
+                Furthermore, TikZ's system allows for use of multiple coord systems in
+                one expression.  So you can write (0,0) -- (polar cs:
+                cs:angle=90,radius=1cm), using first the xyz (Id func) system then the
+                polar system (a positioning function) to draw a line from the origin
+                to (0,1), unit=cm.
 
-    Note that the xyz cs seems to be the default for (x,y) syntax, where x
-    and y are dimensionless.
+                Note that the xyz cs seems to be the default for (x,y) syntax, where x
+                and y are dimensionless.
 
-    %%%%%%%%
-    \subsection{Postscript}
+                %%%%%%%%
+                \subsection{Postscript}
 
-    Figure specification as executable program.
+                Figure specification as executable program.
 
-    User space, device space
+                User space, device space
 
-    Units
+                Units
 
-    %%%%%%%%
-    \subsection{PDF}
+                %%%%%%%%
+                \subsection{PDF}
 
-    Ref:  PDF32000-1:2008 (\url{http://www.adobe.com/devnet/pdf/pdf\_reference.html}
+                Ref:  PDF32000-1:2008 (\url{http://www.adobe.com/devnet/pdf/pdf\_reference.html}
 
-    ``canvas''
+                ``canvas''
 
-    ``[A] PDF content stream is not a program to be interpreted; rather, it is a static description of a sequence of graphics objects.'' p.110
+                ``[A] PDF content stream is not a program to be interpreted; rather, it is a static description of a sequence of graphics objects.'' p.110
 
-    Five ``graphics objects'': path, text, external, inline image, shading
+                Five ``graphics objects'': path, text, external, inline image, shading
 
-    Add: clipping path
+                Add: clipping path
 
-    ``A shading object describes a geometric shape whose colour is an arbitrary function of position within the shape. (A shading can also be treated as a colour when painting other graphics objects; it is not considered to be a separate graphics object in that case.)'' (p. 111)
+                ``A shading object describes a geometric shape whose colour is an arbitrary function of position within the shape. (A shading can also be treated as a colour when painting other graphics objects; it is not considered to be a separate graphics object in that case.)'' (p. 111)
 
 
-    8.3 Coordinate Systems (p. 114)
+                8.3 Coordinate Systems (p. 114)
 
-    ``Coordinate systems define the canvas on which all painting occurs.'' (p.114)
+                ``Coordinate systems define the canvas on which all painting occurs.'' (p.114)
 
-    ``A coordinate space is determined by the following properties with respect to the current page:
-    • The location of the origin
-    • The orientation of the x and y axes
-    • The lengths of the units along each axis'' p.114
+                ``A coordinate space is determined by the following properties with respect to the current page:
+                • The location of the origin
+                • The orientation of the x and y axes
+                • The lengths of the units along each axis'' p.114
 
-    Device space
+                Device space
 
-    User space
-    ``Coordinates in user space (as in any other coordinate space) may be specified as either integers or real numbers, and the unit size in default user space does not constrain positions to any arbitrary grid. The resolution of coordinates in user space is not related in any way to the resolution of pixels in device space.'' p.115
+                User space
+                ``Coordinates in user space (as in any other coordinate space) may be specified as either integers or real numbers, and the unit size in default user space does not constrain positions to any arbitrary grid. The resolution of coordinates in user space is not related in any way to the resolution of pixels in device space.'' p.115
 
-    Transforms: translation, scaling, rotation, skewing
+                Transforms: translation, scaling, rotation, skewing
 
 
-    ``The transformation from user space to device space is defined by the current transformation matrix (CTM), an element of the PDF graphics state...'' p.116
+                ``The transformation from user space to device space is defined by the current transformation matrix (CTM), an element of the PDF graphics state...'' p.116
 
-    Other coordinate spaces: text space (w/text matrix), glyph space
-    (w/font matrix), image space (w/out transforms), form space (matrix),
-    pattern space (matrix), 3D stuff
+                Other coordinate spaces: text space (w/text matrix), glyph space
+                (w/font matrix), image space (w/out transforms), form space (matrix),
+                pattern space (matrix), 3D stuff
 
-    See figure 12, p. 117
+                See figure 12, p. 117
 
-    %%%%%%%%
-    \subsection{CSS}
+                %%%%%%%%
+                \subsection{CSS}
 
-    \url{http://www.w3.org/TR/CSS2/box.html}
+                \url{http://www.w3.org/TR/CSS2/box.html}
 
-    \href{http://www.w3.org/TR/CSS2/visuren.html}{Visual Formatting Model}
+                \href{http://www.w3.org/TR/CSS2/visuren.html}{Visual Formatting Model}
 
-    \href{http://www.w3.org/TR/CSS2/visuren.html#containing-block}{Containing
-      Block} ``In CSS 2.1, many box positions and sizes are calculated
-    with respect to the edges of a rectangular box called a containing
-    block. In general, generated boxes act as containing blocks for
-    descendant boxes; we say that a box "establishes" the containing block
-    for its descendants. The phrase "a box's containing block" means "the
-    containing block in which the box lives," not the one it
-    generates....Each box is given a position with respect to its
-    containing block, but it is not confined by this containing block; it
-    may overflow.''
+                \href{http://www.w3.org/TR/CSS2/visuren.html#containing-block}{Containing
+                  Block} ``In CSS 2.1, many box positions and sizes are calculated
+                with respect to the edges of a rectangular box called a containing
+                block. In general, generated boxes act as containing blocks for
+                descendant boxes; we say that a box "establishes" the containing block
+                for its descendants. The phrase "a box's containing block" means "the
+                containing block in which the box lives," not the one it
+                generates....Each box is given a position with respect to its
+                containing block, but it is not confined by this containing block; it
+                may overflow.''
 
-    So the ``containing block'' is both geometric and structure.  CSS
-    generally maps geometric structure to content structure directly.
+                So the ``containing block'' is both geometric and structure.  CSS
+                generally maps geometric structure to content structure directly.
 
-    \href{http://www.w3.org/TR/CSS2/visuren.html#normal-flow}{9.4 Normal Flow}
+                \href{http://www.w3.org/TR/CSS2/visuren.html#normal-flow}{9.4 Normal Flow}
 
-    CSS \href{http://www.w3.org/TR/CSS2/media.html}{media types}; \href{http://www.w3.org/TR/css-print/}{CSS Print Profile}
+                CSS \href{http://www.w3.org/TR/CSS2/media.html}{media types}; \href{http://www.w3.org/TR/css-print/}{CSS Print Profile}
 
-    \href{http://www.w3.org/TR/css3-page/}{CSS Paged Media Module Level 3}
+                \href{http://www.w3.org/TR/css3-page/}{CSS Paged Media Module Level 3}
 
-    \href{http://www.w3.org/TR/css3-page/#page-model}{The Page Model}
+                \href{http://www.w3.org/TR/css3-page/#page-model}{The Page Model}
 
-    %%%%%%%%
-    \subsection{SVG}
+                %%%%%%%%
+                \subsection{SVG}
 
-    \url{http://www.w3.org/TR/SVG11/coords.html}
+                \url{http://www.w3.org/TR/SVG11/coords.html}
 
-    Viewport space, user spaces
+                Viewport space, user spaces
 
-    %%%%%%%%
-    \subsection{HTML5 Canvas}
-    \label{subs:html5}
+                %%%%%%%%
+                \subsection{HTML5 Canvas}
+                \label{subs:html5}
 
-    \url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
+                \url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
 
-    ``The canvas element provides scripts with a resolution-dependent bitmap canvas, which can be used for rendering graphs, game graphics, art, or other visual images on the fly.'' \url{http://www.w3.org/TR/html5/scripting-1.html#the-canvas-element}
+                ``The canvas element provides scripts with a resolution-dependent bitmap canvas, which can be used for rendering graphs, game graphics, art, or other visual images on the fly.'' \url{http://www.w3.org/TR/html5/scripting-1.html#the-canvas-element}
 
-    ``The CanvasRenderingContext2D 2D rendering context represents a flat linear Cartesian surface whose origin (0,0) is at the top left corner, with the coordinate space having x values increasing when going right, and y values increasing when going down. The x-coordinate of the right-most edge is equal to the width of the rendering context's scratch bitmap in CSS pixels; similarly, the y-coordinate of the bottom-most edge is equal to the height of the rendering context's scratch bitmap in CSS pixels.
+                ``The CanvasRenderingContext2D 2D rendering context represents a flat linear Cartesian surface whose origin (0,0) is at the top left corner, with the coordinate space having x values increasing when going right, and y values increasing when going down. The x-coordinate of the right-most edge is equal to the width of the rendering context's scratch bitmap in CSS pixels; similarly, the y-coordinate of the bottom-most edge is equal to the height of the rendering context's scratch bitmap in CSS pixels.
 
-    The size of the coordinate space does not necessarily represent the size of the actual bitmaps that the user agent will use internally or during rendering. On high-definition displays, for instance, the user agent may internally use bitmaps with two device pixels per unit in the coordinate space, so that the rendering remains at high quality throughout. Anti-aliasing can similarly be implemented using over-sampling with bitmaps of a higher resolution than the final image on the display.''\url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
+                The size of the coordinate space does not necessarily represent the size of the actual bitmaps that the user agent will use internally or during rendering. On high-definition displays, for instance, the user agent may internally use bitmaps with two device pixels per unit in the coordinate space, so that the rendering remains at high quality throughout. Anti-aliasing can similarly be implemented using over-sampling with bitmaps of a higher resolution than the final image on the display.''\url{http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html}
 
-    \url{http://diveintohtml5.info/canvas.html}
+                \url{http://diveintohtml5.info/canvas.html}
 
-    \href{https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/HTML-canvas-guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010542-CH1-SW1}{Safari HTML5 Canvas Guide}
+                \href{https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/HTML-canvas-guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010542-CH1-SW1}{Safari HTML5 Canvas Guide}
 
-    ``The canvas is a two-dimensional grid. The coordinate (0, 0) is at the upper-left corner of the canvas. Along the X-axis, values increase towards the right edge of the canvas. Along the Y-axis, values increase towards the bottom edge of the canvas.'' (\url{http://diveintohtml5.info/canvas.html})
+                ``The canvas is a two-dimensional grid. The coordinate (0, 0) is at the upper-left corner of the canvas. Along the X-axis, values increase towards the right edge of the canvas. Along the Y-axis, values increase towards the bottom edge of the canvas.'' (\url{http://diveintohtml5.info/canvas.html})
 
-    Each canvas element has a ``drawing context''.
+                Each canvas element has a ``drawing context''.
 
-    ``One of the most exciting features of HTML5 is the <canvas> element that can be used to draw vector graphics...'' \url{http://www.1stwebdesigner.com/design/creative-ways-use-html5-canvas/}
+                ``One of the most exciting features of HTML5 is the <canvas> element that can be used to draw vector graphics...'' \url{http://www.1stwebdesigner.com/design/creative-ways-use-html5-canvas/}
 
 
-    \href{http://msdn.microsoft.com/en-us/hh534406.aspx}{The Developer’s Guide to HTML5 Canvas}
+                \href{http://msdn.microsoft.com/en-us/hh534406.aspx}{The Developer’s Guide to HTML5 Canvas}
 
-    \href{http://msdn.microsoft.com/en-us/library/ff975057.aspx}{CanvasRenderingContext2D object} - methods and props
+                \href{http://msdn.microsoft.com/en-us/library/ff975057.aspx}{CanvasRenderingContext2D object} - methods and props
 
-    ``To draw on a canvas, you need to reference the context of the canvas.  The context gives you access to the 2D properties and methods that allow you to draw and manipulate images on a canvas element.'' \url{http://msdn.microsoft.com/en-us/hh534406.aspx}
+                ``To draw on a canvas, you need to reference the context of the canvas.  The context gives you access to the 2D properties and methods that allow you to draw and manipulate images on a canvas element.'' \url{http://msdn.microsoft.com/en-us/hh534406.aspx}
 
-    ``everything in the canvas is a pixel.'' http://msdn.microsoft.com/en-us/hh534406.aspx
+                ``everything in the canvas is a pixel.'' http://msdn.microsoft.com/en-us/hh534406.aspx
 
-    ``The canvas 2D API is an object that allows you to draw and
-    manipulate images and graphics on a canvas element.  To reference the context of the canvas, you call getContext, which is a method on the canvas element.  It has one parameter, which currently is 2d.  Here’s the snippet of code for referencing the context.
+                ``The canvas 2D API is an object that allows you to draw and
+                manipulate images and graphics on a canvas element.  To reference the context of the canvas, you call getContext, which is a method on the canvas element.  It has one parameter, which currently is 2d.  Here’s the snippet of code for referencing the context.
 
-    ``Each canvas has its own context, so if you’re page contains multiple canvas elements; you must have a reference to each individual context that you want to work with.'' \url{Canvas 2D
-      API}  Correction: not an ``object'', a mathematical structure.
+                ``Each canvas has its own context, so if you’re page contains multiple canvas elements; you must have a reference to each individual context that you want to work with.'' \url{Canvas 2D
+                  API}  Correction: not an ``object'', a mathematical structure.
 
-    \href{http://blogs.msdn.com/b/ie/archive/2011/04/22/thoughts-on-when-to-use-canvas-and-svg.aspx}{Thoughts on when to use Canvas and SVG}
+                \href{http://blogs.msdn.com/b/ie/archive/2011/04/22/thoughts-on-when-to-use-canvas-and-svg.aspx}{Thoughts on when to use Canvas and SVG}
 
-    %%%%%%%%
-    \subsection{OpenGL}
-    \label{subs:opengl}
+                %%%%%%%%
+                \subsection{OpenGL}
+                \label{subs:opengl}
 
 
-    \href{http://www.matrix44.net/cms/notes/opengl-3d-graphics/coordinate-systems-in-opengl}{Coordinate Systems in OpenGL}
+                \href{http://www.matrix44.net/cms/notes/opengl-3d-graphics/coordinate-systems-in-opengl}{Coordinate Systems in OpenGL}
 
-    ``There are multiple coordinate Systems involved in 3D Graphics:
+                ``There are multiple coordinate Systems involved in 3D Graphics:
 
-    Object Space
-    World Space (aka Model Space)
-    Camera Space (aka Eye Space or View Space)
-    Screen Space (aka Clip Space)''
+                Object Space
+                World Space (aka Model Space)
+                Camera Space (aka Eye Space or View Space)
+                Screen Space (aka Clip Space)''
 
-    \url{http://www.cse.ohio-state.edu/~parent/classes/581/Lectures/4.2DviewingHandout.pdf}
+                \url{http://www.cse.ohio-state.edu/~parent/classes/581/Lectures/4.2DviewingHandout.pdf}
 
-    %%%%%%%%
-    \subsection{OS X/iOS Drawing}
+                %%%%%%%%
+                \subsection{OS X/iOS Drawing}
 
-    \href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html}{Quartz 2D}
+                \href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html}{Quartz 2D}
 
-    \href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html#//apple\_ref/doc/uid/TP30001066-CH202-CJBBAEEC}{Quartz 2D Coordinate Systems}
+                \href{https://developer.apple.com/library/mac/documentation/graphicsimaging/conceptual/drawingwithquartz2d/dq\_overview/dq\_overview.html#//apple\_ref/doc/uid/TP30001066-CH202-CJBBAEEC}{Quartz 2D Coordinate Systems}
 
-    Cocoa (OS X):  \url{https://developer.apple.com/library/mac/documentation/cocoa/conceptual/CocoaDrawingGuide/Transforms/Transforms.html#//apple\_ref/doc/uid/TP40003290-CH204-BCIDJJBI}
+                Cocoa (OS X):  \url{https://developer.apple.com/library/mac/documentation/cocoa/conceptual/CocoaDrawingGuide/Transforms/Transforms.html#//apple\_ref/doc/uid/TP40003290-CH204-BCIDJJBI}
 
-    iOS:  ??
+                iOS:  ??
 
-    %%%%%%%%
-    \subsection{Android Drawing}
+                %%%%%%%%
+                \subsection{Android Drawing}
 
-    \href{http://developer.android.com/guide/topics/graphics/2d-graphics.html}{Canvas and Drawables}
+                \href{http://developer.android.com/guide/topics/graphics/2d-graphics.html}{Canvas and Drawables}
 
-    Transform operators are in the API ref, but the dev guides don't say much about it.
+                Transform operators are in the API ref, but the dev guides don't say much about it.
 
-    %%%%%%%%
-    \subsection{Direct3D, Direct2D}
-    \label{subs:direct3d}
+                %%%%%%%%
+                \subsection{Direct3D, Direct2D}
+                \label{subs:direct3d}
 
 
-    \href{http://msdn.microsoft.com/en-us/library/dd370990%28VS.85%29.aspx}{Direct2D}
+                \href{http://msdn.microsoft.com/en-us/library/dd370990%28VS.85%29.aspx}{Direct2D}
 
-      \href{http://msdn.microsoft.com/en-us/library/dd756655(v=vs.85).aspx#the_direct2d_coordinate_space}{The Direct2D Coordinate Space}
+                  \href{http://msdn.microsoft.com/en-us/library/dd756655(v=vs.85).aspx#the_direct2d_coordinate_space}{The Direct2D Coordinate Space}
 
-      \href{http://msdn.microsoft.com/en-us/library/windows/desktop/ff476345(v=vs.85).aspx}{Programming Guide for Direct3D}
+                  \href{http://msdn.microsoft.com/en-us/library/windows/desktop/ff476345(v=vs.85).aspx}{Programming Guide for Direct3D}
 
-      \href{http://msdn.microsoft.com/en-us/library/windows/desktop/bb324489(v=vs.85).aspx}{3D coordinate systems and geometry}
+                  \href{http://msdn.microsoft.com/en-us/library/windows/desktop/bb324489(v=vs.85).aspx}{3D coordinate systems and geometry}
 
-      %%%%%%%%
-      \subsection{R}
-      \label{subs:r}
+                  %%%%%%%%
+                  \subsection{R}
+                  \label{subs:r}
 
-      Each ``plotting region'' has its own coordinate space.
+                  Each ``plotting region'' has its own coordinate space.
 
-      %%%%%%%%
-      \subsection{Octave}
-      \label{subs:octave}
+                  %%%%%%%%
+                  \subsection{Octave}
+                  \label{subs:octave}
 
-      Graphic objects: figure, axes, line, text, patch, surface, text and image.
+                  Graphic objects: figure, axes, line, text, patch, surface, text and image.
 
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      \section{Bibliography}
-      \label{sect:bib}
+                  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                  \section{Bibliography}
+                  \label{sect:bib}
 
-      %% \addcontentsline{toc}{chapter}{Bibliography}
-      \bibliography{space.bib% don't omit the %!
-        %% ../bib/logic.bib%
-        %% ,../bib/math.bib%
-        %% ,../bib/stats.bib%
-      }
-      \bibliographystyle{plainnat}
-      %% \printbibliography[heading=none]
+                  %% \addcontentsline{toc}{chapter}{Bibliography}
+                  \bibliography{space.bib% don't omit the %!
+                    %% ../bib/logic.bib%
+                    %% ,../bib/math.bib%
+                    %% ,../bib/stats.bib%
+                  }
+                  \bibliographystyle{plainnat}
+                  %% \printbibliography[heading=none]
   \end{appendices}
 
 \end{document}

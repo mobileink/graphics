@@ -720,6 +720,20 @@ of adequacy outlined above.
 \subsection{Math and Logic}
 \label{subs:mathlogic}
 
+%%%%%%%%
+\subsection{Topology}
+\label{subs:topology}
+
+``Topology (from the Greek τόπος, "place", and λόγος, "study") is the
+mathematical study of shapes and spaces.  It is an area of mathematics
+concerned with the properties of space that are preserved under
+continuous deformations including stretching and bending, but not
+tearing or gluing. This includes such properties as connectedness,
+continuity and boundary.'' \url{http://en.wikipedia.org/wiki/Topology}
+
+That sounds like a pretty good description of what a graphics language
+has to deal with.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Technical Preliminaries}
 \label{sect:prelims}
@@ -904,50 +918,50 @@ point'' datum.
   the more general pt:  expressivity, with and without mutable data.
 \end{remark}
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  \section{(In)Finity}
-  \label{sect:}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{(In)Finity}
+\label{sect:}
 
-  \begin{todo}
-    TODO: We need to say something about uncountably infinite sets and
-    limits, since we will want to plot graphs of functions over open
-    intervals.  For example, \(\lambda x.\frac{1}{x}\) over \((0\ldots
-    1]\).  Unfortunately I don't recall how Z handles this.
-  \end{todo}
+\begin{todo}
+  TODO: We need to say something about uncountably infinite sets and
+  limits, since we will want to plot graphs of functions over open
+  intervals.  For example, \(\lambda x.\frac{1}{x}\) over \((0\ldots
+  1]\).  Unfortunately I don't recall how Z handles this.
+\end{todo}
 
-  TikZ supports ``chains'' of path construction expressions.  It
-  manages this by maintaining a ``current point'' datum, which it
-  updates with the last point used in the path construction
-  expression.  This works just fine for line-like operators like
-  ``line-to'' (\-\-) and ``curve-to'' (.. controls ... etc.); in such
-  expressions the first and last points are explicitly specified so
-  they are easily tracked.  But TikZ does not allow this sort of
-  chaining for e.g. ``plot'', which samples a specified domain of a
-  function and plots its graph.  Presumably finding the ``last point''
-  is a problem; maybe it is too expensive computationally.
+TikZ supports ``chains'' of path construction expressions.  It
+manages this by maintaining a ``current point'' datum, which it
+updates with the last point used in the path construction
+expression.  This works just fine for line-like operators like
+``line-to'' (\-\-) and ``curve-to'' (.. controls ... etc.); in such
+expressions the first and last points are explicitly specified so
+they are easily tracked.  But TikZ does not allow this sort of
+chaining for e.g. ``plot'', which samples a specified domain of a
+function and plots its graph.  Presumably finding the ``last point''
+is a problem; maybe it is too expensive computationally.
 
-  Since our purpose is not to design a concrete ``Domain Specific
-  Language'' (DSL), we need not worry about efficiency.  We only care
-  about completeness and correctness (and simplicity and parsimony and
-  elegance etc.), so one of our requirements must be to handle such
-  cases.  ``Handle'' meaning provide the expressive resources needed
-  to explicitly specify their form and function.
+Since our purpose is not to design a concrete ``Domain Specific
+Language'' (DSL), we need not worry about efficiency.  We only care
+about completeness and correctness (and simplicity and parsimony and
+elegance etc.), so one of our requirements must be to handle such
+cases.  ``Handle'' meaning provide the expressive resources needed
+to explicitly specify their form and function.
 
-  The basic problem seems to boil down to the handling of closed and
-  open intervals.  Since the real numbers are ordered, any interval on
-  the real line is ordered; if it is also bounded, then we should be
-  able to find -- that is, express -- its extrema.  For closed
-  intervals, this is easy, since they are explicitly written down.
-  Open intervals are only slightly more complicated, since the end
-  points \textit{of} an open interval are not \textit{in} the
-  interval.  But by definition, the end points of an open interval on
-  the reals bound the interval, so we can treat them as limits, and
-  then use them as extrema - first and last points, or at least points
-  that will allow us to chain path construction expressions.
+The basic problem seems to boil down to the handling of closed and
+open intervals.  Since the real numbers are ordered, any interval on
+the real line is ordered; if it is also bounded, then we should be
+able to find -- that is, express -- its extrema.  For closed
+intervals, this is easy, since they are explicitly written down.
+Open intervals are only slightly more complicated, since the end
+points \textit{of} an open interval are not \textit{in} the
+interval.  But by definition, the end points of an open interval on
+the reals bound the interval, so we can treat them as limits, and
+then use them as extrema - first and last points, or at least points
+that will allow us to chain path construction expressions.
 
-  Again, how this translates into real-world languages is a separate
-  issue.  What matters is that we have the resources to express the
-  relevant ideas in the appropriate form (clear, simple, etc.).
+Again, how this translates into real-world languages is a separate
+issue.  What matters is that we have the resources to express the
+relevant ideas in the appropriate form (clear, simple, etc.).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Z Notation}
@@ -1026,6 +1040,29 @@ We will worry about defining these later; for now, our task is to make
 the Z notation and techniques clear.
 
 %%%%%%%%
+\subsection{Set Expressions}
+\label{subs:setcomp}
+
+\begin{remark}
+  Extensional v. intensional.  Intensional set definitions are
+  expressed using set comprehension notation. A/K/A set construction
+  notation.  Etc.
+\end{remark}
+
+%%%%%%%%
+\subsection{Relations}
+\label{subs:relations}
+
+\begin{remark}
+  Relations have a domain and a range.  This is true of even a single
+  point.  In particular, it is true of a pair of points; given the end
+  points of a curve, we can project their domain and range.  Saying
+  ``the domain/range of a point interval'' is much more convenient
+  than saying ``the set of first/second points of the endpoints of the
+  interval''.
+\end{remark}
+
+%%%%%%%%
 \subsection{Functions in Z}
 \label{subs:zfuncs}
 
@@ -1051,15 +1088,6 @@ detail in section \ref{sect:funcs}.
 
 For now let's concentrate on the expressive resources of Z regarding
 functions.  Z provides many different ways to express functions.
-
-%%%%%%%%
-\subsection{Set Comprehension}
-\label{subs:setcomp}
-
-\begin{remark}
-  Intensional set definitions are expressed using set comprehension
-  notation. A/K/A set construction notation.  Etc.
-\end{remark}
 
 %%%%%%%%
 \subsection{Sequences}
@@ -1290,25 +1318,27 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \subsection{Abstraction}
   \label{subs:lambda}
 
-\begin{remark}
-  Start with concept of schema with vars.  Then substitute const syms
-  for vars to ``realize'' or ``instantiate'' scheme.  Thus
-  abstraction.
+  \begin{remark}
+    Start with concept of schema with vars.  Then substitute const syms
+    for vars to ``realize'' or ``instantiate'' scheme.  Thus
+    abstraction.
 
-  Two key ideas: one: open formula does not denote a function, you
-  have to add lambda op \textit{and variables} to get that.  Two: the
-  formula part of a lambda abstraction serves as schema pattern,
-  allowing application via substitution.
+    Two key ideas: one: open formula does not denote a function, you
+    have to add lambda op \textit{and variables} to get that.  Two: the
+    formula part of a lambda abstraction serves as schema pattern,
+    allowing application via substitution.
 
-  Lambda abstraction notation -- substitution notation \(M[x:=c]\)
+    Implied: universal quantification over the domain of substitutions.
 
-  Schema and substitution are the concepts that give us abstraction.
+    Lambda abstraction notation -- substitution notation \(M[x:=c]\)
 
-  If we add domain restrictions on substitution we get a typed lambda
-  calculus.
+    Schema and substitution are the concepts that give us abstraction.
+
+    If we add domain restrictions on substitution we get a typed lambda
+    calculus.
 
 
-\end{remark}
+  \end{remark}
 
   %%%%%%%%
   \subsection{Application}
@@ -1346,6 +1376,14 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     (i.e. graphics pipeline) clear and simple.
   \end{remark}
 
+  \begin{remark}
+    In Z's set theoretic world, a function just \emph{is} a set of
+    ordered pairs.  Lambda's view on functions comes a little closer
+    to the intuitive notion of function as office or service.  It
+    doesn't matter what a function \emph{is}; what matters is whether
+    we can compute it or not.  So a function in lambda-world is a kind
+    of capability or capacity.
+  \end{remark}
 
   Hokusai's famous ``Thirty-six Views of Mt. Fuju'' demonstrated 36
   (actually 46, in the end) different ways of seeing the great
@@ -1442,18 +1480,18 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \subsection{Domains: Discrete \& Continuous}
   \label{subs:}
 
-    \begin{todo}
-      Deal with open v. closed intervals.  One possibility is to
-      include [ ] or ( ) with the \(a,b\) arguments.  But that's
-      relatively clumsy and adds a lot of clutter to the definitions.
-      For the latter, we can default to closed intervals and just
-      advise to reader to read the definitions appropriately for the
-      other cases (i.e. replace [] in your imagination).  Maybe the
-      thing to do is provide examples but only provide formal
-      definition for the default.
+  \begin{todo}
+    Deal with open v. closed intervals.  One possibility is to
+    include [ ] or ( ) with the \(a,b\) arguments.  But that's
+    relatively clumsy and adds a lot of clutter to the definitions.
+    For the latter, we can default to closed intervals and just
+    advise to reader to read the definitions appropriately for the
+    other cases (i.e. replace [] in your imagination).  Maybe the
+    thing to do is provide examples but only provide formal
+    definition for the default.
 
-      Possibilities:  \(\sideset{_{[a}}{^{b]}}{\bigg|}f \) \quad \(\sideset{_{(a}}{^{b)}}{\bigg|}f\) \ etc.
-    \end{todo}
+    Possibilities:  \(\sideset{_{[a}}{^{b]}}{\bigg|}f \) \quad \(\sideset{_{(a}}{^{b)}}{\bigg|}f\) \ etc.
+  \end{todo}
 
   %%%%%%%%
   \subsection{Function definition}
@@ -1651,6 +1689,29 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
 
   If the graph of a function is a set of ordered pairs, then the curve
   of a function is its graph ``inked'' into a \cspace{}.
+
+  \begin{remark}
+    ``inked'' = embedded
+  \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Random Variables}
+  \label{sect:rvs}
+
+  \begin{remark}
+    RVs?  Huh?  We will need these when it comes time to talk about
+    data/content.  If we want to support data visualization
+    (data-driven graphics, etc.) then we will have to deal with sets
+    of data points--graphs--whose function is unknown, or which may
+    not be members of the graph of any function.  Regression etc. -
+    critical role of concept of error, curve fitting etc.  The best
+    way to deal with this is in terms of random variables (with
+    unknown probability distributions).  A complete account of this
+    approach to dealing with data is beyond the scope of this paper,
+    but we should at least sketch the idea.
+  \end{remark}
+
+  Mathematically speaking, a random variable is a function.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Language}
@@ -1957,6 +2018,48 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   \subsection{Unit}
   \label{subs:axisunit}
 
+  %%%%%%%%
+  \subsection{Interval}
+  \label{subs:axisinterval}
+
+  By default the root set of each axis is \((-\infty\upto\infty)\).
+  But graphic images are finite; we can only ``draw'' a portion of the
+  curve of any function.  One way to manage this is to associate an
+  interval with each function to be embedded.  Another way is to
+  associate the interval with the axes.  Which is basically a way of
+  generalizing over the embedded function.  If we have say four
+  embedded functions, we can attach the desired domain interval to the
+  axes instead of attaching the same interval to each function
+  individually.
+
+  We could also associate such intervals with \cspace{}s directly, but
+  since we would have to indicate which interval goes with which axis
+  anyway, we might as well attach them directly to the axes.
+
+  \begin{remark}
+    NB: the interval is neither domain nor range, just an interval on
+    \R{} (or \Z in the case of discrete \cspace{}s.
+  \end{remark}
+
+  The carrier (root?) set of \Rtwo is a set of ordered pairs; that is
+  relation (not a function).  It thus has a domain and a range.  We
+  place restrictions on this set by setting axis intervals.
+
+  {\todo Express this using domain/range restriction notation.}
+
+  \begin{remark}
+    Why?  To restrict the extent of curves (e.g. \(\lambda x.x^2\)) to
+    a subset of \R{}, e.g. \([-1\upto 1]\).  The default is
+    \([-\infty\upto\infty]\) for all axes.
+  \end{remark}
+
+  This allows us to put limits on the \cspace{} instead of the
+  individual curves/figures.
+
+  An ``unrestricted'' function embedded in a restricted \cspace{}
+  becomes (is mapped to) a domain-restricted function.  The domain
+  restriction on the \cspace{} also restricts the domain of its
+  embedded functions.
 
   %%%%%%%%
   \subsection{Polarity}
@@ -2212,6 +2315,19 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     history of perspective drawing as a way of organizing space and how
     it changed our ways of thinking.  Maybe something from Bachelard's
     Poetics of Space?}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Topologies}
+  \label{sect:topologies}
+
+  ``The definition of a topological space relies only upon set theory
+  and is the most general notion of a mathematical "space" that allows
+  for the definition of concepts such as continuity, connectedness,
+  and convergence. Other spaces, such as manifolds and metric spaces,
+  are specializations of topological spaces with extra structures or
+  constraints. Being so general, topological spaces are a central
+  unifying notion and appear in virtually every branch of modern
+  mathematics.'' \url{http://en.wikipedia.org/wiki/Topological\_spaces}
 
   %%%%%%%%%%%%%%%%
   \section{Transforms}
@@ -2562,8 +2678,8 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   the same graph can take on a very different appearance in different
   spaces.  The graph of a straight line, for example, doesn't look
   very straight when plotted in a polar \cspace{}.  To get from graph
-  to image, we have to bind the graph to a definite \cspace{}.  When
-  we do this, we end up with a \textit{curve}, which is the
+  to image, we have to \emph{embed} the graph in a definite \cspace{}.
+  When we do this, we end up with a \textit{curve}, which is the
   \textit{image of the graph under the \cspace{}}.  Curves are
   discussed in the next section.
 
@@ -2571,12 +2687,62 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
     Can we always rewrite an extensional definition of a set
     intensionally?  At a minimum, we can use the identity function
     together with an enumeration of its domain.  For example, instead
-    of writing \[S=\{ (0,0), (3,7), (28,195)\}\] we can write ...
+    of writing \[S=\{ (0,0), (3,7), (28,195)\}\] we can write ??
+
+    Doesn't work for random data.  So if we want to support data
+    visualization we will need something like a random variable.
+  \end{remark}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Embedding}
+  \label{sect:embedding}
+
+  ``When some object X is said to be embedded in another object Y, the
+  embedding is given by some injective and structure-preserving map f
+  : X → Y. The precise meaning of "structure-preserving" depends on
+  the kind of mathematical structure of which X and Y are
+  instances. In the terminology of category theory, a
+  structure-preserving map is called a morphism.  The fact that a map
+  f : X → Y is an embedding is often indicated by the use of a "hooked
+  arrow", thus: \(f : X \hookrightarrow Y\). On the other hand, this
+  notation is sometimes reserved for inclusion maps.''
+  \url{http://en.wikipedia.org/wiki/Embedding}
+
+  \begin{remark}
+    Embedding is a key concept; we treat ``drawing'' curves in
+    a \cspace{} in terms of an embedding of a function in a \cspace{}.
+    Or something like that, anyway.
+  \end{remark}
+
+
+  \begin{remark}
+    The wikipedia article talks in terms of topologies.  Is the graph
+    of a function a topology?  Is it correct to view the curve of a
+    function in a \cspace{} as an embedding of one topological space
+    in another?  ``In general topology, an embedding is a
+    homeomorphism onto its image''
+    \url{http://en.wikipedia.org/wiki/Embedding} ``Roughly speaking, a
+    topological space is a geometric object, and the homeomorphism is
+    a continuous stretching and bending of the object into a new
+    shape. Thus, a square and a circle are homeomorphic to each other,
+    but a sphere and a donut are not.''
+    \url{http://en.wikipedia.org/wiki/Homeomorphism}
   \end{remark}
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Curves}
   \label{sect:figs}
+
+  \begin{remark}
+    Curve of a function = graph of the function \emph{embedded}
+    (=drawn) in \cspace{}.
+  \end{remark}
+
+  \begin{remark}
+    Functions with infinite domains obviously cannot be ``drawn'' on a
+    finite physical surface.  So when we say ``curve'' what we really
+    mean is a fragment of a curve.
+  \end{remark}
 
   A curve is the image of a graph under a \cspace{}.  Informally, this
   means we obtain a curve by applying the axial transformation
@@ -2699,6 +2865,68 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
   %%%%%%%%
   \subsection{Transparency}
   \label{subs:transparency}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Animation}
+  \label{sect:animation}
+
+  Animation requires:
+
+  \begin{itemize}
+  \item start and end points
+  \item distance interval (determined by domain of start/end pts)
+  \item interpolation curve - path along which drawing occurs
+  \item acceleration curve - governs placement of interpolated points
+  \item sample rate - in units of distance rather than time, e.g. so many samples per unit distance
+  \item sample range and index - sample rate of 100 determines range of [1..100]
+  \end{itemize}
+
+  The acceleration curve (function) together with the sample index
+  determines the selection of points in the distance interval for
+  mapping by the interpolation curve.  In other words, the sample rate
+  tells us how many points to sample from the x interval, and the
+  acceleration function tells us which ones (how they are
+  distributed).  (The x interval is normalized to 1).
+
+  E.g. if we are at sample 50 out of 100, the acceleration function is
+  applied to .5 to determine a point on the x interval.  If the
+  function is linear, that point would be .5 of the way; if quadratic,
+  it would be .25 of the way.  Etc.
+
+  %%%%%%%%
+  \subsection{Point Animation}
+  \label{subs:ptanim}
+
+  %%%%%%%%
+  \subsection{Figure Animation}
+  \label{subs:figanim}
+
+  e.g. moving a square
+
+  %%%%%%%%
+  \subsection{Function Animation}
+  \label{subs:funcanim}
+
+  e.g. morphing a straight line from a to be into a sine curve from a to b
+
+  \begin{remark}
+    From ''\url{http://en.wikipedia.org/wiki/Homotopy}:
+
+    ``In topology, two continuous functions from one topological space
+    to another are called homotopic (Greek ὁμός (homós) = same,
+    similar, and τόπος (tópos) = place) if one can be "continuously
+    deformed" into the other, such a deformation being called a
+    homotopy between the two functions....
+
+    Formally, a homotopy between two continuous functions f and g from
+    a topological space X to a topological space Y is defined to be a
+    continuous function H : X × [0,1] → Y from the product of the
+    space X with the unit interval [0,1] to Y such that, if x ∈ X then
+    H(x,0) = f(x) and H(x,1) = g(x).
+
+    If we think of the second parameter of H as time then H describes a continuous deformation of f into g: at time 0 we have the function f and at time 1 we have the function g. We can also think of the second parameter as a "slider control" that allows us to smoothly transition from f to g as the slider moves from 0 to 1, and vice versa.
+  \end{remark}
+
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Misc}
@@ -3429,6 +3657,121 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
                 Units
 
                 %%%%%%%%
+                \subsection{Postscript Character Space}
+                \label{subs:pschar}
+
+                \hyperref{http://partners.adobe.com/public/developer/en/font/T1\_SPEC.PDF}{Adobe Type 1 Font Format}, p. 25
+
+                ``In the PostScript language, characters have their
+                own coordinate system distinct from the coordinate
+                system used by a speciﬁc device. The coordinate system
+                in which characters are deﬁned is called character
+                space, the coordinate system used by a device is
+                called device space, and the coordinate system used in
+                PostScript language programs for placing objects on a
+                page is called user space.'' (p. 25)
+
+                ``Type 1 font programs generally use a 1000 to 1
+                scaling matrix for the deﬁnition of the relationship
+                of character space units to user space units. The
+                FontMatrix value in these fonts is typically [0.001 0
+                  0 0.001 0 0]. Thus, 1000 character space units will
+                scale down to 1 user space unit (before application of
+                the makefont or scalefont operators in a PostScript
+                language program). This allows character space
+                coordinates to be expressed in integer values without
+                signiﬁcant loss of precision for most font designs.
+                If additional precision is necessary, expressions such
+                as 145 10div may be used to provide a number (in this
+                case, 14.5) that cannot be expressed directly in the
+                charstring format.''
+
+                ``Character Paths A character is made up of PostScript
+                language code that draws the character in character
+                space. The first step in preparing the con- tents of a
+                charstring is to develop a PostScript language program
+                that defines the character outline in character
+                space. An outline is defined by building a path with
+                the moveto, lineto, curveto, closepath, rlineto,
+                etc. operators.'' p. 26
+
+                %%%%%%%%
+                \subsection{TrueType--OpenType}
+                \label{subs:ttotf}
+
+                \begin{remark}
+                  Everything here taken from
+                  \url{http://www.microsoft.com/typography/otspec/TTCH01.htm}.
+                  OTF fonts used TT outlines, and thus \cspace{}s.
+                \end{remark}
+
+                ``OpenType fonts are an extension of the TrueType Font
+                File format.''
+
+                ``In a TrueType font, glyph shapes are described by
+                their outlines. A glyph outline consists of a series
+                of contours. A simple glyph may have only one
+                contour. More complex glyphs can have two or more
+                contours. Composite glyphs can be constructed by
+                combining two or more simpler glyphs...Contours are
+                composed of straight lines and curves. Curves are
+                defined by a series of points that describe second
+                order Bezier-splines... Straight lines are defined by
+                two consecutive on curve points.''
+
+                ``In a TrueType font file point locations are
+                described in font units, or FUnits. An FUnit is the
+                smallest measurable unit in the em square, an
+                imaginary square that is used to size and align
+                glyphs. The dimensions of the em square typically are
+                those of the full body height of a font plus some
+                extra spacing to prevent lines of text from colliding
+                when typeset without extra leading.''
+
+                ``The em square defines a two-dimensional coordinate grid whose x-axis describes movement in a horizontal direction and whose y-axis describes movement in a vertical direction. This is discussed in more detail in the following section.
+FUnits and the grid
+
+A key decision in digitizing a font is determining the resolution at which the points that make up glyph outlines will be described. The points represent locations in a grid whose smallest addressable unit is known as an FUnit or font Unit. The grid is a two-dimensional coordinate system whose x-axis describes movement in a horizontal direction and whose y-axis describes movement in a vertical direction. The grid origin has the coordinates (0,0). The grid is not an infinite plane. Each point must be within the range -16384 and +16383 FUnits. Depending upon the resolution chosen, the range of addressable grid locations will be smaller.
+The choice of the granularity of the coordinate grid-that is, number of units per em (upem)-is made by the font manufacturer. Outline scaling will be fastest if units per em is chosen to be a power of 2, such as 2048....''
+
+``The granularity of the em square is determined by the number of FUnits per em, or more simply units per em . The em square as divided into FUnits defines a coordinate system with one unit equaling an FUnit. All points defined in this coordinate system must have integral locations. The greater the number of units per em, the greater the precision available in addressing locations within the em square.''
+
+``FUnits are relative units because they vary in size as the size of the em square changes. The number of units per em remains constant for a given font regardless of the point size. The number of points per em, however, will vary with the point size of a glyph. An em square is exactly 9 points high when a glyph is displayed at 9 points, exactly 10 points high when the font is displayed at 10 point, and so on. Since the number of units per em does not vary with the point size at which the font is displayed, the absolute size of an FUnit varies as the point size varies.''
+
+``Because FUnits are relative to the em square, a given location on a glyph will have the same coordinate location in FUnits regardless of the point size at which the font is rendered. This is convenient because it makes it possible to instruct outline points once considering only the original outline and have the changes apply to the glyph at whatever size and resolution it is ultimately rendered.''
+
+``Device space
+
+Whatever the resolution of the em square used to define a glyph outline, before that glyph can be displayed it must be scaled to reflect the size, transformation and the characteristics of the output device on which it is to be displayed. The scaled outline must describe the character outline in units that reflect an absolute rather than relative system of measurement. In this case the points that make up a glyph outline are described in terms of pixels.
+Intuitively, pixels are the actual output bits that will appear on screen or printer. To allow for greater precision in managing outlines, TrueType describes pixel coordinates to the nearest sixty-fourth of a pixel.
+Converting FUnits to pixels
+
+Values in the em square are converted to values in the pixel coordinate system by multiplying them by a scale. This scale is:
+pointSize * resolution / ( 72 points per inch * units per em )
+where pointSize is the size at which the glyph is to be displayed, and resolution is the resolution of the output device. The 72 in the denominator reflects the number of points per inch.
+For example, assume that a glyph feature is 550 FUnits in length on a 72 dpi screen at 18 point. There are 2048 units per em. The following calculation reveals that the feature is 4.83 pixels long.
+550 * 18 * 72 / ( 72 * 2048 ) = 4.83
+Display device characteristics
+
+The resolution of any particular display device is specified by the number of dots or pixels per inch (dpi) that are displayed. For example, a VGA under Windows is treated as a 96 dpi device, and most laser printers have a resolution of 300 dpi. Some devices, such as an EGA, have different resolution in the horizontal and vertical directions (i.e. non-square pixels); in the case of the EGA this resolution is 96 x 72. In such cases, horizontal dots per inch must be distinguished from vertical dots per inch.
+The number of pixels per em is dependent on the resolution of the output device. An 18 point character will have 18 pixels per em on a 72 dpi device. Change the resolution to 300 dpi and it has 75 pixels per em, or change to 1200 dpi and it has 300 pixels per em.''
+
+``Displaying type on a particular device at a specific point size yields an effective resolution measured in pixels per em (ppem). The formula for calculating pixels per em is:
+ppem = pointSize * dpi / 72
+= (pixels per inch) * (inches per pica point) * (pica points per em)
+= dpi * 1 / 72 * pointSize
+On a 300 dpi laser printer, a 12 point glyph would have 12*300/72 or 50 ppem. On a typesetter with 2400 dpi, it would have 12*2400/72 or 400 ppem. On a VGA, a 12 point glyph would have 12*96/72 or 16 ppem. Similarly, the ppem for a 12 point character on a 72 dpi device would be 12*72/72, or 12. This last calculation points to a useful rule of thumb: on any 72 dpi device, points and pixels per em are equal. Note, however, that in traditional typography an inch contains 72.2752 points (rather than 72); that is, one point equals .013836 inches.
+If you know the ppem, the formula to convert between FUnits and pixel space coordinates is:
+pixel\_coordinate = em\_coordinate * ppem /upem
+An em\_coordinate position of (1024, 0) would yield a device\_pixels coordinate of (6, 0), given 2048 units per em and 12 pixels per em.''
+
+``Grid-fitting a glyph outline
+
+The fundamental task of instructing a glyph is one of identifying the critical characteristics of the original design and using instructions to ensure that those characteristics will be preserved when the glyph is rendered at different sizes on different devices. Consistent stem weights, consistent color, even spacing, and the elimination of pixel dropouts are common goals.
+To accomplish these goals, it is necessary to ensure that the correct pixels are turned on when a glyph is rasterized. It is the pixels that are turned on that create the bitmap image of the glyph. Since it is the shape of the glyph outline that determines which pixels will make up the bitmap image of that character at a given size, it is sometimes necessary to change or distort the original outline description to produce a high quality image. This distortion of the outline is known as grid-fitting.''
+
+
+                %%%%%%%%
                 \subsection{PDF}
 
                 Ref:  PDF32000-1:2008 (\url{http://www.adobe.com/devnet/pdf/pdf\_reference.html}
@@ -3468,6 +3811,11 @@ term \([M[x:=N]\).''\marginnote{\citet{lalement_computation_1993}}
                 pattern space (matrix), 3D stuff
 
                 See figure 12, p. 117
+
+                %%%%%%%%
+                \subsection{TrueType-OpenType}
+                \label{subs:ttf}
+
 
                 %%%%%%%%
                 \subsection{CSS}

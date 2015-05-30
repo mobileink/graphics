@@ -1,0 +1,176 @@
+\documentclass{standalone}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+%% Preamble:
+\pgfplotsset{width=7cm,compat=1.9}
+%% \pgfplotsset{xticklabel={\tick},scaled x ticks=false}
+\pgfplotsset{plot coordinates/math parser=false}
+
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+\usepackage{pgffor}
+
+\usepackage{animate}
+
+\usepackage{arrayjobx}
+\usepackage{multido}
+
+\usepackage{layouts}
+
+\usepackage{etoolbox}
+
+\newcounter{mylistcounter}
+
+\def\saveitem#1{%
+\stepcounter{mylistcounter}%
+\expandafter\def\csname mylist\themylistcounter\endcsname{#1}}
+
+\forcsvlist{\saveitem}{%
+  1,
+  2,
+  3
+}%
+
+\def\getnthelement#1{\csname mylist#1\endcsname}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\def\FrameCount{30}
+\def\FrameRate{30}
+\def\dist{1}
+
+\def\pts{(0,1),(1,2),(2,3)}
+\expandafter\def\expandafter\coords{\foreach \pt in \pts {\pt}}
+
+%% \begin{figure}[t]
+%% \centering
+\begin{tikzpicture}
+  %% \draw[help lines] (-4,-4) grid (4,4);
+
+  \fill (0,4) node[circle,fill,label=$b_1$] (b1) {};
+  \fill (0,-4) circle (4pt) node[label=below:$b_2$] (b2) {};
+  \draw (0,0) node[fill,circle,red,minimum size=16pt,label=right:$a$] (a) {};
+  \draw (-3,3) node[align=center] (a=b) {free path space \\($x:a=b$)};
+  %% \draw (0,-3) node[fill,circle,blue,minimum size=16pt,label=right:$b_2$] (b2) {};
+
+  \draw[thick,white] (-7pt,0) -- (7pt,0);
+  \draw[->] (2,1) node[align=left,anchor=west]{``exploded'' view of\\constant path at $a$\\($refl_a:a=a$)} .. controls (2,1) and (0,1) .. (0,0);
+
+  \draw (a) .. node[midway](refla){} controls (-2,1.5) and (-2,-1.5) .. (a);
+  \draw (a) .. node[midway](reflb){} controls (-1,.5) and (-1,-.5) .. (a);
+  \draw[loosely dotted,thick] (reflb) -- (a);
+  \draw[loosely dotted,thick] (refla) -- (reflb);
+  \draw[loosely dotted,thick] (refla.west) -- ++(180:.5);
+
+  \draw (-3,1) node[align=center] (refl) {loop space at $a$\\($x:a=a$)};
+  \draw[->] (refl.south) -- (reflb.north);
+  \draw[->] (refl.south) -- (refla.north);
+  \draw[->] (refl.south) -- (-2.2,.1);
+
+  \draw[thick] (a) --
+      node[pos=.6](b06){}
+      node[midway](mid){} (b1.center);
+  \draw[thick] (a) to[out=135,in=225]
+      node[pos=.6](p6){}
+      node[midway](pmid){} (b1.center);
+
+  \draw[thick] (a) to[out=45,in=-45]
+      node[pos=.6](q6){}
+      node[midway] (qmid){} (b1.center);
+
+  \draw[loosely dotted,thick] (pmid) -- (mid);
+  \draw[loosely dotted,thick] (mid) -- (qmid);
+  \draw[loosely dotted,thick] (qmid) -- ++(0:1);
+  \draw[->] (a=b) -- (p6);
+  \draw[->] (a=b) -- (b06);
+  \draw[->] (a=b) -- (q6);
+
+  \draw[thick] (b2.center) to[out=45,in=-45] (a);
+  \draw[thick] (b2.center) to[out=135,in=225] (a);
+  \draw[thick] (b2.center) -- (a);
+
+\end{tikzpicture}
+%% \end{figure}
+
+%% \begin{quote}
+%% ``[I]n homotopy theory the space corresponding to ∑(x,y:A)(x = y) is the free path space — the space of paths in A whose endpoints may vary — and it is in fact the case that any point of this space is homotopic to the constant loop at some point, since we can simply retract one of its endpoints along the given path.'' (HoTT p. 51)
+%% \end{quote}
+
+%% \begin{quote}
+%% ``In set theory, the proposition $a=a$ is entirely uninteresting, but in
+%% homotopy theory, paths from a point to itself are called loops and
+%% carry lots of interesting higher structure. Thus, given a type $A$
+%% with a point $a:A$, we define its \textbf{loop space} $\Omega(A,a)$ to
+%% be the type $a=_Aa$.'' (HoTT p. 68)
+%% \end{quote}
+
+
+  %% \node foreach \name/\angle in {a/0,b/90,c/180,d/270}
+  %%       (\name) at (\angle:1.5) {$\name$};
+  %% \path[->] (b) edge            node[above right]  {$5$}     (a)
+  %% edge (c)
+  %% edge [-,dotted] node[below,sloped] {} (d)
+  %% (c) edge   (a)
+  %% edge (d)
+  %% (d) edge [red] node[above,sloped] {}
+  %%                node[below,sloped] {}     (a);
+
+\bigskip
+
+
+%% Here's a little animation; I leave it in as a template in case I ever get around to animating the above.
+
+%% \bigskip
+
+%% \begin{animateinline}[poster=first,%
+%%     controls,
+%%     begin={\begin{tikzpicture}[scale=1]%
+%%         %% \useasboundingbox[draw=black] (0,0) rectangle (\dist,\dist);
+%%     },%
+%%     end={\end{tikzpicture}}%
+%%   ]%
+%%   {\FrameRate}%
+%%   %% \filldraw (0,0) circle (.4pt);
+%%   %% \newframe %% step 0
+%%   %% \filldraw (0,0) circle (.4pt);
+%%   \multiframe{\FrameCount}{iCurrFrame=1+1}{%
+%%     \message{\iCurrFrame}
+%%     \pgfmathsetmacro{\pct}{\iCurrFrame/\FrameCount};
+%%     \pgfmathsetmacro{\delta}{\pct*\dist}
+%%     \begin{axis}[%
+%%       title={Step \iCurrFrame, delta: \delta}%
+%%       ,xmin=-.5
+%%       ,ymin=-.5
+%%       ,ymax=10
+%%       ]%
+%%       \pgfplotstableread{lineplot.dat}\plotdata
+%%       %% \addplot[sharp plot] coordinates \coords;
+%%       %% \addplot+[sharp plot] coordinates {(0,0) (1,2) (2,3)};
+%%       \def\dists{1,2,3}
+%%       \pgfmathparse{\getnthelement{1}}\pgfmathresult
+%%       \addplot+[sharp plot]
+%%       	table[header=true
+%%           ,x=a, y expr=\thisrow{b}+(\coordindex+1)*\pct
+%%         ]%
+%%         {\plotdata};
+%%       \end{axis}
+%%   }
+%% \end{animateinline}
+
+\end{document}

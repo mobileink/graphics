@@ -1,0 +1,135 @@
+\documentclass{standalone}
+
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage{fontspec}
+\defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+\setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+%% Preamble:
+\pgfplotsset{width=7cm,compat=1.9}
+%% \pgfplotsset{xticklabel={\tick},scaled x ticks=false}
+\pgfplotsset{plot coordinates/math parser=false}
+
+\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+\usepackage{pgffor}
+
+\usepackage{animate}
+
+\usepackage{arrayjobx}
+\usepackage{multido}
+
+\usepackage{layouts}
+
+\usepackage{etoolbox}
+
+\newcounter{mylistcounter}
+
+\def\saveitem#1{%
+\stepcounter{mylistcounter}%
+\expandafter\def\csname mylist\themylistcounter\endcsname{#1}}
+
+\forcsvlist{\saveitem}{%
+  1,
+  2,
+  3
+}%
+
+\def\getnthelement#1{\csname mylist#1\endcsname}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\def\FrameCount{30}
+\def\FrameRate{30}
+\def\dist{2}
+\def\xdist{4}
+
+\def\pts{(0,1),(1,2),(2,3)}
+\expandafter\def\expandafter\coords{\foreach \pt in \pts {\pt}}
+
+%% \begin{figure}[t]
+%% \centering
+%% \begin{tikzpicture}
+%%   \draw[help lines] (-4,-4) grid (4,4);
+
+%%   \fill (-2,0) node[circle,fill] (a) {};
+%%   \fill (2,0) node[circle,fill] (b) {};
+%%   \draw (a) .. controls (0,1) .. (b);
+%%   \draw (a) .. controls (0,-1) .. (b);
+
+%% \end{tikzpicture}
+
+\begin{animateinline}[poster=first,%
+    controls,
+    begin={\begin{tikzpicture}[scale=1]%
+        %% \useasboundingbox[draw=black] (0,0) rectangle (\dist,\dist);
+    },%
+    end={\end{tikzpicture}}%
+  ]%
+  {\FrameRate}%
+  %% \filldraw (0,0) circle (.4pt);
+  %% \newframe %% step 0
+  %% \filldraw (0,0) circle (.4pt);
+
+  \multiframe{\FrameCount}{iCurrFrame=0+1}{%
+    \message{\iCurrFrame}
+    \pgfmathsetmacro{\pct}{(\iCurrFrame)/(\FrameCount - 1)};
+    \pgfmathsetmacro{\xdelta}{(\pct > .5)? (1-\pct)*\xdist : (\pct)*\xdist}
+    \pgfmathsetmacro{\ydelta}{\pct*\dist}
+    \pgfmathsetmacro{\yda}{(\pct > .5)? \dist : (2*\pct)*\dist}
+    \pgfmathsetmacro{\ydb}{(\pct > .5)? (\pct - .5)*2*\dist : 0}
+
+      %% \draw[help lines] (-4,-2) grid (4,2);
+
+      \draw (-4,0) node (a) {};
+      \draw (0,0) node (b) {};
+      \draw (4,0) node (c) {};
+
+      \fill[gray] (a.center) .. controls (-2,-1) .. (b.center) .. controls (-2,-1+\ydelta) .. cycle;
+      \draw (a.center) .. controls (-2,-1+\ydelta) .. (b.center);
+      \draw (a.center) .. controls (-2,1) .. (b.center);
+      \draw (a.center) .. controls (-2,-1) .. (b.center);
+
+      %% \fill[gray] (b.center) .. controls (2,-1) .. (c.center)
+      %%     .. controls (2+\xdelta,-1+\ydelta) .. cycle;
+      %% \draw (b.center) .. controls (2+\xdelta,-1+\ydelta) .. (c.center);
+      \draw (b.center) .. controls (2,1) .. (c.center);
+      \draw (b.center) .. controls (2,-1) .. (c.center);
+
+      \fill[gray] (b.center) .. controls (2,-1+\yda) and (2,-1+\ydb) .. (c.center)
+          .. controls (2,-1) .. cycle; %
+      \draw (b.center) .. controls (2,-1+\yda) and (2,-1+\ydb) .. (c.center);
+
+
+      %% \draw[gray] (b.center) .. controls (2,1) and (2,-1) .. (c.center);
+          %% .. controls (2,-1) .. cycle; %
+
+
+      %% \fill[red] (2,-1+\yda) circle[radius=1pt];
+      %% \fill[blue] (2,-1+\ydb) circle[radius=1pt];
+      %% \fill[red] (2+\xdelta,-1+\ydelta) circle[radius=1pt];
+
+      \fill (-4,0) circle[radius=1pt];
+      \fill (0,0) circle[radius=1pt];
+      \fill (4,0) circle[radius=1pt];
+
+
+
+
+      %% \end{axis}
+  }
+\end{animateinline}
+
+\end{document}

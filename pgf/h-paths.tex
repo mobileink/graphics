@@ -1,0 +1,151 @@
+\documentclass{standalone}
+
+%% \usepackage{fontspec,xltxtra,xunicode}
+%% \usepackage{fontspec}
+%% \defaultfontfeatures{Scale=MatchLowercase}
+
+%% \setmainfont[Mapping=tex-text]{Times New Roman}
+%% \setromanfont[Mapping=tex-text]{Times New Roman}
+%% \setsansfont[Mapping=tex-text]{Arial}
+
+%% \setmainfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setromanfont[Mapping=tex-text]{TeX Gyre Pagella}
+%% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
+
+\usepackage{tikz}
+
+\usetikzlibrary{external}
+
+\usepackage{pgffor}
+
+\usepackage{animate}
+
+\usepgflibrary{fpu}
+
+%% \tikzexternalize
+
+%% \setlength\parindent{0pt}
+
+\pgfmathsetmacro\halfpi{pi/2}
+\pgfmathdeclarefunction{easeInSin}{4}{%
+  \pgfmathparse{ -#3 * cos(#1/#4 * \halfpi r) + #3 + #2}% radians
+}
+
+\pgfmathsetmacro\s{1.70158}
+
+\pgfmathdeclarefunction{ezoutback}{4}{%
+  \pgfmathsetmacro\dt{#1/#4-1}
+  \pgfmathparse{ #3*((\dt)^2*((\s+1)*\dt+\s)+1) + #2}
+}
+
+%% \pgfkeys{/ymax/.initial=0}
+%% \pgfkeys{/tikz/.cd,
+%%   ymax/.store in=\ymax,
+%%   ymax=0,
+%%    }
+
+\pgfkeys{/ymax/.initial=0}
+%% \pgfkeyssetvalue{/ymax}{0}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+
+\def\iFrameCount{30}
+\def\iFrameRate{30}
+\def\ydist{4}
+\def\xdist{4}
+\def\rFromY{0}	%% b : begin point
+\def\rToY{4}	%%   : end point
+\pgfmathsetmacro\rDeltaY{\rToY-\rFromY}  %% c :  end-begin, total change
+
+\def\pts{(0,1),(1,2),(2,3)}
+\expandafter\def\expandafter\coords{\foreach \pt in \pts {\pt}}
+
+\begin{animateinline}[poster=first,%
+    controls,
+%% autoplay,loop,
+    begin={\begin{tikzpicture}[scale=1]%
+        \useasboundingbox (-5,-3) rectangle (6,3);
+    },%
+    end={\end{tikzpicture}}%
+  ]%
+  {\iFrameRate}%
+  \multiframe{\iFrameCount}{iCurrFrame=0+1}{%
+    \message{\iCurrFrame}
+    \pgfmathsetmacro{\pct}{(\iCurrFrame)/(\iFrameCount - 1)};
+    \pgfmathsetmacro{\xdelta}{(\pct > .5)? (1-\pct)*\xdist : (\pct)*\xdist}
+    \pgfmathsetmacro{\ydelta}{\pct*\ydist}
+    %% \pgfmathsetmacro{\yda}{(\pct > .5)? \ydist : (2*\pct)*\ydist}
+    %% \pgfmathsetmacro{\ydb}{(\pct > .5)? (\pct - .5)*2*\ydist : 0}
+
+      %% \draw[help lines] (-4,-2) grid (4,2);
+
+      \draw (-4,-2) node (a0) {};
+      \draw (-4,2)  node (b0) {};
+      \draw[gray] (a0.center) .. node[pos=\pct] (mid){} controls (-3,0) .. (b0.center);
+
+      %% \draw (-2,-2+\y)  node (b1) {};
+      %% \draw[thick] (a0.center) .. controls (-3,0) .. (-4,-2+\ydelta);
+      \draw[thick,pos=.5] (a0.center) .. controls (mid.center) .. (mid.center);
+      \fill (a0) circle[radius=1pt] node[left] {$a$};
+      \fill (b0) circle[radius=1pt] node[right] {$b$};
+
+      \pgfmathsetmacro\y{easeInSin(\iCurrFrame,\rFromY,\rDeltaY,(\iFrameCount-1))};
+      \draw (-2,-2) node (a1) {};
+      \draw (-2,2)  node (b1) {};
+      \draw[gray] (a1.center) -- (b1.center);
+      %% \draw (-2,-2+\y)  node (b1) {};
+      \draw[thick] (a1.center) -- (-2,-2+\y);
+      \fill (a1) circle[radius=1pt] node[left] {$a$};
+      \fill (b1) circle[radius=1pt] node[right] {$b$};
+
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %% linear
+      \draw (0,-2) node (a2) {};
+      \draw (0,2)  node (b2) {};
+      \draw[gray] (a2.center) -- (b2.center);
+      %% \draw (0,-2+\ydelta)  node (b2) {};
+      \draw[thick] (a2.center) -- (0,-2+\ydelta);
+      \fill (a2.center) circle[radius=1pt] node[left] {$a$};
+      \fill (b2.center) circle[radius=1pt] node[right] {$b$};
+
+      %% for some reason this cause x to offset right
+      \pgfmathsetmacro\yc{ezoutback(\iCurrFrame,\rFromY,\rDeltaY,\iFrameCount)};
+
+      %% trying to store ymax in global, but can't get it to work!
+      \pgfkeysgetvalue{/ymax}{\ymax};
+      \message{\ymax};
+      %% \pgfmathparse{ (\yc > \pgfkeysvalueof{/ymax}) ? \yc : \pgfkeysvalueof{/ymax}};
+      \pgfmathparse{ (\yc > \ymax) ? \yc : \ymax};
+      \pgfkeys{/ymax/.expanded=\pgfmathresult};
+
+      %% \message{\yc};
+      %% \message{\ymax};
+
+      \draw (2,-2) node (a3) {};
+      \draw (2,2)  node (b3) {};
+      \draw[gray] (a3.center) -- (b3.center);
+      %% \draw (2,-2+\yc)  node (b3) {};
+      %% \draw[red] (a3.center) -- (ymax.center);
+      \draw[thick] (a3.center) -- (2,-2+\yc);
+      \fill (a3.center) circle[radius=1pt] node[left] {$a$};
+      \fill (b3.center) circle[radius=1pt] node[right] {$b$};
+
+      \draw (4,-2) node (a4) {};
+      \draw (4,2)  node (b4) {};
+      \draw[gray] (a4.center) -- (4,0) arc[start angle=0,end angle=360,radius=.5] -- (b4.center);
+           %% .. controls (b4.center) .. (5,0);
+           %% .. controls (a4.center) .. (3,0) .. controls (b4.center) .. (b4.center);
+      %% \draw (2,-2+\yc)  node (b4) {};
+      %% \draw[red] (a4.center) -- (ymax.center);
+      \draw[red] (4,0) arc[start angle=0,end angle=(\pct*360),radius=.5];
+      \draw[thick] (a4.center) -- (4,-2+\ydelta);
+      \fill (a4.center) circle[radius=1pt] node[left] {$a$};
+      \fill (b4.center) circle[radius=1pt] node[right] {$b$};
+
+  }
+\end{animateinline}
+
+\end{document}

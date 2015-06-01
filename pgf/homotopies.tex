@@ -13,46 +13,63 @@
 %% \setsansfont[Mapping=tex-text]{TeX Gyre Heros}
 
 \usepackage{tikz}
-\usepackage{pgfplots}
-\usepackage{pgfplotstable}
-%% Preamble:
-\pgfplotsset{width=7cm,compat=1.9}
-%% \pgfplotsset{xticklabel={\tick},scaled x ticks=false}
-\pgfplotsset{plot coordinates/math parser=false}
+%% \usepackage{pgfplots}
+%% \usepackage{pgfplotstable}
+%% %% Preamble:
+%% \pgfplotsset{width=7cm,compat=1.9}
+%% %% \pgfplotsset{xticklabel={\tick},scaled x ticks=false}
+%% \pgfplotsset{plot coordinates/math parser=false}
 
-\usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
+%% \usetikzlibrary{arrows,shapes,patterns,backgrounds,spy}
 \usepackage{pgffor}
+\usepgflibrary{fpu}
 
 \usepackage{animate}
 
-\usepackage{arrayjobx}
-\usepackage{multido}
+%% \usepackage{arrayjobx}
+%% \usepackage{multido}
 
-\usepackage{layouts}
+%% \usepackage{layouts}
 
-\usepackage{etoolbox}
+%% \usepackage{etoolbox}
 
-\newcounter{mylistcounter}
+%% \newcounter{mylistcounter}
 
-\def\saveitem#1{%
-\stepcounter{mylistcounter}%
-\expandafter\def\csname mylist\themylistcounter\endcsname{#1}}
+%% \def\saveitem#1{%
+%% \stepcounter{mylistcounter}%
+%% \expandafter\def\csname mylist\themylistcounter\endcsname{#1}}
 
-\forcsvlist{\saveitem}{%
-  1,
-  2,
-  3
-}%
+%% \forcsvlist{\saveitem}{%
+%%   1,
+%%   2,
+%%   3
+%% }%
 
-\def\getnthelement#1{\csname mylist#1\endcsname}
+%% \def\getnthelement#1{\csname mylist#1\endcsname}
+\pgfmathdeclarefunction{easeInQuadratic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^2+#2} %% c(t/d)^2 + b
+}
 
+\pgfmathdeclarefunction{easeInQuintic}{4}{%
+  \pgfmathparse{#3*(#1/#4)^5+#2}%
+}
+
+\pgfmathsetmacro\s{1.70158}
+\pgfmathdeclarefunction{easeInBack}{4}{%
+  \pgfmathsetmacro\dt{#1/#4}
+  \pgfmathparse{ #3 * (\dt)^2 * ((\s+1)*\dt - \s) + #2}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 
-\def\FrameCount{30}
-\def\FrameRate{30}
+\def\iFrameCount{30}
+\def\iFrameRate{30}
+\def\rFromY{0}	%% b : begin point
+\def\rToY{2}	%%   : end point
+\pgfmathsetmacro\rDeltaY{\rToY-\rFromY}  %% c :  end-begin, total change
+
 \def\dist{2}
 \def\xdist{4}
 
@@ -78,57 +95,87 @@
     },%
     end={\end{tikzpicture}}%
   ]%
-  {\FrameRate}%
+  {\iFrameRate}%
   %% \filldraw (0,0) circle (.4pt);
   %% \newframe %% step 0
   %% \filldraw (0,0) circle (.4pt);
 
-  \multiframe{\FrameCount}{iCurrFrame=0+1}{%
+  \multiframe{\iFrameCount}{iCurrFrame=0+1}{%
     \message{\iCurrFrame}
-    \pgfmathsetmacro{\pct}{(\iCurrFrame)/(\FrameCount - 1)};
+    \pgfmathsetmacro{\pct}{(\iCurrFrame)/(\iFrameCount - 1)};
     \pgfmathsetmacro{\xdelta}{(\pct > .5)? (1-\pct)*\xdist : (\pct)*\xdist}
     \pgfmathsetmacro{\ydelta}{\pct*\dist}
     \pgfmathsetmacro{\yda}{(\pct > .5)? \dist : (2*\pct)*\dist}
     \pgfmathsetmacro{\ydb}{(\pct > .5)? (\pct - .5)*2*\dist : 0}
 
-      %% \draw[help lines] (-4,-2) grid (4,2);
+      %% \draw[help lines] (-4,-2) grid (4,4);
 
-      \draw (-4,0) node (a) {};
-      \draw (0,0) node (b) {};
-      \draw (4,0) node (c) {};
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %% row 1
 
-      \fill[gray] (a.center) .. controls (-2,-1) .. (b.center) .. controls (-2,-1+\ydelta) .. cycle;
-      \draw (a.center) .. controls (-2,-1+\ydelta) .. (b.center);
-      \draw (a.center) .. controls (-2,1) .. (b.center);
-      \draw (a.center) .. controls (-2,-1) .. (b.center);
+      %%  figure 1a
+      \draw (-2.5,-2) node {easing: linear};
+      \draw (-4,-1) node (a1a) {};
+      \draw (-1,-1) node (b1a) {};
 
-      %% \fill[gray] (b.center) .. controls (2,-1) .. (c.center)
-      %%     .. controls (2+\xdelta,-1+\ydelta) .. cycle;
-      %% \draw (b.center) .. controls (2+\xdelta,-1+\ydelta) .. (c.center);
-      \draw (b.center) .. controls (2,1) .. (c.center);
-      \draw (b.center) .. controls (2,-1) .. (c.center);
+      \fill[gray] (a1a.center) .. controls (-2.5,-2) .. (b1a.center)
+          .. controls (-2.5,-2+\ydelta) .. cycle;
+      \draw (a1a.center) .. controls (-2.5,-2+\ydelta) .. (b1a.center);
 
-      \fill[gray] (b.center) .. controls (2,-1+\yda) and (2,-1+\ydb) .. (c.center)
-          .. controls (2,-1) .. cycle; %
-      \draw (b.center) .. controls (2,-1+\yda) and (2,-1+\ydb) .. (c.center);
+      \draw (a1a.center) .. controls (-2.5,0) .. (b1a.center);
+      \draw (a1a.center) .. controls (-2.5,-2) .. (b1a.center);
 
+      \fill (a1a) circle[radius=1pt] node[left]{a};
+      \fill (b1a) circle[radius=1pt] node[right]{b};
 
-      %% \draw[gray] (b.center) .. controls (2,1) and (2,-1) .. (c.center);
-          %% .. controls (2,-1) .. cycle; %
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %%  figure 1b
+      \draw (2.5,-2) node {easing: quintic};
+      \draw (1,-1) node (a1b) {};
+      \draw (4,-1) node (b1b) {};
 
+      \pgfmathsetmacro\ya{easeInQuintic(\iCurrFrame,\rFromY,\rDeltaY,(\iFrameCount-1))};
+      \fill[gray] (a1b.center) .. controls (2.5,-2) .. (b1b.center)
+          .. controls (2.5,-2+\ya) .. cycle;
+      \draw (a1b.center) .. controls (2.5,-2+\ya) .. (b1b.center);
 
-      %% \fill[red] (2,-1+\yda) circle[radius=1pt];
-      %% \fill[blue] (2,-1+\ydb) circle[radius=1pt];
-      %% \fill[red] (2+\xdelta,-1+\ydelta) circle[radius=1pt];
+      \draw (a1b.center) .. controls (2.5,0) .. (b1b.center);
+      \draw (a1b.center) .. controls (2.5,-2) .. (b1b.center);
 
-      \fill (-4,0) circle[radius=1pt];
-      \fill (0,0) circle[radius=1pt];
-      \fill (4,0) circle[radius=1pt];
+      \fill (a1b) circle[radius=1pt] node[left]{a};
+      \fill (b1b) circle[radius=1pt] node[right]{b};
 
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      %%  row 2
+      %%  2a
+      \draw (-2.5,.75) node {easing: back in};
+      \draw (-4,2) node (a2a) {};
+      \draw (-1,2) node (b2a) {};
+      \pgfmathsetmacro\ya{easeInBack(\iCurrFrame,\rFromY,\rDeltaY,(\iFrameCount-1))};
+      \fill[gray] (a2a.center) .. controls (-2.5,1) .. (b2a.center)
+          .. controls (-2.5,1+\ya) .. cycle;
+      \draw (a2a.center) .. controls (-2.5,1+\ya) .. (b2a.center);
 
+      \draw (a2a.center) .. controls (-2.5,3) .. (b2a.center);
+      \draw (a2a.center) .. controls (-2.5,1) .. (b2a.center);
 
+      \fill (a2a.center) circle[radius=1pt] node[left]{a};
+      \fill (b2a.center) circle[radius=1pt] node[right]{b};
 
-      %% \end{axis}
+      %%  figure 2b
+      \draw (2.5,.75) node {easing: linear};
+      \draw (1,2) node (a2b) {};
+      \draw (4,2) node (b2b) {};
+
+      \fill[gray] (a2b.center) .. controls (2.5,1+\yda) and (2.5,1+\ydb) .. (b2b.center)
+          .. controls (2.5,1) .. cycle; %
+      \draw (a2b.center) .. controls (2.5,1+\yda) and (2.5,1+\ydb) .. (b2b.center);
+      \draw (a2b.center) .. controls (2.5,3) .. (b2b.center);
+      \draw (a2b.center) .. controls (2.5,1) .. (b2b.center);
+
+      \fill (a2b.center) circle[radius=1pt] node[left]{a};
+      \fill (b2b.center) circle[radius=1pt] node[right]{b};
+
   }
 \end{animateinline}
 
